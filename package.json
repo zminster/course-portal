@@ -1,0 +1,32 @@
+{
+  "name": "course-portal",
+  "version": "0.0.0",
+  "description": "Student course portal frontend for STAB US CS program.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://zminster@bitbucket.org/zminster/course-portal.git"
+  },
+  "keywords": [],
+  "author": "Zach Minster",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/zminster/course-portal#readme",
+  "private": true,
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.2",
+    "connect-flash": "^0.1.1",
+    "consolidate": "^0.14.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-session": "^1.14.0",
+    "hogan.js": "^3.0.2",
+    "letsencrypt-express": "^1.1.5",
+    "mysql": "^2.11.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
+  }
+}
