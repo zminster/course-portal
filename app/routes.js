@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
 
 	// process the login form
 	app.post('/login', passport.authenticate('local', {
-            successRedirect : '/profile', // redirect to the secure profile section
+            successRedirect : '/resources', // redirect to the secure profile section
             failureRedirect : '/login', // redirect back to the signup page if there is an error
             failureFlash : true // allow flash messages
 		}),
@@ -69,6 +69,6 @@ function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated())
 		return next();
 
-	// if they aren't redirect them to the home page
-	res.redirect('/');
+	// if they aren't redirect them to login screen
+	res.redirect('/login');
 }
