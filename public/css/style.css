@@ -1,0 +1,89 @@
+ @import 'https://fonts.googleapis.com/css?family=Reem+Kufi';
+
+html, body {
+	margin:0;
+	padding:0;
+	border:0;
+	height:100%;
+	overflow:auto;
+	background-image: url('../assets/bg.jpg');
+	background-position:center center;
+	min-width:500px;
+
+
+
+    font-family: 'Reem Kufi', sans-serif;
+}
+
+#login-container {
+	position:absolute;
+	top:20px;
+	bottom:20px;
+	left:0;
+	right:0;
+	/*width:100%;
+	height:auto;
+	max-width:900px;*/
+}
+
+.fullscreen-box {
+	width:90%;
+	height:60%;
+	max-width:500px;
+	max-height:500px;
+	margin:auto;
+}
+
+#login {
+	text-align:center;
+	line-height:50px;
+	text-transform:uppercase;
+
+}
+
+#login>div {
+	background:#fff;
+	padding:20px;
+}
+
+#jake {
+	height:40%;
+	width:90%;
+	max-width:900px;
+	max-height:500px;
+	min-width:500px;
+	min-height:150px;
+	background-image: url('../assets/keyhand_final.png');
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:center top;
+	margin:auto;
+}
+
+form input {
+	display:block;
+    font-family: 'Reem Kufi', sans-serif;
+    padding:15px;
+    width:100%;
+    background:#ececec;
+    color:#111;
+    border:0;
+    font-size:20px;
+    margin-bottom:20px;
+    box-sizing: border-box;
+}
+
+button {
+	display:block;
+    font-family: 'Reem Kufi', sans-serif;
+    padding:15px;
+    width:100%;
+    background:#ffd100;
+    text-align:center;
+    margin:0;
+    color:#111;
+    font-size:20px;
+    box-sizing: border-box;
+    border:0;
+    cursor:pointer;
+}
