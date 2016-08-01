@@ -9,11 +9,10 @@ module.exports = function(app, passport) {
 	});
 
 	/**************************************
-	  LOGIN FORM
+	  LOGIN
 	 **************************************/
 	// show the login form
 	app.get('/login', function(req, res) {
-		// TODO: Login Form
 		res.render('login.html', { message: req.flash('loginMessage') });
 	});
 
@@ -33,14 +32,26 @@ module.exports = function(app, passport) {
     });
 
 	/**************************************
-	 PRIVILEGED PAGE EXAMPLE
+	  PRIVILEGED STATIC PAGES
 	 **************************************/
 	 // isLoggedIn middleware ensures page will not be rendered unless user is logged in
-	app.get('/profile', isLoggedIn, function(req, res) {
-		res.render('SUMATOROTHER', {
+	app.get('/resources', isLoggedIn, function(req, res) {
+
+
+		res.render('demo.html', {
 			user : req.user // get the user out of session and pass to template
 		});
 	});
+
+	/**************************************
+	  ASSIGNMENTS & GRADES PORTAL
+	 **************************************/
+	 // TODO
+
+	/**************************************
+	  HANDIN FLOW
+	 **************************************/
+	 // TODO
 
 	/**************************************
 	  LOGOUT

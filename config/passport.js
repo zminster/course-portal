@@ -4,12 +4,8 @@
 var LocalStrategy   = require('passport-local').Strategy;
 
 // load up the user model
-var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
-var dbconfig = require('./database');
-var connection = mysql.createConnection(dbconfig.connection);
-
-connection.query('USE ' + dbconfig.database);
+var connection = require('../app/database_ops.js').connection;
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -21,12 +17,12 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id);
+        done(null, user.uid);
     });
 
     // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
-        connection.query("SELECT * FROM users WHERE id = ? ",[id], function(err, rows){
+    passport.deserializeUser(function(uid, done) {
+        connection.query("SELECT * FROM user WHERE uid = ? ",[id], function(err, rows){
             done(err, rows[0]);
         });
     });
@@ -44,9 +40,9 @@ module.exports = function(passport) {
                 if (err)
                     return done(err);
                 else if (!rows.length)
-                    return done(null, false, req.flash('loginMessage', 'No such found.')); // req.flash is the way to set flashdata using connect-flash
+                    return done(null, false, req.flash('loginMessage', 'Username does not exist.')); // req.flash is the way to set flashdata using connect-flash
                 else if (!bcrypt.compareSync(password, rows[0].password))
-                    return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                    return done(null, false, req.flash('loginMessage', 'Whoops! Wrong password.')); // create the loginMessage and save it to session as flashdata
                 else
                     return done(null, rows[0]);
             });

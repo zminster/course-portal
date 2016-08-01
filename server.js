@@ -37,9 +37,8 @@ if (process.env.NODE_ENV == 'production') {
 // configuration
 require('./config/passport')(passport);	// passport gets configured
 
-//app.engine('html', engines.hogan);
-//app.set('views', __dirname +'/templates');
-app.set('view engine', 'ejs');
+app.engine('html', engines.hogan);
+app.set('views', __dirname +'/templates');
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
