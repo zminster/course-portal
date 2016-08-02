@@ -1,0 +1,19 @@
+* {
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+body {
+	background-color:#fffcf2;
+}
+
+form > * {
+	display:block;
+	width:100%;
+	box-sizing:border-box;
+	padding:20px;
+}
+
+textarea {
+	height:50%;
+	margin-bottom:20px;
+}

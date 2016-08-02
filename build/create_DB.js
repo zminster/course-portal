@@ -85,8 +85,8 @@ connection.query('\
 CREATE TABLE `' + dbconfig.database + '`.`assignment_meta ` ( \
     `asgn_id` INT UNSIGNED NOT NULL, \
     `class_pd` INT UNSIGNED NOT NULL, \
-    `date_out` DATETIME NOT NULL, \
-    `date_due` DATETIME NOT NULL, \
+    `date_out` DATETIME, \
+    `date_due` DATETIME, \
     `displayed` TINYINT(1), \
     `can_handin` TINYINT(1), \
     `info_changed` TINYINT(1), \
