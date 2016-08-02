@@ -12,6 +12,7 @@ CREATE TABLE course_portal.user (
     `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(20) NOT NULL,
     `password` CHAR(60) NOT NULL,
+    `change_flag` TINYINT(1), -- password reset flag
         PRIMARY KEY (`uid`),
     UNIQUE INDEX `uid_UNIQUE` (`uid` ASC),
     UNIQUE INDEX `username_UNIQUE` (`username` ASC)

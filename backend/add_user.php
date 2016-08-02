@@ -8,15 +8,16 @@
 
 		$students = explode("\n", $_POST['students']);
 
-		$user_insert = $conn->prepare("INSERT INTO user (username, password) VALUES (?, ?)");
+		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag) VALUES (?, ?, 1)");
 		$uid_lookup  = $conn->prepare("SELECT uid FROM user WHERE username = ?");
 		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, name, year, email) VALUES (?, ?, ?, ?)");
-		$membership  = $conn->prepare("INSERT INTO membersip (uid, class_pd)");
+		$membership  = $conn->prepare("INSERT INTO membersip (uid, class_pd) VALUES (?, ?)");
 
 		$user_insert->bind_param("ss", $username, $password);
 		$uid_lookup->bind_param("s", $username);
 		$meta_insert->bind_param("isis", $uid, $name, $year, $email);
 		$membership->bind_param("ii", $uid, $period);
+		?><h1>Period <?php echo($period) ?>Students Added</h1><ul><?php
 
 		foreach ($students as $student) {
 			// USER TABLE FORMAT: USERNAME, NAME, YEAR, EMAIL
@@ -39,6 +40,7 @@
 			$meta_insert->execute();
 			$membership->execute();
 		}
+		?></ul><?php
 	} else {	// display add user screen
 
 	}
