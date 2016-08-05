@@ -9,6 +9,23 @@
 	include 'config/database.php';
 	$method = $_SERVER['REQUEST_METHOD'];
 
+	// generates easy password using random adjective and random animal
+	//	CAUTION: absolutely not secure / dependable in any way
+	function generate_easy_password() {
+
+		$adjectives = file('config/adjectives.list');
+		$animals = file('config/animals.list');
+
+		$rand_adjective = rand(0, count($adjectives));
+		$rand_animal = rand(0, count($animals));
+		
+		$word_one = ucfirst(trim($adjectives[$rand_adjective]));
+		$word_two = ucfirst(trim($animals[$rand_animal]));
+		$concat = $word_one . $word_two;
+
+		return $concat;
+	}
+
 	if ($method == 'POST') {	// POST: admin is adding users
 
 		$period = $_POST['period'];
@@ -30,40 +47,44 @@
 
 		foreach ($students as $student) {
 			$ct++;
-			// USER TABLE FORMAT: USERNAME, NAME, YEAR, EMAIL
 			$data = explode(",", $student);
 
 			if (count($data) != 4)
 				die("MALFORMED STUDENT LINE " + $ct + ": " + $student);
 
+			// extract vars
 			$username = $data[0];
 			$name = $data[1];
 			$year = $data[2];
 			$email = $data[3];
 
-			$password = password_hash("password", PASSWORD_BCRYPT);
+			// generate password
+			$gen_pass = generate_easy_password();
+			$password = password_hash($gen_pass, PASSWORD_BCRYPT);
+			$password[2] = 'a';
 
-			echo("Inserting user.<br>");
+			// insert into auth table
 			$user_insert->execute();
 			echo($user_insert->error); 
 
-			echo("Looking up UID.<br>"); 
+			// find assigned UID
 			$uid_lookup->execute();
 			echo($uid_lookup->error); 
-
 			$uid_lookup->fetch();
 			$uid_lookup->free_result();
-			?>
-			<li><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($password); ?></li>
-			<?php
 
-			echo("Inserting meat.<br>");
+			// insert into user meta
 			$meta_insert->execute();
 			echo($meta_insert->error); 
 
-			echo("Inserting membership.<br>");
+			// insert into membership
 			$membership->execute();
 			echo($membership->error);
+
+			// report result
+			?>
+			<li><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($name); ?>,<?php echo($gen_pass); ?></li>
+			<?php
 		}
 		?></ul><div><a href="add_class.php">Again</a> | 
 		<a href="index.php">Menu</a></div><?php
@@ -90,7 +111,7 @@
 
 		} else{
 			die("<span style=\"color:red;\"><b>
-				You must <a href=\"add_class.php\">add a class</a>.</b></span>");
+				You must <a href=\"add_user.php\">add a class</a>.</b></span>");
 		}?>
 
 		<textarea name="students"></textarea>
