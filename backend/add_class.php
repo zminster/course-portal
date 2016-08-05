@@ -4,9 +4,25 @@
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 </head>
 <body>
-	<h1>Add Class</h1>
+	<h1>Add Class Period</h1>
 	<?php
 	include 'config/database.php';
+
+	$res = $conn->query("SELECT * FROM class");
+
+	if ($res->num_rows > 0) {
+
+		?><div>Existing class periods:</div><ul><?php
+		while ($class_pd = $res->fetch_assoc()) {
+			?><li>
+				<?php echo($class_pd["class_pd"]); ?>
+			</li>
+		<?php } ?>
+		</ul>
+		<?php
+
+	}
+
 	$method = $_SERVER['REQUEST_METHOD'];
 
 	if ($method == 'POST') {	// POST: admin is adding class
@@ -17,8 +33,8 @@
 		$class_insert->bind_param("i", $period);
 		$class_insert->execute();
 
-		?><h2>Class Added :: Period <?php echo($period) ?></h2>
-		<div><a href="add_class.php">Again</a> | <a href="index.php">Menu</a></div><?php
+		?><p style="font-weight:bold">Class Added :: Period <?php echo($period) ?></p>
+		<p><a href="add_class.php">Again</a> | <a href="index.php">Menu</a></p><?php
 
 	} else {	// GET: display add class screen
 

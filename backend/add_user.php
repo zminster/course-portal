@@ -7,24 +7,8 @@
 	<h1>Add User (Batch)</h1>
 	<?php
 	include 'config/database.php';
+	include 'common/password_generator.php';
 	$method = $_SERVER['REQUEST_METHOD'];
-
-	// generates easy password using random adjective and random animal
-	//	CAUTION: absolutely not secure / dependable in any way
-	function generate_easy_password() {
-
-		$adjectives = file('config/adjectives.list');
-		$animals = file('config/animals.list');
-
-		$rand_adjective = rand(0, count($adjectives));
-		$rand_animal = rand(0, count($animals));
-		
-		$word_one = ucfirst(trim($adjectives[$rand_adjective]));
-		$word_two = ucfirst(trim($animals[$rand_animal]));
-		$concat = $word_one . $word_two;
-
-		return $concat;
-	}
 
 	if ($method == 'POST') {	// POST: admin is adding users
 
@@ -86,7 +70,7 @@
 			<li><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($name); ?>,<?php echo($gen_pass); ?></li>
 			<?php
 		}
-		?></ul><div><a href="add_class.php">Again</a> | 
+		?></ul><div><a href="add_user.php">Again</a> | 
 		<a href="index.php">Menu</a></div><?php
 	} else {	// GET: display add user screen
 
@@ -111,7 +95,7 @@
 
 		} else{
 			die("<span style=\"color:red;\"><b>
-				You must <a href=\"add_user.php\">add a class</a>.</b></span>");
+				You must <a href=\"add_class.php\">add a class</a>.</b></span>");
 		}?>
 
 		<textarea name="students"></textarea>
