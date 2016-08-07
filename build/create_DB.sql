@@ -109,6 +109,7 @@ CREATE TABLE course_portal.grades (
     `asgn_id` INT UNSIGNED NOT NULL,
     `nreq` TINYINT(1) NOT NULL,
     `handed_in` TINYINT(1) NOT NULL,
+    `handin_time` DATETIME,
     `late` TINYINT(1) NOT NULL,
     `graded` TINYINT(1) NOT NULL,
     `can_view_feedback` TINYINT(1) NOT NULL,

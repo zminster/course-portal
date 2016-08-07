@@ -41,4 +41,34 @@
 				You must <a href=\"add_asgn_type.php\">add an assignment type</a>.</b></span>");
 		}
 	}
+
+	function get_all_assignments($conn) {
+		$res = $conn->query("SELECT * FROM assignment");
+		$asgns = array();
+
+		if ($res->num_rows > 0) {
+			while ($asgn = $res->fetch_assoc()) {
+				$asgns[$asgn["asgn_id"]] = $asgn;
+			}
+			return $asgns;
+		} else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_asgn.php\">add an assignment</a>.</b></span>");
+		}
+	}
+
+	function get_all_assignment_data($conn, $asgn_id) {
+		$res = $conn->query("SELECT * FROM assignment_meta WHERE asgn_id = ".$asgn_id);
+		$asgns = array();
+
+		if ($res->num_rows > 0) {
+			while ($asgn = $res->fetch_assoc()) {
+				$asgns[$asgn["class_pd"]] = $asgn;
+			}
+			return $asgns;
+		} else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_asgn.php\">add an assignment</a>.</b></span>");
+		}
+	}
 ?>

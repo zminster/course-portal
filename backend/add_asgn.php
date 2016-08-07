@@ -47,7 +47,6 @@
 
 		$meta = $_POST["asgn"];
 		foreach (array_keys($meta) as $class_pd) {
-			var_dump($meta[$class_pd]);
 			$date_out = date("Y-m-d H:i:s", strtotime($meta[$class_pd]["out"]));
 			$date_due = date("Y-m-d H:i:s", strtotime($meta[$class_pd]["due"]));
 			$displayed = array_key_exists("displayed", $meta[$class_pd]) ? 1 : 0;
@@ -67,7 +66,7 @@
 		}
 		?><p style="font-weight:bold">Assignment Added: <?php echo($_POST["name"]); ?></p>
 		<div><a href="add_asgn.php">Again</a> | 
-		<a href="index.php">Menu</a></div><?php */
+		<a href="index.php">Menu</a></div><?php
 	} else {	// GET: display add asgn screen
 
 		?>
