@@ -25,6 +25,7 @@ CREATE TABLE course_portal.user (
 -- 	class(class_pd)
 CREATE TABLE course_portal.class (
     `class_pd` INT UNSIGNED NOT NULL,
+    `amnesty` TINYINT(1),
         PRIMARY KEY (`class_pd`)
 );
 

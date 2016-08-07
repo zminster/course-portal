@@ -29,11 +29,12 @@
 
 		$period = $_POST['period'];
 
-		$class_insert = $conn->prepare("INSERT INTO class (class_pd) VALUES (?)");
+		$class_insert = $conn->prepare("INSERT INTO class (class_pd, amnesty) VALUES (?, 0)");
 		$class_insert->bind_param("i", $period);
 		$class_insert->execute();
+		echo($class_insert->error);
 
-		?><p style="font-weight:bold">Class Added :: Period <?php echo($period) ?></p>
+		?><p style="font-weight:bold">Class Added :: Period <?php echo($period); ?></p>
 		<p><a href="add_class.php">Again</a> | <a href="index.php">Menu</a></p><?php
 
 	} else {	// GET: display add class screen

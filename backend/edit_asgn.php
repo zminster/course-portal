@@ -144,13 +144,13 @@
 						<tr>
 							<th>Period</th>
 							<th>Date Out</th>
-							<th>Date Due</td>
+							<th>Date Due</th>
 							<th>Display on Portal</th>
 							<th>Can Handin</th>
 							<th>Info Changed?</th>
 							<th>Recompute Lates?</th>
-							<th>Update Can View Grades?</th>
-							<th>Can View Grades</th>
+							<th>Update CANVIEW for all?</th>
+							<th>CANVIEW Grades</th>
 						</tr>
 						<?php
 						foreach ($classes as $pd) {

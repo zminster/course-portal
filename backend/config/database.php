@@ -71,4 +71,19 @@
 				You must <a href=\"add_asgn.php\">add an assignment</a>.</b></span>");
 		}
 	}
+
+	function get_all_userinfo($conn) {
+		$res = $conn->query("SELECT user.uid, class_pd, username, name, year, email FROM user INNER JOIN membership ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid ORDER BY class_pd, username");
+		$users = array();
+
+		if ($res->num_rows > 0) {
+			while ($user = $res->fetch_assoc()) {
+				$users[$user["uid"]] = $user;
+			}
+			return $users;
+		}  else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_user.php\">add users</a>.</b></span>");
+		}
+	}
 ?>
