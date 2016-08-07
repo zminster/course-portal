@@ -98,7 +98,7 @@
 				You must <a href=\"add_class.php\">add a class</a>.</b></span>");
 		}?>
 
-		<textarea name="students"></textarea>
+		<textarea id="students" name="students"></textarea>
 		<input type="submit">
 		</form><?php
 	}

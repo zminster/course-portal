@@ -54,6 +54,18 @@ CREATE TABLE course_portal.membership (
    FOREIGN KEY (`class_pd`) REFERENCES class(`class_pd`)
 );
 
+-- assignment type table
+--  stores weights/names of assignment categories
+--  used to calculate students' overall grades
+-- 
+--  assignment(type_id, name, weight)
+CREATE TABLE course_portal.assignment_type (
+    `type_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `weight` FLOAT,
+        PRIMARY KEY (`type_id`)
+);
+
 -- assignment table
 -- 	stores information about each assignment
 -- 	future usage: type corresponds to enum/relation defining asgn types (hw, project, exam, etc)
@@ -62,11 +74,13 @@ CREATE TABLE course_portal.membership (
 CREATE TABLE course_portal.assignment (
     `asgn_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `type` TINYINT UNSIGNED,
-    `pt_value` TINYINT UNSIGNED,
+    `type` INT UNSIGNED NOT NULL,
+    `pt_value` INT UNSIGNED NOT NULL,
     `description` TEXT,
     `url` TEXT,
-        PRIMARY KEY (`asgn_id`)
+        PRIMARY KEY (`asgn_id`),
+    FOREIGN KEY (`type`) REFERENCES assignment_type(`type_id`),
+    UNIQUE INDEX `asgn_name_UNIQUE` (`name`)
 );
 
 -- assignment_meta table
@@ -93,10 +107,11 @@ CREATE TABLE course_portal.assignment_meta (
 CREATE TABLE course_portal.grades (
     `uid` INT UNSIGNED NOT NULL,
     `asgn_id` INT UNSIGNED NOT NULL,
-    `handed_in` TINYINT(1),
-    `late` TINYINT(1),
-    `graded` TINYINT(1),
-    `can_view_feedback` TINYINT(1),
+    `nreq` TINYINT(1) NOT NULL,
+    `handed_in` TINYINT(1) NOT NULL,
+    `late` TINYINT(1) NOT NULL,
+    `graded` TINYINT(1) NOT NULL,
+    `can_view_feedback` TINYINT(1) NOT NULL,
     `score` FLOAT,
     UNIQUE INDEX `ix_perstudent` (`uid`, `asgn_id`),
     FOREIGN KEY (`uid`) REFERENCES user(`uid`),

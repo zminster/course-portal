@@ -1,3 +1,6 @@
+// WARNING: FILE OUT OF DATE
+// RUN .SQL FILE AS MYSQL ROOT USER INSTEAD
+
 var mysql = require('mysql');
 var dbconfig = require('../config/database');
 
