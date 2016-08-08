@@ -2,6 +2,8 @@
 
 var upload 		= require('./upload.js');		/* upload handling for handins */
 var middleware	= require('./middleware.js');	/* login & handin verification */
+var moment		= require('moment');			/* timing handins */
+var conn		= require('./database_ops.js').connection;
 
 /* Routes */
 module.exports = function(app, passport) {
@@ -60,19 +62,40 @@ module.exports = function(app, passport) {
 	  HANDIN FLOW
 	 **************************************/
 	app.get('/handin/:asgn_id', middleware.isLoggedIn, middleware.isLegitHandin, function(req, res) {
+		var late = moment().isAfter(moment(req.date_due)) ? 1 : 0;
 		res.render('handin.html', {
-			asgn_id : req.params.asgn_id
+			asgn_id: req.params.asgn_id,
+			asgn_name: req.asgn_name,
+			late: late
 		});
 	});
 
 	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isLegitHandin, upload, function(req, res) {
 		if (!req.files) {
-			res.render('handin_error.html', {error: 'Files not received!'});
-			return;
+			res.render('handin_error.html', {error: 'I didn\'t receive your files - something went wrong. Try to hand in again.'});
 		} else {
-			res.send("ALL GOOD!\n" + req.files);
-			console.log (req.files);
-			return;
+			// capture due date
+			var now = moment();
+			var time = moment().format('YYYY-MM-DD HH:mm:ss');
+			var late = now.isAfter(moment(req.date_due)) ? 1 : 0;
+			console.log("Handin time: " + time);
+			console.log("Late?: " + late);
+			console.log("Files: " + req.files);
+			// record handin
+			conn.query("UPDATE grades SET handed_in=1, handin_time=?, late=? WHERE uid=? AND asgn_id=?",[time, late, req.user.uid, req.params.asgn_id],
+				function(err, rows) {
+					if (!err) {
+						res.render("handin_success.html", {
+							asgn_id: req.params.asgn_id,
+							asgn_name: req.asgn_name,
+							time: now,
+							late: late,
+							files: req.files
+						});
+					} else {
+						res.render("handin_error.html", {error: "There was an issue recording your handin time in the database."});
+					}
+				});
 		}
 	});
 

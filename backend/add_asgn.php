@@ -66,13 +66,15 @@
 		}
 
 		// assignment filesystem changes
+		$old = umask(0);
 		if (!is_dir("/course/csp/handin/" . $asgn_id)) {
-			if (!mkdir("/course/csp/handin/" . $asgn_id)) {
+			if (!mkdir("/course/csp/handin/" . $asgn_id, 0770)) {
 				echo("<p>ERROR: Could not create assignment handin directory.</p>");
 			}
 		} else {
 			echo("<p>Assignment handin directory already exists??</p>");
 		}
+		umask($old);
 		?><p style="font-weight:bold">Assignment Added: <?php echo($_POST["name"]); ?> (ID #<?php echo($asgn_id); ?>)</p>
 		<div><a href="add_asgn.php">Again</a> | 
 		<a href="index.php">Menu</a></div><?php
