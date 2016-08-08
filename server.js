@@ -11,11 +11,13 @@ var passport	= require('passport');
 var flash		= require('connect-flash');
 var lex			= require('letsencrypt-express').testing();
 var engines		= require('consolidate');
+var multer		= require('multer');
 
 // consts
 var DEV_PORT 	= 8080;
 var DOMAIN		= 'cs.stab.org';
 var EMAIL		= 'zminster@stab.org';
+var upload 		= multer({ dest: 'uploads/' })
 
 var app 		= express();
 if (process.env.NODE_ENV == 'production') {
@@ -56,7 +58,7 @@ app.use(flash());
 app.use(express.static(__dirname + '/public'));
 
 // routing
-require('./app/routes.js')(app, passport);
+require('./app/routes.js')(app, passport, upload);
 
 // production: 80/443/5001 (SSL enabled)
 if (process.env.NODE_ENV == 'production') {

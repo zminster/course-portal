@@ -21,8 +21,10 @@ module.exports = function(passport) {
     });
 
     // used to deserialize the user
+    // we want full set of information, so we do a JOIN query
     passport.deserializeUser(function(uid, done) {
-        connection.query("SELECT * FROM user WHERE uid = ? ",[uid], function(err, rows){
+        connection.query("SELECT user.uid, class_pd, username, password, change_flag, name, year, email FROM user INNER JOIN membership\
+         ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid WHERE user.uid = ?",[uid], function(err, rows){
             done(err, rows[0]);
         });
     });
@@ -37,6 +39,7 @@ module.exports = function(passport) {
         },
         function(req, username, password, done) { // callback with email and password from our form
             connection.query("SELECT * FROM user WHERE username = ?",[username], function(err, rows){
+                // TODO: Force user to change password when change_flag is set
                 if (err)
                     return done(err);
                 else if (!rows.length)
