@@ -1,6 +1,7 @@
 // app/routes.js
 
-var upload = require('./upload.js');	/* Include upload handling for handins */
+var upload 		= require('./upload.js');		/* upload handling for handins */
+var middleware	= require('./middleware.js');	/* login & handin verification */
 
 /* Routes */
 module.exports = function(app, passport) {
@@ -40,7 +41,7 @@ module.exports = function(app, passport) {
 	  PRIVILEGED STATIC PAGES
 	 **************************************/
 	 // isLoggedIn middleware ensures page will not be rendered unless user is logged in
-	app.get('/resources', isLoggedIn, function(req, res) {
+	app.get('/resources', middleware.isLoggedIn, function(req, res) {
 
 
 		res.render('demo.html', {
@@ -58,22 +59,18 @@ module.exports = function(app, passport) {
 	/**************************************
 	  HANDIN FLOW
 	 **************************************/
-	app.get('/handin/:asgn_id', isLoggedIn, function(req, res) {
+	app.get('/handin/:asgn_id', middleware.isLoggedIn, middleware.isLegitHandin, function(req, res) {
 		res.render('handin.html', {
 			asgn_id : req.params.asgn_id
 		});
 	});
 
-	app.post('/handin/:asgn_id', isLoggedIn, isLegitHandin, upload, function(req, res) {
-		var asgn_id = req.params.asgn_id;
-
-		console.log("HERE");
-
+	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isLegitHandin, upload, function(req, res) {
 		if (!req.files) {
-			res.send('Handin not accepted - error.');
+			res.render('handin_error.html', {error: 'Files not received!'});
 			return;
 		} else {
-			res.send("Handin accepted!");
+			res.send("ALL GOOD!\n" + req.files);
 			console.log (req.files);
 			return;
 		}
@@ -87,20 +84,3 @@ module.exports = function(app, passport) {
 		res.redirect('/');
 	});
 };
-
-// middleware: ensures user is logged in
-function isLoggedIn(req, res, next) {
-
-	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
-
-	// if they aren't redirect them to login screen
-	res.redirect('/login');
-}
-
-// TODO: middleware: ensures handin is legit before processing
-function isLegitHandin(req, res, next) {
-	console.log("FUTURE LEGIT CHECK");
-	return next();
-}
