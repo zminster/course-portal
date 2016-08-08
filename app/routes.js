@@ -78,9 +78,6 @@ module.exports = function(app, passport) {
 			var now = moment();
 			var time = moment().format('YYYY-MM-DD HH:mm:ss');
 			var late = now.isAfter(moment(req.date_due)) ? 1 : 0;
-			console.log("Handin time: " + time);
-			console.log("Late?: " + late);
-			console.log("Files: " + req.files);
 			// record handin
 			conn.query("UPDATE grades SET handed_in=1, handin_time=?, late=? WHERE uid=? AND asgn_id=?",[time, late, req.user.uid, req.params.asgn_id],
 				function(err, rows) {
