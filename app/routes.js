@@ -1,5 +1,9 @@
 // app/routes.js
-module.exports = function(app, passport, upload) {
+
+var upload = require('./upload.js');	/* Include upload handling for handins */
+
+/* Routes */
+module.exports = function(app, passport) {
 
 	/**************************************
 	  HOME PAGE (not logged in)
@@ -60,17 +64,17 @@ module.exports = function(app, passport, upload) {
 		});
 	});
 
-	app.post('/handin/:asgn_id', isLoggedIn, isLegitHandin, upload.single('file'), function(req, res) {
+	app.post('/handin/:asgn_id', isLoggedIn, isLegitHandin, upload, function(req, res) {
 		var asgn_id = req.params.asgn_id;
 
 		console.log("HERE");
 
-		if (!req.file) {
-			res.send('No files were uploaded.');
+		if (!req.files) {
+			res.send('Handin not accepted - error.');
 			return;
 		} else {
-			res.send("Files were uploaded!");
-			console.log (req.file);
+			res.send("Handin accepted!");
+			console.log (req.files);
 			return;
 		}
 	});
