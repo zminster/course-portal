@@ -16,6 +16,7 @@ module.exports = {
 	},
 
 	// middleware: ensures handin is legit before processing
+	// TODO: block NREQ from handing in
 	isLegitHandin: function(req, res, next) {
 		var asgn_id = req.params.asgn_id;
 		if (asgn_id) {	// assignment ID specified

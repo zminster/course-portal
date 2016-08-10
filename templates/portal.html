@@ -1,0 +1,13 @@
+{{#categories}}
+	<h1>{{name}}</h1>
+	<p>Weight: {{weight}}%; Average: {{#avg}}{{avg}}{{/avg}}{{^avg}}N/A{{/avg}}</p>
+	{{#assignments}}
+		<h2>{{name}}</h2>
+		{{#handed_in}}
+			{{handin_time}}
+		{{/handed_in}}
+		{{^handed_in}}
+			NTI
+		{{/handed_in}}
+	{{/assignments}}
+{{/categories}}
