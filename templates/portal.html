@@ -1,13 +1,95 @@
-{{#categories}}
-	<h1>{{name}}</h1>
-	<p>Weight: {{weight}}%; Average: {{#avg}}{{avg}}{{/avg}}{{^avg}}N/A{{/avg}}</p>
-	{{#assignments}}
-		<h2>{{name}}</h2>
-		{{#handed_in}}
-			{{handin_time}}
-		{{/handed_in}}
-		{{^handed_in}}
-			NTI
-		{{/handed_in}}
-	{{/assignments}}
-{{/categories}}
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Assignments &amp; Grades :: Adventures in Computer Science</title>
+
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/ribbon.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+</head>
+
+<body>
+	<header>
+		<div id="nav">
+			<ul>
+				<li class="selected"><a href="/portal"><span class="fa fa-graduation-cap"></span>Assignments &amp; Grades</a></li>
+				<li><a href="/lessons"><span class="fa fa-pencil"></span>Lessons</a></li>
+				<li><a href="/resources"><span class="fa fa-question"></span>Help Resources</a></li>
+			</ul>
+		</div>
+		<div id="user">
+			<span id="hello"><span id="greeting">Hello</span>, {{user.username}}!</span>
+		</div>
+	</header>
+
+	<div id="user_flyout">
+		<div class="top">
+			<div id="icon" class="fa fa-user fa-4x"></div>
+			<p class="name">{{user.name}}</p>
+			<p class="sub">{{user.email}}</p>
+			<p class="sub">Period {{user.class_pd}} / Grade {{user.year}}</p>
+		</div>
+		<ul>
+			<li><a href="/password"><span class="fa fa-key"></span> Change Password</a></li>
+			<li><a href="/logout"><span class="fa fa-sign-out"></span> Log Out</a></li>
+		</ul>
+	</div>
+
+
+	<div id="header"><h1>Assignments & Grades</h1></div>
+
+	<div id="page-container">
+		{{#categories}}
+			<h1>{{name}}</h1>
+			<div class="avg">Weight: {{weight}}%; Current Average: {{#avg}}{{avg}}%{{/avg}}{{^avg}}N/A{{/avg}}</div>
+
+			<table>
+				<thead>
+					<th>Title</th>
+					<th>Out</th>
+					<th>Due</th>
+					<th>Turn-In Status</th>
+					<th>On Time?</th>
+					<th>Score/Comments</th>
+				</thead>
+				<tbody>
+					{{#assignments}}
+						<tr {{#due_warn}}class="{{due_warn}}"{{/due_warn}}>
+							<td class="title"><a href="{{url}}">{{name}}</a>{{#description}}<div class="description">{{description}}</div>{{/description}}</td>
+							<td>{{date_out}}</td>
+							<td>{{date_due}}{{#time_left}} <span class="time_left">({{time_left}})</span>{{/time_left}}</td>
+							<td class="title">
+								{{#handin_status}}<span class="{{handin_status}}"></span>{{/handin_status}}
+								{{^handin_status}}<span class="fa fa-times-circle"></span> <div class="turn-in">(<a href="/handin/{{id}}">Turn In</a>)</div>{{/handin_status}}
+								{{#handin_time}}<div class="description">Received {{handin_time}}</div><div class="turn-in">(<a href="/handin/{{id}}">Turn In Again</a>)</div>{{/handin_time}}
+								{{#nreq}}<div class="turn-in">(Not Required)</div>{{/nreq}}
+							</td>
+							<td>
+								{{#late}} <span class="{{late}}"></span> {{/late}}
+							</td>
+							<td class="ribbon-container">
+								{{#changed}}<div class="ribbon-box"><span>Updated!</span></div>{{/changed}}
+								{{#grade_status}}<span class="icon {{grade_status}}"></span>{{/grade_status}}
+								{{^grade_status}}{{score}}{{/grade_status}}
+								/
+								{{pt_value}}
+								{{#feedback}}(<a href="{{feedback}}">View Comments</a>){{/feedback}}
+							</td>
+						</tr>
+					{{/assignments}}
+				</tbody>
+			</table>
+
+		{{/categories}}
+	</div>
+
+	<script src="/js/portal.js"></script>
+	<script src="/js/global.js"></script>
+
+</body>
+</html>

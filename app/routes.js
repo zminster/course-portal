@@ -64,6 +64,7 @@ module.exports = function(app, passport) {
 	app.get('/portal', middleware.isLoggedIn, function(req, res) {
 		// prepare massive datagram for delivery to portal renderer
 		var d = {};
+		d['user'] = req.user;
 		// q1: get all assignment cats
 		var q1 = function(cb) {
 			conn.query("SELECT * FROM assignment_type", cb);
@@ -99,7 +100,7 @@ module.exports = function(app, passport) {
 					if (!err) {
 						for (var i = 0; i < averages.length; i++) {
 							var smooth_avg = Math.round(averages[i].avg * 1000) / 10;	// avg to one decimal place
-							types[averages[i].type_id].avg = averages[i].avg;
+							types[averages[i].type_id].avg = smooth_avg;
 						}
 					}
 
@@ -189,7 +190,7 @@ function construct_assignment(row) {
 
 	var date_out 	= moment(row['date_out']);
 	var date_due 	= moment(row['date_due']);
-	var days_before = date_due.subtract(2, 'days');
+	var days_before = date_due.clone().subtract(2, 'days');
 	var now 		= moment();
 
 	// basic meta
@@ -217,30 +218,32 @@ function construct_assignment(row) {
 
 	// handin status (symbol class) & time if applicable
 	if (!row['can_handin'] || row['nreq'])
-		asgn['handin_status'] = 'locked';
+		asgn['handin_status'] = 'fa fa-lock';
 	else if (row['handed_in']) {
-		asgn['handin_status'] = 'handed_in';
+		asgn['handin_status'] = 'fa fa-check-circle';
 		var handin_time = moment(row['handin_time']).format('llll');
 		asgn['handin_time'] = handin_time;
 	}
 
 	// late (symbol class for late column)
-	if (row['late'] && row['handed_in'])
-		asgn['late'] = 'late';
-	else if (!row['late'] && row['handed_in'])
-		asgn['late'] = 'ontime';
+	if (!row['nreq'] && row['late'] && row['handed_in'])
+		asgn['late'] = 'fa fa-times-circle';
+	else if (!row['nreq'] && !row['late'] && row['handed_in'])
+		asgn['late'] = 'fa fa-check-circle';
 
 	// grade status
-	if (row['nreq'] || !row['handed_in'])
-		asgn['grade_status'] = 'na';		// question mark
+	if (row['nreq'])
+		asgn['grade_status'] = 'fa fa-ban';		// ban symbol
+	else if (!row['handed_in'])
+		asgn['grade_status'] = 'fa fa-question-circle';		// question mark
 	else if (!row['graded'])
-		asgn['grade_status'] = 'pending';	// hourglass
-	else 
+		asgn['grade_status'] = 'fa fa-cog fa-spin';	// spinning cog
+	else
 		asgn['score'] = row['score'];		// show score instead of symbol
 
 	asgn['pt_value'] = row['pt_value'];
 
-	if (row['can_view_feedback'])
+	if (row['graded'] && row['can_view_feedback'])
 		asgn['feedback'] = '/feedback/' + row['asgn_id'];
 
 	return asgn;

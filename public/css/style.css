@@ -10,10 +10,257 @@ html, body {
 	background-position:center center;
 	min-width:500px;
 
-
-
-    font-family: 'Reem Kufi', sans-serif;
+	font-family: 'Reem Kufi', sans-serif;
 }
+
+h1, h2, h3, h4, h5, h6, #login_container {
+
+}
+
+a, a:hover, a:visited {
+	color: #3c9dbe;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a, a:visited{
+	text-decoration: none;
+}
+
+/* HEADER / HEADING */
+
+header {
+	height:50px;
+	width:100%;
+	background-color:#333;
+	color:#fff;
+	font-family: "Helvetica", sans-serif;
+	font-size:15px;
+	box-shadow: 0 0 10px #000;
+}
+
+header .selected {
+	background:#aaa;
+}
+
+header * {
+	display:inline-block;
+	height:100%;
+	line-height: 50px;
+}
+
+header ul>li {
+	display:inline-block;
+	height:100%;
+}
+
+header a, header a:visited, header a:hover {
+	display:block;
+	color:#fff;
+}
+
+header a, #hello {
+	padding: 0 20px;
+}
+
+header ul>li a:hover {
+	background-color:#888;
+	text-decoration: none;
+}
+
+#nav span {
+	padding-right:7px;
+}
+
+#user {
+	float:right;
+	cursor:pointer;
+}
+
+#user:hover {
+	background-color:#888;
+}
+
+#header {
+	background-image: url('../assets/portal.png');
+	background-position: right bottom;
+	background-size:contain;
+	background-repeat:no-repeat;
+	height:200px;
+	max-width:85%;
+	margin:auto;
+	color:#fff;
+	position:relative;
+}
+
+#header>h1 {
+	font-size:5.5vw;
+	position:absolute;
+	bottom:1vh;
+	left:1vw;
+	text-shadow: 0 0 10px #333;
+}
+
+#user_flyout {
+	display:none;
+	font-family: "Helvetica", sans-serif;
+	background:#fff;
+	min-width:280px;
+	position:absolute;
+	top:50px;
+	right:0;
+	z-index:2;
+	border:1px solid #888;
+}
+
+#user_flyout .top {
+	padding:10px;
+}
+
+#user_flyout .name {
+	font-weight:bold;
+}
+
+#user_flyout .sub {
+	color:#aaa;
+	font-size:13px;
+}
+
+#user_flyout #icon {
+	float:left;
+	padding:0 15px 0 5px;
+	color:#aaa;
+}
+
+#user_flyout ul {
+	width: 100%;
+	display:block;
+	clear:both;
+	list-style-type: none;
+}
+
+#user_flyout ul li {
+	height:40px;
+	line-height:30px;
+}
+
+#user_flyout ul li a {
+	display:block;
+	padding:2.5px 15px;
+}
+
+#user_flyout ul li a:hover {
+	text-decoration: none;
+}
+
+#user_flyout ul li a span {
+	padding-right: 6px;
+}
+
+#user_flyout ul li:hover {
+	background:#eee;
+}
+
+/* PORTAL */
+
+
+
+#page-container h1 {
+	border-bottom:4px dashed #333;
+}
+
+#page-container h1:not(:first-child) {
+	margin-top:30px;
+}
+
+#page-container .avg {
+	margin: 4px 0;
+}
+
+#page-container{
+	margin:auto;
+	max-width:85%;
+	min-width:900px;
+	background:#fff;
+	padding:20px;
+
+	box-shadow: 0 0 20px #000;
+}
+
+.fa-check-circle {
+	color:green;
+}
+
+.fa-times-circle {
+	color: crimson;
+}
+
+td:nth-child(5), td:nth-child(4) {
+	text-align:center;
+}
+
+.turn-in {
+	font-size:13px;
+	margin-top:-5px;
+}
+
+table {
+	width:100%;
+	border-collapse: collapse;
+	box-shadow: 0 0 5px #e0e0e0;
+}
+
+th, td {
+	border: 1px solid #fff;
+}
+
+thead {
+	background-color:#ffd100;
+}
+
+tbody tr {
+	height:50px;
+	background-color:#f8f8f8;
+}
+
+tbody tr:nth-child(2n) {
+	background-color:#ececec;
+}
+
+tbody td {
+	padding:0 5px;
+}
+
+.today {
+	background-color:#ffffe0 !important;
+}
+
+.overdue {
+	color: crimson;
+	background-color: #ffe5e5 !important;
+}
+
+.time_left {
+	font-weight:bold;
+}
+
+.description {
+	display:none;
+	position:absolute;
+	color: #9f6000;
+	background-color: #feefb3;
+	border:1px solid #9f6000;
+	padding:2px;
+	z-index: 2;
+}
+
+.avg {
+	float:right;
+}
+
+/* LOGIN */
 
 #login-container {
 	position:absolute;
