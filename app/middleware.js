@@ -3,16 +3,32 @@
 var conn 				= require('./database_ops').connection;
 var err_can_handin 		= "Students in your class period aren't allowed to hand in this assignment right now.";
 var err_invalid_handin	= "That's not a valid assignment.";
+var db_error 			= "There was a fatal database error.";
 
 module.exports = {
 	// middleware: ensures user is logged in
 	isLoggedIn: function(req, res, next) {
-		// if user is authenticated in the session, carry on
+		// if user is authenticated in the session
 		if (req.isAuthenticated())
 			return next();
 
 		// if they aren't redirect them to login screen
 		res.redirect('/login');
+	},
+
+	isPasswordFresh: function(req, res, next) {
+				// ensure password does not need to be changed
+		conn.query("SELECT change_flag FROM user WHERE uid = ?", [req.user.uid],
+			function(err, reset) {
+				if (!err) {
+					if (reset[0].change_flag == 1)
+						res.redirect('/password');
+					else
+						return next();
+				} else {
+					res.render("handin_error.html", {error: db_error});
+				}
+		});
 	},
 
 	// middleware: ensures handin is legit before processing

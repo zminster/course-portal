@@ -4,6 +4,8 @@ var upload 		= require('./upload.js');		/* upload handling for handins */
 var middleware	= require('./middleware.js');	/* login & handin verification */
 var moment		= require('moment');			/* timing handins */
 var conn		= require('./database_ops.js').connection;
+var bcrypt 		= require('bcrypt-nodejs');		/* changing passwords */
+
 
 /* Routes */
 module.exports = function(app, passport) {
@@ -39,6 +41,20 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
+    // allow password changes
+    app.get('/password', middleware.isLoggedIn, function(req, res) {
+    	res.render("password.html", {
+    		user: req.user
+    	});
+    });
+
+    app.post('/password', middleware.isLoggedIn, function(req, res) {
+    	var pass = bcrypt.hashSync(req.body.password);
+    	conn.query("UPDATE user SET password=?, change_flag=0 WHERE uid=?", [pass, req.user.uid], function(err, e) {
+    		res.redirect('/login');
+    	});
+    });
+
 	/**************************************
 	  PRIVILEGED STATIC PAGES
 	 **************************************/
@@ -61,7 +77,7 @@ module.exports = function(app, passport) {
 	/**************************************
 	  ASSIGNMENTS & GRADES PORTAL
 	 **************************************/
-	app.get('/portal', middleware.isLoggedIn, function(req, res) {
+	app.get('/portal', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
 		// prepare massive datagram for delivery to portal renderer
 		var d = {};
 		d['user'] = req.user;
