@@ -39,7 +39,6 @@ module.exports = function(passport) {
         },
         function(req, username, password, done) { // callback with email and password from our form
             connection.query("SELECT * FROM user WHERE username = ?",[username], function(err, rows){
-                // TODO: Force user to change password when change_flag is set
                 if (err)
                     return done(err);
                 else if (!rows.length)

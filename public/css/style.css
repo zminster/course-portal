@@ -273,6 +273,21 @@ tbody td {
 	max-width:900px;*/
 }
 
+#login-container #message {
+	margin-bottom:20px;
+	border:1px solid #9f6000;
+	padding:2px;
+	text-align:left;
+	font-family: "Helvetica", sans-serif;
+	font-size:13px;
+	line-height:20px;
+	font-weight:bold;
+	text-transform: none;
+	padding:10px;
+	color:crimson;
+	background-color:#ffe5e5;
+}
+
 .fullscreen-box {
 	width:90%;
 	height:60%;
@@ -291,6 +306,7 @@ tbody td {
 #login>div {
 	background:#fff;
 	padding:20px;
+	box-shadow: 0 0 20px #000;
 }
 
 #jake {
@@ -305,6 +321,8 @@ tbody td {
 	background-repeat:no-repeat;
 	background-position:center top;
 	margin:auto;
+	z-index: 2;
+	position:relative;
 }
 
 form input {
@@ -320,7 +338,7 @@ form input {
     box-sizing: border-box;
 }
 
-button {
+.submit {
 	display:block;
     font-family: 'Reem Kufi', sans-serif;
     padding:15px;
@@ -333,4 +351,67 @@ button {
     box-sizing: border-box;
     border:0;
     cursor:pointer;
+}
+
+.login-helper-box {
+	border:1px solid #9f6000;
+	padding:2px;
+	z-index: 2;
+	text-align:left;
+	font-family: "Helvetica", sans-serif;
+	font-size:13px;
+	line-height:20px;
+	text-transform: none;
+	padding:10px;
+	
+	display: none;
+	width:300px;
+}
+
+#tips {
+	position:absolute;
+	left:0;
+	bottom:60px;
+
+	color: #9f6000;
+	background-color: #feefb3;
+}
+
+#tips ul {
+	list-style-type: none;
+	margin:0;
+	padding-left:24px;
+}
+
+#tips li:before {
+	content: "\f00c"; /* FontAwesome Unicode */
+	font-family: FontAwesome;
+	display: inline-block;
+	margin-left: -1.3em; /* same as padding-left set on li */
+	width: 1.3em; /* same as padding-left set on li */
+}
+
+#tips.error {
+	color:crimson;
+	background-color:#ffe5e5;
+	font-weight: bold;
+}
+
+input.error{
+	background-color:#ffe5e5;
+	color:crimson;
+}
+
+#match {
+	position:absolute;
+	left:0;
+	top:60px;
+
+	color:crimson;
+	background-color:#ffe5e5;
+	font-weight:bold;
+}
+
+#match.error{
+	display:block;
 }

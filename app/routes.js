@@ -41,38 +41,62 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    // allow password changes
+    // show password change form
     app.get('/password', middleware.isLoggedIn, function(req, res) {
     	res.render("password.html", {
-    		user: req.user
+    		user: req.user,
+    		message: req.flash('resetMessage')
     	});
     });
 
+    // process password change form
     app.post('/password', middleware.isLoggedIn, function(req, res) {
-    	var pass = bcrypt.hashSync(req.body.password);
-    	conn.query("UPDATE user SET password=?, change_flag=0 WHERE uid=?", [pass, req.user.uid], function(err, e) {
-    		res.redirect('/login');
-    	});
+    	// error checks
+    	if (req.body.new_password != req.body.new_password_repeat) {
+    		req.flash('resetMessage', 'Passwords did not match.');
+    		res.redirect('/password'); return;
+    	} else if (!checkPassword(req.body.new_password)) {
+    		req.flash('resetMessage', 'Passwords must have one capital letter, one lowercase letter, and one number.');
+    		res.redirect('/password'); return;
+    	} else {	// verify current password first
+            conn.query("SELECT password FROM user WHERE username = ?",[req.user.username], function(err, rows){
+            	if (!bcrypt.compareSync(req.body.current_password, rows[0].password)){
+            		req.flash('resetMessage', 'Incorrect current password.');
+            		res.redirect('/password'); return;
+            	} else {
+					conn.query("UPDATE user SET password=?, change_flag=0 WHERE uid=?", [bcrypt.hashSync(req.body.new_password), req.user.uid],
+						function(err, e) {
+							req.logout();
+							req.flash('loginMessage', 'Password changed! Log in again with your new password.');
+							res.redirect('/login');
+						});
+				}
+    		});
+        }
     });
 
 	/**************************************
 	  PRIVILEGED STATIC PAGES
 	 **************************************/
-	 // isLoggedIn middleware ensures page will not be rendered unless user is logged in
-	app.get('/resources', middleware.isLoggedIn, function(req, res) {
-
-
+	app.get('/resources', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
+		//TODO: Resources page
 		res.render('demo.html', {
 			user : req.user.name // get the user out of session and pass to template
 		});
 	});
 
-	app.get('/feedback/:asgn_id', middleware.isLoggedIn, function(req, res) {
-		// TODO: middleware for legit comment pull
-		// TODO: comment display
+	app.get('/lessons', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
+		// TODO: Lessons page
+		res.render('demo.html', {
+			user : req.user.name // get the user out of session and pass to template
+		});
 	});
 
-	// TODO: Any other static pages
+	app.get('/feedback/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
+		// TODO: middleware for legit comment pull
+		// TODO: comment display
+		res.end("TODO");
+	});
 
 	/**************************************
 	  ASSIGNMENTS & GRADES PORTAL
@@ -157,7 +181,7 @@ module.exports = function(app, passport) {
 	/**************************************
 	  HANDIN FLOW
 	 **************************************/
-	app.get('/handin/:asgn_id', middleware.isLoggedIn, middleware.isLegitHandin, function(req, res) {
+	app.get('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, function(req, res) {
 		var late = moment().isAfter(moment(req.date_due)) ? 1 : 0;
 		res.render('handin.html', {
 			asgn_id: req.params.asgn_id,
@@ -166,7 +190,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isLegitHandin, upload, function(req, res) {
+	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, upload, function(req, res) {
 		if (!req.files) {
 			res.render('handin_error.html', {error: 'I didn\'t receive your files - something went wrong. Try to hand in again.'});
 		} else {
@@ -263,4 +287,12 @@ function construct_assignment(row) {
 		asgn['feedback'] = '/feedback/' + row['asgn_id'];
 
 	return asgn;
+}
+
+function checkPassword(str)
+{
+	// at least one number, one lowercase and one uppercase letter
+	// at least six characters that are letters, numbers or the underscore
+	var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{6,}$/;
+	return re.test(str);
 }

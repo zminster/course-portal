@@ -15,10 +15,10 @@
 			<div id="login" class="fullscreen-box">
 				<div>
 					<form method="post" action="/login">
-						<div id="message">{{message}}</div>
-						<input type="text" name="username" placeholder="Username">
-						<input type="password" name="password" placeholder="Password">
-						<input type="submit" />
+						{{#message}}<div id="message">{{message}}</div>{{/message}}
+						<input type="text" name="username" placeholder="Username" />
+						<input type="password" name="password" placeholder="Password" />
+						<input class="submit" type="submit" value="Log In" />
 					</form>
 				</div>
 			</div>

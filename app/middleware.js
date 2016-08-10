@@ -16,13 +16,16 @@ module.exports = {
 		res.redirect('/login');
 	},
 
+	// middleware: ensures password change if change_flag is set
 	isPasswordFresh: function(req, res, next) {
 				// ensure password does not need to be changed
 		conn.query("SELECT change_flag FROM user WHERE uid = ?", [req.user.uid],
 			function(err, reset) {
 				if (!err) {
-					if (reset[0].change_flag == 1)
+					if (reset[0].change_flag == 1) {
+						req.flash('resetMessage', 'Welcome! You must choose a new password now.')
 						res.redirect('/password');
+					}
 					else
 						return next();
 				} else {
