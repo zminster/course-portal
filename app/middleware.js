@@ -4,6 +4,8 @@ var conn 				= require('./database_ops').connection;
 var err_can_handin 		= "Students in your class period aren't allowed to hand in this assignment right now.";
 var err_invalid_handin	= "That's not a valid assignment.";
 var db_error 			= "There was a fatal database error.";
+var handinDir 			= '/course/csp/handin/';
+var fs 					= 
 
 module.exports = {
 	// middleware: ensures user is logged in
@@ -62,6 +64,22 @@ module.exports = {
 		} else {
 			res.render("handin_error.html", {error: err_invalid_handin});
 			return;
+		}
+	},
+
+	// middleware: ensures feedback is visible before exposing
+	isLegitFeedback: function(req, res, next) {
+		var asgn_id = req.params.asgn_id;
+		if (asgn_id) {	// assignment ID specified
+			// query for valid assignment ID & visibility
+			conn.query("SELECT graded, can_view_feedback FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
+				if (!err && rows.length > 0 && rows[0].can_view_feedback == 1 && rows[0].graded == 1) {
+					return next();
+				} else {
+					res.render('feedback.html', {user: req.user, error: 'Feedback is not available for you on that assignment.'});
+					return;
+				}
+			});
 		}
 	}
 }

@@ -273,7 +273,7 @@ tbody td {
 	max-width:900px;*/
 }
 
-#login-container #message {
+#message {
 	margin-bottom:20px;
 	border:1px solid #9f6000;
 	padding:2px;
@@ -414,4 +414,43 @@ input.error{
 
 #match.error{
 	display:block;
+}
+
+/* REPORT PAGE */
+
+pre {
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+pre#data {
+	padding:15px;
+	background-color:#333;
+	color:#fff;
+	border:3px dashed #aaa;
+}
+
+#big-back {
+	display:block;
+    padding:15px;
+    width:100%;
+    background:#ffd100;
+    text-align:center;
+    color:#111;
+    font-size:20px;
+    box-sizing: border-box;
+}
+
+#big-back.top {
+    margin-bottom:30px;
+}
+
+#big-back.bottom {
+    margin-top:30px;
+}
+
+#big-back:hover {
+	text-decoration: none;
 }

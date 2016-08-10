@@ -5,6 +5,9 @@ var middleware	= require('./middleware.js');	/* login & handin verification */
 var moment		= require('moment');			/* timing handins */
 var conn		= require('./database_ops.js').connection;
 var bcrypt 		= require('bcrypt-nodejs');		/* changing passwords */
+var fs 			= require('fs');
+
+var handinDir 	= '/course/csp/handin/'; 		/* If changing, also change in upload.js */
 
 
 /* Routes */
@@ -92,10 +95,24 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.get('/feedback/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
-		// TODO: middleware for legit comment pull
-		// TODO: comment display
-		res.end("TODO");
+	app.get('/feedback/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitFeedback, function(req, res) {
+		// find feedback in filesystem
+		var file_path = handinDir + req.params.asgn_id + '/' + req.user.username + '/grade_comments.txt';
+		fs.stat(file_path, function(err, stat) {
+			if (!err) {
+				fs.readFile(file_path, function(err, data) {
+					if(!err) {
+						res.render('feedback.html', {user: req.user, data: data});
+					} else {
+						res.render('feedback.html', {user: req.user, error: 'Feedback should be available, but I\'m having trouble opening the file on my end.\
+					You should email Mr. Minster about this.'});
+					}
+				});
+			} else {
+				res.render('feedback.html', {user: req.user, error: 'Feedback should be available, but I\'m having trouble finding it on my end.\
+					You should email Mr. Minster about this.'});
+			}
+		});
 	});
 
 	/**************************************
