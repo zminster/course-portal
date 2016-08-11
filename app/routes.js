@@ -212,6 +212,7 @@ module.exports = function(app, passport) {
 	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, function(req, res) {
 		upload(req, res, function(err) {
 			if (err) {
+				console.log("ERR: " + err)
 				if (!req.body.collab)
 					req.flash('handinMessage', 'You must agree to the Collaboration Statement.');
 				else

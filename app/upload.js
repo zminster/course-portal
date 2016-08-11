@@ -12,6 +12,8 @@ var exec 		= require('child_process').exec;
 var storage = multer.diskStorage({
 	// send uploads to correct handin dir thorugh multer
 	destination: function (req, file, callback) {
+		console.log(req.body);
+		console.log(req.body);
 		if (!req.body.collab) {
 			callback("NOCOLLABERR", null);
 		}

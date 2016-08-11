@@ -1,8 +1,3 @@
-$(function() {
-	// hack to accommodate backend sequential parse shenanigans
-	$("#handin").insertBefore($("#collab-statement"));
-});
-
 $("#collab").change(function(e) {
 	if ($("#collab").prop("checked")) {
 		$("#submit").prop("disabled", false);
