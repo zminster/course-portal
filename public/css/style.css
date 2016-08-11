@@ -17,6 +17,10 @@ h1, h2, h3, h4, h5, h6, #login_container {
 
 }
 
+em {
+	font-weight:bold;
+}
+
 a, a:hover, a:visited {
 	color: #3c9dbe;
 }
@@ -453,4 +457,58 @@ pre#data {
 
 #big-back:hover {
 	text-decoration: none;
+}
+
+/* HANDIN */
+form #collab-statement {
+	line-height:30px;
+    background:#ececec;
+    color:#111;
+    width:100%;
+    margin-bottom:20px;
+    padding:15px;
+}
+
+#collab-statement input, 
+#collab-statement label {
+	display:inline-block;
+	vertical-align: middle;
+}
+
+#collab-statement input {
+	width:5%;
+	padding:0 15px;
+	height:100%;
+	margin:0;
+}
+
+#collab-statement label {
+	width:95%;
+	margin:0;
+}
+
+#instructions h1, #instructions h2, #instructions h3 {
+	margin:10px 0;
+}
+
+#instructions h1 + div, #instructions h2 + div, #instructions h3 + div {
+	padding-left: 20px;
+	font-family: "Helvetica", sans-serif;
+}
+
+#instructions ul, ol {
+	padding-left:25px;
+}
+#instructions p{
+	margin:10px 0;
+}
+
+form#f_handin>input:nth-child(1) {
+	margin-top:40px;
+}
+
+#submit.disabled {
+	background-color:#ececec;
+	cursor:default;
+	color:#ccc;
 }

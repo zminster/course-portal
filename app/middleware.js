@@ -47,23 +47,22 @@ module.exports = {
 					req.asgn_name = rows[0].name;
 					conn.query("SELECT can_handin, date_due FROM assignment_meta WHERE asgn_id = ? AND class_pd = ?",[asgn_id, req.user.class_pd],
 						function(err, rows){
-							console.log(rows);
 							if (!err && rows.length > 0 && rows[0].can_handin == 1) {
 								req.date_due = rows[0].date_due;
 								return next();
 							} else {
-								res.render("handin_error.html", {error: err_can_handin});
-								return;
+								req.flash('handinMessage', err_can_handin);
+								res.redirect('/handin/' + req.params.asgn_id);
 							}
 						});
 				} else {
-					res.render("handin_error.html", {error: err_invalid_handin});
-					return;
+					req.flash('handinMessage', err_invalid_handin);
+					res.redirect('/handin/' + req.params.asgn_id);
 				}
 			});
 		} else {
-			res.render("handin_error.html", {error: err_invalid_handin});
-			return;
+			req.flash('handinMessage', err_invalid_handin);
+			res.redirect('/handin/' + req.params.asgn_id);
 		}
 	},
 

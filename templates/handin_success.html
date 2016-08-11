@@ -1,4 +1,80 @@
-<h1>Reciept for {{asgn_name}}</h1>
-<p>Late? {{late}}</p>
-<p>Time: {{time}}</p>
-<p>Files: {{files}}</p>
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Turn In Assignment :: Adventures in Computer Science</title>
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/ribbon.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+
+</head>
+
+<body>
+	<header>
+		<div id="nav">
+			<ul>
+				<li class="selected"><a href="/portal"><span class="fa fa-graduation-cap"></span>Assignments &amp; Grades</a></li>
+				<li><a href="/lessons"><span class="fa fa-pencil"></span>Lessons</a></li>
+				<li><a href="/resources"><span class="fa fa-question"></span>Help Resources</a></li>
+			</ul>
+		</div>
+		<div id="user">
+			<span id="hello"><span id="greeting">Hello</span>, {{user.username}}!</span>
+		</div>
+	</header>
+
+	<div id="user_flyout">
+		<div class="top">
+			<div id="icon" class="fa fa-user fa-4x"></div>
+			<p class="name">{{user.name}}</p>
+			<p class="sub">{{user.email}}</p>
+			<p class="sub">Period {{user.class_pd}} / Grade {{user.year}}</p>
+		</div>
+		<ul>
+			<li><a href="/password"><span class="fa fa-key"></span> Change Password</a></li>
+			<li><a href="/logout"><span class="fa fa-sign-out"></span> Log Out</a></li>
+		</ul>
+	</div>
+
+
+	<div id="header"><h1>Receipt</h1></div>
+
+	<div id="page-container">
+
+		<h1>Receipt for {{asgn_name}}</h1>
+			<table>
+				<tr>
+					<td>On Time?</td>
+					<td>{{#late}}<span class="fa fa-times-circle"></span> {{late}} day(s) late (rounded up){{/late}}{{^late}}<span class="fa fa-check-circle"></span>{{/late}}</td>
+				</tr>
+
+				<tr>
+					<td>Timestamp</td>
+					<td>{{time}}</td>
+				</tr>
+
+				<tr>
+					<td>Files Received:</td>
+					<td>
+						<ol>
+						{{#files}}
+							<li>{{filename}}</li>
+						{{/files}}
+						</ol>
+					</td>
+				</tr>
+			</table>
+
+			<a id="big-back" class="bottom" href="/portal"><span class="fa fa-arrow-circle-left"></span> Back to Assignments &amp; Grades</a>
+
+	</div>
+
+	<script src="/js/global.js"></script>
+
+</body>
+</html>

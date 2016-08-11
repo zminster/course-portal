@@ -1,4 +1,107 @@
-<form action="/handin/{{asgn_id}}" enctype="multipart/form-data" method="post">
-	<input type="file" id="handin" name="handin" multiple>
-	<input type="submit">
-</form>
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Turn In Assignment :: Adventures in Computer Science</title>
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/ribbon.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+
+</head>
+
+<body>
+	<header>
+		<div id="nav">
+			<ul>
+				<li class="selected"><a href="/portal"><span class="fa fa-graduation-cap"></span>Assignments &amp; Grades</a></li>
+				<li><a href="/lessons"><span class="fa fa-pencil"></span>Lessons</a></li>
+				<li><a href="/resources"><span class="fa fa-question"></span>Help Resources</a></li>
+			</ul>
+		</div>
+		<div id="user">
+			<span id="hello"><span id="greeting">Hello</span>, {{user.username}}!</span>
+		</div>
+	</header>
+
+	<div id="user_flyout">
+		<div class="top">
+			<div id="icon" class="fa fa-user fa-4x"></div>
+			<p class="name">{{user.name}}</p>
+			<p class="sub">{{user.email}}</p>
+			<p class="sub">Period {{user.class_pd}} / Grade {{user.year}}</p>
+		</div>
+		<ul>
+			<li><a href="/password"><span class="fa fa-key"></span> Change Password</a></li>
+			<li><a href="/logout"><span class="fa fa-sign-out"></span> Log Out</a></li>
+		</ul>
+	</div>
+
+
+	<div id="header"><h1>Turn In {{asgn_name}}</h1></div>
+
+	<div id="page-container">
+		{{#message}}<div id="message">{{message}}</div>{{/message}}
+
+		<div id="instructions">
+			<h1>Instructions:</h1>
+			<div>
+				<h2>General Instructions</h2>
+				<div>
+					<ol>
+						<li>Identify and locate the files you need to turn in for this assignment. If in doubt, read the assignment's "Handing In" section for an explanation.</li>
+						<li>Click the Browse button and select all the files you need to turn in. Hold down the SHIFT key while clicking on files to select multiple files.</li>
+						<li>Verify you have included all information (including README.txt if necessary), agree to the Collaboration Statement, and then press submit. <em>Make sure the receipt on the next page lists all the files you needed to turn in.</em></li>
+					</ol>
+				</div>
+
+				<h2>File Formats</h2>
+				<div>
+					<ul>
+						<li>Written assignments must be turned in as text files or PDFs; <em>do NOT hand in Word / Pages documents</em>.</li>
+						<li>Programming assignments should include any files necessary to run your program as well as a text file named README.txt (see below).</li> 
+					</ul>
+				</div>
+
+				<h2>README.txt</h2>
+				<div>
+					<p>Every programming assignment requires a README.txt; written assignments do not <em>unless you collaborated with someone</em>. A README.txt should include:</p>
+					<ul>
+						<li>A list of the students/groups with whom you collaborated in any way on this assignment (<em>Be honest!</em> Failure to disclose this information is a violation of the Collaboration Policy.)</li>
+						<li>Any extra information mentioned in the assignment (check the "Handing In" section for a list).</li>
+						<li>(If code:) A description of any possible bugs or problems with your program (rest assured, you will lose fewer points for documented bugs than undocumented ones).</li>
+						<li>(If code:) Any special instructions required to run your project.</li>
+						<li>(If code:) A description of any extra features you chose to implement.</li>
+					</ul>
+				</div>
+
+				<h2>Upload Limits:</h2>
+				<div>
+					<ul>
+						<li>No more than 10MB total for any assignment.</li>
+						<li>No more than 100 individual files per assignment.</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<form action="/handin/{{asgn_id}}" enctype="multipart/form-data" method="post" id="f_handin">
+			<input type="hidden" name="post" value="1" />
+			<input type="file" id="handin" name="handin" multiple>
+			<div id="collab-statement">
+				
+			<input type="checkbox" id="collab" name="collab" /><label for="collab">I have followed the course Collaboration Policy; have not copied any of my work; and have included the names of students with whom I collaborated in my README.txt file.</label>
+			</div>
+			<input id="submit" class="submit disabled" type="submit" value="Turn In Now" disabled>
+		</form>
+	</div>
+
+	<script src="/js/handin.js"></script>
+	<script src="/js/global.js"></script>
+
+</body>
+</html>
