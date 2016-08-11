@@ -212,13 +212,13 @@ module.exports = function(app, passport) {
 	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, function(req, res) {
 		upload(req, res, function(err) {
 			if (err) {
-				req.flash('handinMessage', 'Files provided exceed upload limits. Please reduce the size or turn in an archive.');
+				if (!req.body.collab)
+					req.flash('handinMessage', 'You must agree to the Collaboration Statement.');
+				else
+					req.flash('handinMessage', 'Files provided exceed upload limits. Please reduce the size or turn in an archive.');
 				res.redirect('/handin/' + req.params.asgn_id);
 			} else if (!req.files || req.files.length == 0) {
 				req.flash('handinMessage', 'I didn\'t receive your files - something went wrong. Try to hand in again.');
-				res.redirect('/handin/' + req.params.asgn_id);
-			} else if (!req.body.collab) {
-				req.flash('handinMessage', 'You must agree to the Collaboration Statement.');
 				res.redirect('/handin/' + req.params.asgn_id);
 			} else {
 				// capture due date

@@ -12,18 +12,23 @@ var exec 		= require('child_process').exec;
 var storage = multer.diskStorage({
 	// send uploads to correct handin dir thorugh multer
 	destination: function (req, file, callback) {
-		var handin_path = handinDir + req.params.asgn_id + '/' + req.user.username;
-		mkdirp(handin_path, {mode: 0770}, function(err, made) {
-			if (!err) {	// delete any existing files
-				exec('rm -rf ' + handin_path + '/*', function (err, stdout, stderr) {
-					if (!err)
-						callback(null, handin_path);
-					else
-						callback(err, null);
-					});
-			} else
-				callback(err, null);
-		});
+		if (!req.body.collab) {
+			callback("NOCOLLABERR", null);
+		}
+		else {
+			var handin_path = handinDir + req.params.asgn_id + '/' + req.user.username;
+			mkdirp(handin_path, {mode: 0770}, function(err, made) {
+				if (!err) {	// delete any existing files
+					exec('rm -rf ' + handin_path + '/*', function (err, stdout, stderr) {
+						if (!err)
+							callback(null, handin_path);
+						else
+							callback(err, null);
+						});
+				} else
+					callback(err, null);
+			});
+		}
 	},
 	// keep student's original filenames
 	filename: function (req, file, callback) {

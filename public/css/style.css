@@ -465,8 +465,8 @@ form #collab-statement {
     background:#ececec;
     color:#111;
     width:100%;
-    margin-bottom:20px;
     padding:15px;
+    margin-bottom:20px;
 }
 
 #collab-statement input, 
@@ -491,7 +491,11 @@ form #collab-statement {
 	margin:10px 0;
 }
 
-#instructions h1 + div, #instructions h2 + div, #instructions h3 + div {
+#instructions h1 + div {
+	padding-left:20px;
+}
+
+#instructions h2 + div {
 	padding-left: 20px;
 	font-family: "Helvetica", sans-serif;
 }
@@ -503,12 +507,12 @@ form #collab-statement {
 	margin:10px 0;
 }
 
-form#f_handin>input:nth-child(1) {
-	margin-top:40px;
-}
-
 #submit.disabled {
 	background-color:#ececec;
 	cursor:default;
 	color:#ccc;
+}
+
+#handin {
+	margin-top:40px;
 }
