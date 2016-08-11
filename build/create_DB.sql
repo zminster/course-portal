@@ -104,7 +104,7 @@ CREATE TABLE course_portal.assignment_meta (
 -- grades table
 -- 	stores students' grades on each assignment
 -- 
--- 	grades(uid, asgn_id, handed_in, late, graded, can_view_feedback, score)
+-- 	grades(uid, asgn_id, handed_in, late, chomped, can_view_feedback, score)
 CREATE TABLE course_portal.grades (
     `uid` INT UNSIGNED NOT NULL,
     `asgn_id` INT UNSIGNED NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE course_portal.grades (
     `handed_in` TINYINT(1) NOT NULL,
     `handin_time` DATETIME,
     `late` TINYINT(1) NOT NULL,
-    `graded` TINYINT(1) NOT NULL,
+    `chomped` TINYINT(1) NOT NULL,
     `can_view_feedback` TINYINT(1) NOT NULL,
     `score` FLOAT,
     UNIQUE INDEX `ix_perstudent` (`uid`, `asgn_id`),

@@ -83,15 +83,15 @@ module.exports = function(app, passport) {
 	 **************************************/
 	app.get('/resources', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
 		//TODO: Resources page
-		res.render('demo.html', {
-			user : req.user.name // get the user out of session and pass to template
+		res.render('resources.html', {
+			user : req.user // get the user out of session and pass to template
 		});
 	});
 
 	app.get('/lessons', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
 		// TODO: Lessons page
-		res.render('demo.html', {
-			user : req.user.name // get the user out of session and pass to template
+		res.render('lessons.html', {
+			user : req.user // get the user out of session and pass to template
 		});
 	});
 
@@ -126,15 +126,15 @@ module.exports = function(app, passport) {
 		var q1 = function(cb) {
 			conn.query("SELECT * FROM assignment_type", cb);
 		};
-		// q2: compute cat averages of graded/viewable assignments
+		// q2: compute cat averages of scored/viewable assignments
 		var q2 = function(cb) {
-			conn.query("SELECT type_id, SUM(IFNULL(score,0)) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND graded = 1 AND can_view_feedback = 1 GROUP BY type_id", [req.user.uid], cb);
+			conn.query("SELECT type_id, SUM(score,0) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND chomped = 1 AND can_view_feedback = 1 AND score IS NOT NULL GROUP BY type_id", [req.user.uid], cb);
 		}
 		// q3: get all assignment data in one fell swoop
 		var q3 = function(cb) {
 					conn.query("SELECT type, assignment.asgn_id, name, description, url, pt_value,\
 				date_out, date_due, can_handin, info_changed, nreq, handed_in, handin_time,\
-				late, graded, can_view_feedback, score\
+				late, chomped, can_view_feedback, score\
 			FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
 				JOIN grades ON assignment.asgn_id = grades.asgn_id\
 			WHERE uid = ? AND class_pd = ? AND displayed = 1 ORDER BY type, date_out, date_due",
@@ -300,24 +300,26 @@ function construct_assignment(row) {
 	}
 
 	// late (symbol class for late column)
-	if (!row['nreq'] && row['late'] && row['handed_in'])
+	if (!row['nreq'] && row['late'] && row['handed_in']) {
 		asgn['late'] = 'fa fa-times-circle';
+		asgn['late_days'] = Math.ceil(now.diff(date_due, 'days', true));
+	}
 	else if (!row['nreq'] && !row['late'] && row['handed_in'])
 		asgn['late'] = 'fa fa-check-circle';
 
 	// grade status
-	if (row['nreq'])
-		asgn['grade_status'] = 'fa fa-ban';		// ban symbol
-	else if (!row['handed_in'])
-		asgn['grade_status'] = 'fa fa-question-circle';		// question mark
-	else if (!row['graded'])
-		asgn['grade_status'] = 'fa fa-cog fa-spin';	// spinning cog
-	else
-		asgn['score'] = row['score'];		// show score instead of symbol
+	if (row['nreq'])												// NREQ:
+		asgn['grade_status'] = 'fa fa-ban';							//   ban symbol
+	else if (!row['handed_in'] || !row['chomped'])					// NTI OR Not Chomped:
+		asgn['grade_status'] = 'fa fa-question-circle';				//   question mark
+	else if (!row['score'])											// Chomped but not yet scored:
+		asgn['grade_status'] = 'fa fa-cog fa-spin';					//   spinning cog
+	else															// Scored:
+		asgn['score'] = row['score'];								//   show score instead of symbol
 
 	asgn['pt_value'] = row['pt_value'];
 
-	if (row['graded'] && row['can_view_feedback'])
+	if (row['score'] && row['chomped'] && row['can_view_feedback'])
 		asgn['feedback'] = '/feedback/' + row['asgn_id'];
 
 	return asgn;

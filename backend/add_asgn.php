@@ -22,7 +22,7 @@
 		// create queries
 		$assignment_insert	= $conn->prepare("INSERT INTO assignment (name, type, pt_value, description, url) VALUES (?, ?, ?, ?, ?)");
 		$meta_insert		= $conn->prepare("INSERT INTO assignment_meta (asgn_id, class_pd, date_out, date_due, displayed, can_handin, info_changed) VALUES (?, ?, ?, ?, ?, ?, ?)");
-		$grade_insert		= $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, graded, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
+		$grade_insert		= $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
 
 		$asgn_id_lookup		= $conn->prepare("SELECT asgn_id FROM assignment WHERE name = ?");
 		$uids_lookup		= $conn->prepare("SELECT user.uid FROM user INNER JOIN membership ON user.uid = membership.uid WHERE class_pd = ?");

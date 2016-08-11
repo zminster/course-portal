@@ -69,8 +69,8 @@
 								{{#handin_time}}<div class="description">Received {{handin_time}}</div><div class="turn-in">(<a href="/handin/{{id}}">Turn In Again</a>)</div>{{/handin_time}}
 								{{#nreq}}<div class="turn-in">(Not Required)</div>{{/nreq}}
 							</td>
-							<td>
-								{{#late}} <span class="{{late}}"></span> {{/late}}
+							<td class="title">
+								{{#late}}<div class="description">{{late_days}} day(s) late</div><span class="{{late}}"></span>{{/late}}
 							</td>
 							<td class="ribbon-container">
 								{{#changed}}<div class="ribbon-box"><span>Updated!</span></div>{{/changed}}

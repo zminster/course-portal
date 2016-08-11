@@ -20,7 +20,6 @@
 		<li><a href="edit_user.php">Edit/Delete Student</a></li>
 		<li><a href="edit_asgn.php">Edit/Delete Assigment</a></li>
 		<li><a href="edit_grades.php">Chomp Assignment Grades</a></li>
-		<?php // TODO: chomp will set graded=1, allow can_view=1, compute/update score ?>
 		<li><a href="edit_toggle.php">Toggle Assignment NREQ/CANVIEW/LATE (Per-Student)</a></li>
 		<li><a href="edit_amnesty.php">Toggle Amnesty Period</a></li>
 	</ul>

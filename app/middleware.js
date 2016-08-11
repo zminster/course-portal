@@ -71,8 +71,8 @@ module.exports = {
 		var asgn_id = req.params.asgn_id;
 		if (asgn_id) {	// assignment ID specified
 			// query for valid assignment ID & visibility
-			conn.query("SELECT graded, can_view_feedback FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
-				if (!err && rows.length > 0 && rows[0].can_view_feedback == 1 && rows[0].graded == 1) {
+			conn.query("SELECT score, can_view_feedback, chomped FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
+				if (!err && rows.length > 0 && rows[0].chomped == 1 && rows[0].can_view_feedback == 1 && rows[0].score) {
 					return next();
 				} else {
 					res.render('feedback.html', {user: req.user, error: 'Feedback is not available for you on that assignment.'});

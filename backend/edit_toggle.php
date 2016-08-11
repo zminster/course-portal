@@ -17,10 +17,16 @@
 			$nreq = array_key_exists("nreq", $_POST) ? 1 : 0;
 			$late = array_key_exists("late", $_POST) ? 1 : 0;
 			$canview = array_key_exists("canview", $_POST) ? 1 : 0;
+			$chomped = array_key_exists("chomped", $_POST) ? 1 : 0;
+
+			// nullify score if null_score is set, otherwise re-enter same score
+			$null_score = array_key_exists("null_score", $_POST) ? 1 : 0;
+			$score = array_key_exists("score", $_POST) ? $_POST["score"] : "NULL";
+			$score = $null_score ? "NULL" : $score;
 
 			// create query
-			$toggle_query	= $conn->prepare("UPDATE grades SET nreq=?, late=?, can_view_feedback=? WHERE uid=? AND asgn_id=?");
-			$toggle_query->bind_param("iiiii", $nreq, $late, $canview, $uid, $asgn_id);
+			$toggle_query	= $conn->prepare("UPDATE grades SET nreq=?, late=?, can_view_feedback=?, chomped=?, score=? WHERE uid=? AND asgn_id=?");
+			$toggle_query->bind_param("iiiii", $nreq, $late, $canview, $chomped, $score, $uid, $asgn_id);
 
 			// exec
 			$toggle_query->execute();
@@ -33,9 +39,9 @@
 			$users = get_all_userinfo($conn);
 			$user = $users[$uid];
 
-			$lookup = $conn->prepare("SELECT nreq, handed_in, handin_time, late, graded, can_view_feedback, score FROM grades WHERE uid=? AND asgn_id=?");
+			$lookup = $conn->prepare("SELECT nreq, handed_in, handin_time, late, chomped, can_view_feedback, score FROM grades WHERE uid=? AND asgn_id=?");
 			$lookup->bind_param("ii", $uid, $asgn_id);
-			$lookup->bind_result($nreq, $handed_in, $handin_time, $late, $graded, $can_view_feedback, $score);
+			$lookup->bind_result($nreq, $handed_in, $handin_time, $late, $chomped, $can_view_feedback, $score);
 			$lookup->execute();
 			echo($lookup->error);
 			$lookup->store_result();
@@ -52,22 +58,26 @@
 						<th>ASGN ID</th>
 						<th>(Handed in)?</th>
 						<th>(Handin Time)</th>
-						<th>(Graded)?</th>
-						<th>(Score)</th>
 						<th>NREQ?</th>
 						<th>LATE?</th>
 						<th>CANVIEW?</th>
+						<th>CHOMPED (Handin Locked)?</th>
+						<th>SCORE (Check to NULL)</th>
 					</tr>
 					<tr>
 						<td><?php echo($uid); ?></td>
 						<td><?php echo($asgn_id); ?></td>
 						<td><?php echo($handed_in ? "YES" : "NO"); ?></td>
 						<td><?php echo($handin_time ? $handin_time : "N/A"); ?></td>
-						<td><?php echo($graded ? "YES" : "NO"); ?></td>
-						<td><?php echo($score ? $score : "N/A"); ?></td>
 						<td><input type="checkbox" id="nreq" name="nreq" <?php echo($nreq ? "checked" : ""); ?>/></td>
 						<td><input type="checkbox" id="late" name="late" <?php echo($late ? "checked" : ""); ?>/></td>
 						<td><input type="checkbox" id="canview" name="canview" <?php echo($can_view_feedback ? "checked" : ""); ?>/></td>
+						<td><input type="checkbox" id="chomped" name="chomped" <?php echo($chomped ? "checked" : ""); ?>/></td>
+						<td>
+							<?php echo($score ? $score : "NULL"); ?> 
+							<?php echo($score ? "<input type=\"hidden\" name=\"score\" value=\"" + $score + "\" />" : "" ?>
+							<input type="checkbox" id="null_score" name="null_score" />
+						</td>
 					</tr>
 				</table>
 				<input type="submit" />

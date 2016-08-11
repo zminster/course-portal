@@ -102,6 +102,14 @@ header ul>li a:hover {
 	margin-top:50px;
 }
 
+#header.resources {
+	background-image: url('../assets/resources.png');
+}
+
+#header.lessons {
+	background-image: url('../assets/lessons.png');
+}
+
 #header>h1 {
 	font-size:5.5vw;
 	position:absolute;
