@@ -194,6 +194,7 @@ header ul>li a:hover {
 	padding:20px;
 
 	box-shadow: 0 0 20px #000;
+	margin-bottom:30px;
 }
 
 .fa-check-circle {
@@ -527,4 +528,8 @@ form #collab-statement {
 #f_handin #submit {
 	position:absolute;
 	top:160px;
+}
+
+.receipt {
+	margin-top:25px;
 }
