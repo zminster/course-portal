@@ -70,7 +70,7 @@
 								{{#nreq}}<div class="turn-in">(Not Required)</div>{{/nreq}}
 							</td>
 							<td class="title">
-								{{#late}}<div class="description">{{late_days}} day(s) late</div><span class="{{late}}"></span>{{/late}}
+								{{#late}}{{#late_days}}<div class="description">{{late_days}} day(s) late</div>{{/late_days}}<span class="{{late}}"></span>{{/late}}
 							</td>
 							<td class="ribbon-container">
 								{{#changed}}<div class="ribbon-box"><span>Updated!</span></div>{{/changed}}
