@@ -66,7 +66,7 @@
 							<td class="title">
 								{{#handin_status}}<span class="{{handin_status}}"></span>{{/handin_status}}
 								{{^handin_status}}<span class="fa fa-times-circle"></span> <div class="turn-in">(<a href="/handin/{{id}}">Turn In</a>)</div>{{/handin_status}}
-								{{#handin_time}}<div class="description">Received {{handin_time}}</div><div class="turn-in">(<a href="/handin/{{id}}">Turn In Again</a>)</div>{{/handin_time}}
+								{{#handin_time}}<div class="description">Received {{handin_time}}</div>{{^chomped}}<div class="turn-in">(<a href="/handin/{{id}}">Turn In Again</a>)</div>{{/chomped}}{{/handin_time}}
 								{{#nreq}}<div class="turn-in">(Not Required)</div>{{/nreq}}
 							</td>
 							<td class="title">

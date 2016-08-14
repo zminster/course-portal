@@ -26,7 +26,7 @@
 
 			// create query
 			$toggle_query	= $conn->prepare("UPDATE grades SET nreq=?, late=?, can_view_feedback=?, chomped=?, score=? WHERE uid=? AND asgn_id=?");
-			$toggle_query->bind_param("iiiii", $nreq, $late, $canview, $chomped, $score, $uid, $asgn_id);
+			$toggle_query->bind_param("iiiiiii", $nreq, $late, $canview, $chomped, $score, $uid, $asgn_id);
 
 			// exec
 			$toggle_query->execute();
@@ -75,7 +75,7 @@
 						<td><input type="checkbox" id="chomped" name="chomped" <?php echo($chomped ? "checked" : ""); ?>/></td>
 						<td>
 							<?php echo($score ? $score : "NULL"); ?> 
-							<?php echo($score ? "<input type=\"hidden\" name=\"score\" value=\"" + $score + "\" />" : "" ?>
+							<?php echo($score ? "<input type=\"hidden\" name=\"score\" value=\"" + $score + "\" />" : ""); ?>
 							<input type="checkbox" id="null_score" name="null_score" />
 						</td>
 					</tr>

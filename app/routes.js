@@ -185,12 +185,12 @@ module.exports = function(app, passport) {
 							console.log(JSON.stringify(d, null, 4));
 							res.render('portal.html', d);
 						} else {
-							res.render("handin_error.html", {error: "There's a problem accessing portal information from the database right now."});
+							res.render("error.html", {error: "There's a problem accessing portal information from the database right now."});
 						}
 					});
 				});
 			} else {
-				res.render("handin_error.html", {error: "There's a problem accessing portal information from the database right now."});
+				res.render("error.html", {error: "There's a problem accessing portal information from the database right now."});
 			}	
 		});
 	});
@@ -257,6 +257,10 @@ module.exports = function(app, passport) {
 		req.logout();
 		res.redirect('/');
 	});
+
+	app.use(function(req, res, next){
+		res.status(404).render('error.html', {error: "Requested URL does not exist."});
+	});
 };
 
 function construct_assignment(row) {
@@ -298,6 +302,8 @@ function construct_assignment(row) {
 		var handin_time = moment(row['handin_time']).format('llll');
 		asgn['handin_time'] = handin_time;
 	}
+	if (row['chomped'])
+		asgn['chomped'] = 'true';
 
 	// late (symbol class for late column)
 	if (!row['nreq'] && row['late'] && row['handed_in']) {

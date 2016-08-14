@@ -4,8 +4,8 @@ var conn 				= require('./database_ops').connection;
 var err_can_handin 		= "Students in your class period aren't allowed to hand in this assignment right now.";
 var err_invalid_handin	= "That's not a valid assignment.";
 var db_error 			= "There was a fatal database error.";
+var err_chomped			= "This assignment is currently being graded; you cannot turn it in again.";
 var handinDir 			= '/course/csp/handin/';
-var fs 					= 
 
 module.exports = {
 	// middleware: ensures user is logged in
@@ -31,7 +31,7 @@ module.exports = {
 					else
 						return next();
 				} else {
-					res.render("handin_error.html", {error: db_error});
+					res.render("error.html", {error: db_error});
 				}
 		});
 	},
@@ -49,20 +49,23 @@ module.exports = {
 						function(err, rows){
 							if (!err && rows.length > 0 && rows[0].can_handin == 1) {
 								req.date_due = rows[0].date_due;
-								return next();
+								conn.query("SELECT chomped FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
+									if (!err && !rows[0].chomped)
+										return next();
+									else {
+										res.render('error.html', {error: err_chomped});
+									}
+								})
 							} else {
-								req.flash('handinMessage', err_can_handin);
-								res.redirect('/handin/' + req.params.asgn_id);
+								res.render('error.html', {error: err_can_handin});
 							}
 						});
 				} else {
-					req.flash('handinMessage', err_invalid_handin);
-					res.redirect('/handin/' + req.params.asgn_id);
+					res.render('error.html', {error: err_invalid_handin});
 				}
 			});
 		} else {
-			req.flash('handinMessage', err_invalid_handin);
-			res.redirect('/handin/' + req.params.asgn_id);
+			res.render('error.html', {error: err_invalid_handin});
 		}
 	},
 

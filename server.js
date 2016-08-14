@@ -35,6 +35,7 @@ if (process.env.NODE_ENV == 'production') {
 }
 
 // configuration
+process.umask(0);
 require('./config/passport')(passport);	// passport gets configured
 
 app.engine('html', engines.hogan);
