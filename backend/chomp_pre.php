@@ -15,7 +15,6 @@
 	include 'config/database.php';
 	$method = $_SERVER['REQUEST_METHOD'];
 	$classes = get_class_pds($conn);
-	$types = get_asgn_types($conn);
 	$assignments = get_all_assignments($conn);
 	if ($method == 'POST') {	// POST
 		// steps:
@@ -33,7 +32,7 @@
 		//set_error_handler("warning_handler", E_WARNING);
 		$f_rubric = file($rubric_dir . $asgn_id . ".txt");
 	
-		// create queies
+		// create queries
 		$meta_select		= $conn->prepare("SELECT date_due, pt_value, name FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id WHERE assignment.asgn_id = ? AND class_pd = ?");
 		$grade_select		= $conn->prepare("SELECT grades.uid, username, name, late, handin_time FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_meta ON grades.uid = user_meta.uid WHERE handed_in=1 AND asgn_id=? AND class_pd=?");
 		$grade_update		= $conn->prepare("UPDATE grades SET chomped=1 WHERE uid = ? AND asgn_id = ?");

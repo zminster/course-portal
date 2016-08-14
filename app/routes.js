@@ -128,7 +128,7 @@ module.exports = function(app, passport) {
 		};
 		// q2: compute cat averages of scored/viewable assignments
 		var q2 = function(cb) {
-			conn.query("SELECT type_id, SUM(score,0) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND chomped = 1 AND can_view_feedback = 1 AND score IS NOT NULL GROUP BY type_id", [req.user.uid], cb);
+			conn.query("SELECT type_id, SUM(score) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND chomped = 1 AND score IS NOT NULL GROUP BY type_id", [req.user.uid], cb);
 		}
 		// q3: get all assignment data in one fell swoop
 		var q3 = function(cb) {
