@@ -6,11 +6,9 @@ var moment		= require('moment');			/* timing handins */
 var conn		= require('./database_ops.js').connection;
 var bcrypt 		= require('bcrypt-nodejs');		/* changing passwords */
 var fs 			= require('fs');				/* read feedback files */
-var exec 		= require('child_process').exec;/* removing old handins */
-
 
 var handinDir 	= '/course/csp/handin/'; 		/* If changing, also change in upload.js */
-
+var maxSize 	= 1000000;						/* per-handin upload limit (bytes) */
 
 /* Routes */
 module.exports = function(app, passport) {
@@ -211,52 +209,47 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, function(req, res) {
-		// remove existing handin stuff first before processing handin (ignore errors)
-		var handin_path = handinDir + req.params.asgn_id + '/' + req.user.username;
-		exec('rm -rf ' + handin_path + '/*', function (err, stdout, stderr) {
-			upload(req, res, function(err) {
-				if (err) {
-					console.log("FUCKING ERROR");
-					console.log(err);
-					if (err == "NOCOLLABERR")
-						req.flash('handinMessage', 'You must agree to the Collaboration Statement.');
-					else
-						req.flash('handinMessage', 'Files provided exceed upload limits. Please reduce the size or turn in an archive.');
-					res.redirect('/handin/' + req.params.asgn_id);
-				} else if (!req.files || req.files.length == 0) {
-					req.flash('handinMessage', 'I didn\'t receive your files - something went wrong. Try to hand in again.');
-					res.redirect('/handin/' + req.params.asgn_id);
-				} else {
-					// capture due date
-					var now = moment();
-					var due = moment(req.date_due);
-					var time = moment().format('YYYY-MM-DD HH:mm:ss');
-					var late = now.isAfter(due) ? 1 : 0;
-					var late_days = Math.ceil(now.diff(due, 'days', true));
-					var friendly_time = now.format('llll');
-					// record handin
-					conn.query("UPDATE grades SET handed_in=1, handin_time=?, late=? WHERE uid=? AND asgn_id=?",[time, late, req.user.uid, req.params.asgn_id],
-						function(err, rows) {
-							if (!err) {
-								res.render("handin_success.html", {
-									asgn_id: req.params.asgn_id,
-									asgn_name: req.asgn_name,
-									time: friendly_time,
-									late: late_days,
-									files: req.files,
-									user: req.user
-								});
-							} else {
-								req.flash('handinMessage', 'There was an issue recording your handin time in the database. Try to hand in again.');
-								res.redirect('/handin/' + req.params.asgn_id);
-							}
+	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, upload,
+		function(req, res) {
+			if (req.err) {
+				req.flash('handinMessage', req.err);
+				res.redirect('/handin/' + req.params.asgn_id);
+			}
+			else if (!req.body.collab) {
+				req.flash('handinMessage', 'You must agree to the Collaboration Statement and upload again.');
+				res.redirect('/handin/' + req.params.asgn_id);
+			}
+			else if (!req.files || req.files.length == 0) {
+				req.flash('handinMessage', 'I didn\'t receive any files. Try to hand in again.');
+				res.redirect('/handin/' + req.params.asgn_id);
+			} else {
+				// capture due date
+				var now = moment();
+				var due = moment(req.date_due);
+				var time = moment().format('YYYY-MM-DD HH:mm:ss');
+				var late = now.isAfter(due) ? 1 : 0;
+				var late_days = Math.ceil(now.diff(due, 'days', true));
+				var friendly_time = now.format('llll');
+				// record handin
+				conn.query("UPDATE grades SET handed_in=1, handin_time=?, late=? WHERE uid=? AND asgn_id=?",[time, late, req.user.uid, req.params.asgn_id],
+					function(err, rows) {
+						if (!err) {
+							res.render("handin_success.html", {
+								asgn_id: req.params.asgn_id,
+								asgn_name: req.asgn_name,
+								time: friendly_time,
+								late: late_days,
+								files: req.files,
+								user: req.user
+							});
+						} else {
+							req.flash('handinMessage', 'There was an issue recording your handin time in the database. Try to hand in again.');
+							res.redirect('/handin/' + req.params.asgn_id);
 						}
-					);
-				}
-			});
+					}
+				);
+			}
 		});
-	});
 
 	/**************************************
 	  LOGOUT

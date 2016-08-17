@@ -40,12 +40,11 @@ require('./config/passport')(passport);	// passport gets configured
 
 app.engine('html', engines.hogan);
 app.set('views', __dirname +'/templates');
-app.use(morgan('dev'));
+process.env.NODE_ENV != 'production' ? app.use(morgan('dev')) : NULL;
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
-app.use(bodyParser.json());
 app.use(session({
 	secret: '3GcdA580QSFonX4MZ9z6rvY0G1WRCFB1',
 	resave: true,

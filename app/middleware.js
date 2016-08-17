@@ -1,11 +1,11 @@
 //app/middleware.js
 
 var conn 				= require('./database_ops').connection;
+
 var err_can_handin 		= "Students in your class period aren't allowed to hand in this assignment right now.";
 var err_invalid_handin	= "That's not a valid assignment.";
 var db_error 			= "There was a fatal database error.";
 var err_chomped			= "This assignment is currently being graded; you cannot turn it in again.";
-var handinDir 			= '/course/csp/handin/';
 
 module.exports = {
 	// middleware: ensures user is logged in
