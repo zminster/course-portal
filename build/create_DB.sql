@@ -118,7 +118,7 @@ CREATE TABLE course_portal.grades (
     `chomped` TINYINT(1) NOT NULL,
     `can_view_feedback` TINYINT(1) NOT NULL,
     `score` FLOAT,
-    `honors_earned` TINYINT(1)
+    `honors_earned` TINYINT(1),
     UNIQUE INDEX `ix_perstudent` (`uid`, `asgn_id`),
     FOREIGN KEY (`uid`) REFERENCES user(`uid`),
     FOREIGN KEY (`asgn_id`) REFERENCES assignment(`asgn_id`)
