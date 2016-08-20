@@ -49,9 +49,12 @@ module.exports = {
 						function(err, rows){
 							if (!err && rows.length > 0 && rows[0].can_handin == 1) {
 								req.date_due = rows[0].date_due;
-								conn.query("SELECT chomped FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
-									if (!err && !rows[0].chomped)
+								conn.query("SELECT chomped, extension FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
+									if (!err && !rows[0].chomped) {
+										if (rows[0].extension)
+											req.extension = rows[0].extension;
 										return next();
+									}
 									else {
 										res.render('error.html', {error: err_chomped});
 									}

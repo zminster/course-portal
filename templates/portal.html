@@ -62,7 +62,7 @@
 						<tr {{#due_warn}}class="{{due_warn}}"{{/due_warn}}>
 							<td class="title"><a href="{{url}}">{{name}}</a>{{#description}}<div class="description">{{description}}</div>{{/description}}</td>
 							<td>{{date_out}}</td>
-							<td>{{date_due}}{{#time_left}} <span class="time_left">({{time_left}})</span>{{/time_left}}</td>
+							<td class="ribbon-container">{{date_due}}{{#time_left}} <span class="time_left">({{time_left}})</span>{{/time_left}}{{#extension}}<div class="ribbon-box"><span>{{extension}} hour extension</span></div>{{/extension}}</td>
 							<td class="title">
 								{{#handin_status}}<span class="{{handin_status}}"></span>{{/handin_status}}
 								{{^handin_status}}<span class="fa fa-times-circle"></span> <div class="turn-in">(<a href="/handin/{{id}}">Turn In</a>)</div>{{/handin_status}}

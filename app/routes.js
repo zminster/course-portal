@@ -134,7 +134,7 @@ module.exports = function(app, passport) {
 		var q3 = function(cb) {
 					conn.query("SELECT type, assignment.asgn_id, name, description, url, pt_value,\
 				date_out, date_due, can_handin, info_changed, nreq, handed_in, handin_time,\
-				late, chomped, can_view_feedback, score\
+				late, extension, chomped, can_view_feedback, score\
 			FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
 				JOIN grades ON assignment.asgn_id = grades.asgn_id\
 			WHERE uid = ? AND class_pd = ? AND displayed = 1 ORDER BY type, date_out, date_due",
@@ -199,7 +199,10 @@ module.exports = function(app, passport) {
 	  HANDIN FLOW
 	 **************************************/
 	app.get('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, function(req, res) {
-		var late = moment().isAfter(moment(req.date_due)) ? 1 : 0;
+		var date_due = moment(req.date_due);
+		if (req.extension)
+			date_due.add(req.extension, 'h');
+		var late = moment().isAfter(date_due) ? 1 : 0;
 		res.render('handin.html', {
 			message: req.flash('handinMessage'),
 			asgn_id: req.params.asgn_id,
@@ -226,6 +229,8 @@ module.exports = function(app, passport) {
 				// capture due date
 				var now = moment();
 				var due = moment(req.date_due);
+				if (req.extension)
+					due.add(req.extension, 'h');
 				var time = moment().format('YYYY-MM-DD HH:mm:ss');
 				var late = now.isAfter(due) ? 1 : 0;
 				var late_days = Math.ceil(now.diff(due, 'days', true));
@@ -269,6 +274,10 @@ function construct_assignment(row) {
 
 	var date_out 	= moment(row['date_out']);
 	var date_due 	= moment(row['date_due']);
+	if (row['extension']) {
+		// recompute due date if there is an extension
+		date_due.add(row['extension'], 'h');
+	}
 	var days_before = date_due.clone().subtract(2, 'days');
 	var now 		= moment();
 
@@ -288,6 +297,8 @@ function construct_assignment(row) {
 	asgn['date_due'] = date_due.format('llll');
 	if (!row['handed_in'])
 		asgn['time_left'] = date_due.fromNow();
+	if (row['extension'])
+		asgn['extension'] = row['extension'];
 
 	// due warnings - classes change background colors of assignment display
 	if (now.isBetween(days_before, date_due) && !row['handed_in'])	// assignment due in 24 hrs and NTI
