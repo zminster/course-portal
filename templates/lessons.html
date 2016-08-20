@@ -45,7 +45,24 @@
 	<div id="header" class="lessons"><h1>Lessons</h1></div>
 
 	<div id="page-container">
-		Lorem Ipsum
+		<table class="lessons">
+		<thead>
+			<th>Topic</th>
+			<th>Date</th>
+			<th>Slides</th>
+			<th>Extra</th>
+		</thead>
+		<tbody>
+		{{#lessons}}
+			<tr>
+				<td>{{topic}}</td>
+				<td>{{released}}</td>
+				<td>{{#slide_url}}<a href="{{slide_url}}"><span class="fa fa-external-link"></span></a>{{/slide_url}}</td>
+				<td>{{#extra_url}}<a href="{{extra_url}}"><span class="fa fa-external-link"></span></a>{{/extra_url}}</td>
+			</tr>
+		{{/lessons}}
+		</tbody>
+		</table>
 	</div>
 
 	<script src="/js/global.js"></script>

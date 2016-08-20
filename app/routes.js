@@ -9,6 +9,7 @@ var fs 			= require('fs');				/* read feedback files */
 
 var handinDir 	= '/course/csp/handin/'; 		/* If changing, also change in upload.js */
 var maxSize 	= 1000000;						/* per-handin upload limit (bytes) */
+var releaseTime = 465;							/* minutes after midnight to release lessons */
 
 /* Routes */
 module.exports = function(app, passport) {
@@ -89,10 +90,27 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/lessons', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
-		// TODO: Lessons page
-		res.render('lessons.html', {
-			user : req.user // get the user out of session and pass to template
-		});
+		conn.query("SELECT trimester, topic, slide_url, extra_url, release_date FROM lesson JOIN lesson_meta ON lesson.id = lesson_meta.id WHERE class_pd = ? AND visible = 1 ORDER BY release_date ASC", [req.user.class_pd],
+			function(err, lessons) {
+				var arr_l = [];
+				for (var i = 0; i < lessons.length; i++) {
+					var release_date = moment(lessons[i].release_date).add(releaseTime, 'm'); // release lessons at time on release date
+					var now = moment();
+					if (now.isAfter(release_date)) {	// only expose visible lessons after release date
+						var lesson_obj = {};
+						lesson_obj.trimester = lessons[i].trimester;
+						lesson_obj.topic = lessons[i].topic;
+						lesson_obj.slide_url = lessons[i].slide_url;
+						lesson_obj.extra_url = lessons[i].extra_url;
+						lesson_obj.released = release_date.format('dddd, MMMM Do YYYY');
+						arr_l.push(lesson_obj);
+					}
+				}
+				res.render('lessons.html', {
+					user : req.user, // get the user out of session and pass to template
+					lessons: arr_l
+				});
+			});
 	});
 
 	app.get('/feedback/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitFeedback, function(req, res) {
@@ -182,7 +200,6 @@ module.exports = function(app, passport) {
 								d.categories.push(types[type]);
 							});
 
-							console.log(JSON.stringify(d, null, 4));
 							res.render('portal.html', d);
 						} else {
 							res.render("error.html", {error: "There's a problem accessing portal information from the database right now."});

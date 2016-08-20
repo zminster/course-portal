@@ -541,3 +541,17 @@ form #collab-statement {
 .receipt {
 	margin-top:25px;
 }
+
+/* LESSONS PAGE */
+
+.lessons td {
+	text-align:left;
+}
+
+.lessons td:first-child {
+	font-weight:bold;
+}
+
+.lessons td:nth-child(3), .lessons td:nth-child(4) {
+	text-align:center;
+}
