@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Portal Admin :: Add Assignment</title>
+	<title>Portal Admin :: Edit/Delete Assignment</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 	<script src="https://code.jquery.com/jquery-1.10.1.min.js" type="text/javascript"></script>
 	<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
@@ -45,7 +45,7 @@
 			$canview_update		= $conn->prepare("UPDATE grades SET can_view_feedback=? WHERE uid = ? AND asgn_id = ?");
 
 			$uids_lookup		= $conn->prepare("SELECT user.uid FROM user INNER JOIN membership ON user.uid = membership.uid WHERE class_pd = ?");
-			$handin_time_lookup = $conn->prepare("SELECT handin_time FROM grades WHERE uid = ? AND asgn_id = ?");
+			$handin_time_lookup = $conn->prepare("SELECT handin_time, extension FROM grades WHERE uid = ? AND asgn_id = ?");
 
 			// assignment queries
 			$assignment_update->bind_param("siissi", $_POST["name"], $_POST["type"], $_POST["pt_value"], $_POST["description"], $_POST["url"], $asgn_id);
@@ -60,7 +60,7 @@
 			$uids_lookup->bind_param("i", $class_pd);
 			$uids_lookup->bind_result($uid);
 			$handin_time_lookup->bind_param("ii", $uid, $asgn_id);
-			$handin_time_lookup->bind_result($handin_time);
+			$handin_time_lookup->bind_result($handin_time, $extension);
 
 			$meta = $_POST["asgn"];
 			foreach (array_keys($meta) as $class_pd) {
@@ -88,7 +88,13 @@
 					$handin_time_lookup->store_result();
 					$handin_time_lookup->fetch();
 					if ($handin_time && $recompute_lates) {
-						if (strtotime($handin_time) < $php_date_due) {
+						$h_dt = new DateTime($handin_time);
+						$d_dt = new DateTime($date_due);
+						if ($extension) {
+							$ext = new DateInterval("PT".$extension."H");
+							$d_dt->add($ext);
+						}
+						if ($h_dt < $d_dt) {
 							$recomputed_late = 0;
 						} else {
 							$recomputed_late = 1;
