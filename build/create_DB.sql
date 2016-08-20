@@ -71,12 +71,14 @@ CREATE TABLE course_portal.assignment_type (
 -- 	stores information about each assignment
 -- 	future usage: type corresponds to enum/relation defining asgn types (hw, project, exam, etc)
 -- 
--- 	assignment(asgn_id, name, type, pt_value, description, url)
+-- 	assignment(asgn_id, name, type, pt_value, trimester, honors_possible, description, url)
 CREATE TABLE course_portal.assignment (
     `asgn_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `type` INT UNSIGNED NOT NULL,
     `pt_value` INT UNSIGNED NOT NULL,
+    `trimester` INT UNSIGNED NOT NULL,
+    `honors_possible` TINYINT(1),
     `description` TEXT,
     `url` TEXT,
         PRIMARY KEY (`asgn_id`),
@@ -104,17 +106,19 @@ CREATE TABLE course_portal.assignment_meta (
 -- grades table
 -- 	stores students' grades on each assignment
 -- 
--- 	grades(uid, asgn_id, handed_in, late, chomped, can_view_feedback, score)
+-- 	grades(uid, asgn_id, handed_in, late, chomped, can_view_feedback, score, honors_earned)
 CREATE TABLE course_portal.grades (
     `uid` INT UNSIGNED NOT NULL,
     `asgn_id` INT UNSIGNED NOT NULL,
     `nreq` TINYINT(1) NOT NULL,
     `handed_in` TINYINT(1) NOT NULL,
     `handin_time` DATETIME,
+    `extension` INT UNSIGNED,
     `late` TINYINT(1) NOT NULL,
     `chomped` TINYINT(1) NOT NULL,
     `can_view_feedback` TINYINT(1) NOT NULL,
     `score` FLOAT,
+    `honors_earned` TINYINT(1)
     UNIQUE INDEX `ix_perstudent` (`uid`, `asgn_id`),
     FOREIGN KEY (`uid`) REFERENCES user(`uid`),
     FOREIGN KEY (`asgn_id`) REFERENCES assignment(`asgn_id`)
