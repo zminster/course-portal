@@ -72,6 +72,36 @@
 		}
 	}
 
+	function get_all_lessons($conn) {
+		$res = $conn->query("SELECT * FROM lesson");
+		$lessons = array();
+
+		if ($res->num_rows > 0) {
+			while ($lesson = $res->fetch_assoc()) {
+				$lessons[$lesson["id"]] = $lesson;
+			}
+			return $lessons;
+		} else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_asgn.php\">add a lesson</a>.</b></span>");
+		}
+	}
+
+	function get_all_lesson_data($conn, $id) {
+		$res = $conn->query("SELECT * FROM lesson_meta WHERE id = ".$id);
+		$lessons = array();
+
+		if ($res->num_rows > 0) {
+			while ($lesson = $res->fetch_assoc()) {
+				$lessons[$lesson["class_pd"]] = $lesson;
+			}
+			return $lessons;
+		} else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_lesson.php\">add a lesson</a>.</b></span>");
+		}
+	}
+
 	function get_all_userinfo($conn) {
 		$res = $conn->query("SELECT user.uid, class_pd, username, name, year, email FROM user INNER JOIN membership ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid ORDER BY class_pd, username");
 		$users = array();

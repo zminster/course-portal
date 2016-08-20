@@ -14,7 +14,7 @@
 		<li><a href="add_asgn_type.php">Add Assignment Type</a></li>
 	</ul>
 
-	<h2>Manage</h2>
+	<h2>Grade/Assignment Management</h2>
 	<ul>
 		<li><a href="add_asgn.php">Add Assignment</a></li>
 		<li><a href="edit_user.php">Edit/Delete Student</a></li>
@@ -25,6 +25,12 @@
 		<li><a href="edit_toggle.php">Toggle Assignment LATE/NREQ/CAN_VIEW_FEEDBACK (Per-Student)</a></li>
 		<li><a href="edit_nullify.php">Nullify Assignment (Mark Zero) (Per-Student)</a></li>
 		<li><a href="edit_amnesty.php">Toggle Amnesty Period</a></li>
+	</ul>
+
+	<h2>Lesson Management</h2>
+	<ul>
+		<li><a href="add_lesson.php">Add Lesson</a></li>
+		<li><a href="edit_lesson.php">Edit/Delete Lesson</a></li>
 	</ul>
 
 	<h2>Reports</h2>

@@ -123,3 +123,29 @@ CREATE TABLE course_portal.grades (
     FOREIGN KEY (`uid`) REFERENCES user(`uid`),
     FOREIGN KEY (`asgn_id`) REFERENCES assignment(`asgn_id`)
 );
+
+-- lesson table
+--  stores universal information about class lessons
+-- 
+--  lessons(id, topic, slide_url, extra_url)
+CREATE TABLE course_portal.lesson (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `trimester` INT UNSIGNED NOT NULL,
+    `topic` VARCHAR(767) NOT NULL,
+    `slide_url` TEXT NOT NULL,
+    `extra_url` TEXT NOT NULL,
+        PRIMARY KEY (`id`),
+    UNIQUE INDEX `lesson_topic_UNIQUE` (`topic`)
+);
+
+-- lesson_meta table
+--  stores per-class meta information about each lesson in lesson table
+-- 
+-- lesson_meta(id, class_pd, date, visible)
+CREATE TABLE course_portal.lesson_meta (
+    `id` INT UNSIGNED NOT NULL,
+    `class_pd` INT UNSIGNED NOT NULL,
+    `release_date` DATE NOT NULL,
+    `visible` TINYINT(1) NOT NULL,
+        FOREIGN KEY (`id`) REFERENCES lesson(`id`)
+);
