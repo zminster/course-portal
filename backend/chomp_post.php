@@ -23,11 +23,11 @@
 		$canview = array_key_exists("canview", $_POST) ? 1 : 0;
 	
 		$student_select	= $conn->prepare("SELECT grades.uid, username FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid WHERE chomped = 1 AND class_pd = ? AND asgn_id = ? ORDER BY grades.uid");
-		$grade_update = $conn->prepare("UPDATE grades SET score=?, can_view_feedback=? WHERE uid = ? AND asgn_id = ?");
+		$grade_update = $conn->prepare("UPDATE grades SET score=?, can_view_feedback=?, honors_earned=? WHERE uid = ? AND asgn_id = ?");
 
 		$student_select->bind_param("ii", $class_pd, $asgn_id);
 		$student_select->bind_result($uid, $username);
-		$grade_update->bind_param("diii", $score, $canview, $uid, $asgn_id);
+		$grade_update->bind_param("diiii", $score, $canview, $honors_earned, $uid, $asgn_id);
 
 		// iterate through handed in assignments
 		$student_select->execute();
@@ -41,15 +41,23 @@
 					if (strpos($f_rubric[$i], $match_str) !== FALSE) {
 						preg_match('/: (\d+\.?\d*)\//', $f_rubric[$i], $m); // regex matches ": XX/"
 						$score = $m[1];
+						if ($assignments[$asgn_id]["honors_possible"]) {
+							preg_match('/\? : ([a-z]*)/i', $f_rubric[$i+1], $m); // regex matches "? : YYY"; YYY should be either "YES" or "NO"
+							$honors_earned = trim($m[1]);
+						}
 						break;
 					}
 				}
 				if ($score === NULL) {
 					?><p style="color:red;"><b>Missing final grade for <?php echo($username); ?>!</b></p><?php
 				} else {
+					if ($assignments[$asgn_id]["honors_possible"])
+						$honors_earned = strcasecmp($honors_earned, "yes") == 0 ? 1 : 0;
+					else
+						$honors_earned = NULL;
 					$grade_update->execute();
 					echo($grade_update->error);
-					?><p><b>Entered final grade of <?php echo($score); ?> for <?php echo($username); ?>!</b></p><?php
+					?><p><b>Entered final grade of <?php echo($score); echo(isset($honors_earned) ? ($honors_earned ? " (Honors Earned)" : " (Honors NOT Earned)") : NULL); ?> for <?php echo($username); ?>!</b></p><?php
 				}
 			} else {
 				?><p style="color:red;"><b>Missing rubric for <?php echo($username); ?>!</b></p><?php

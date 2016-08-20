@@ -19,6 +19,7 @@
 		<li><a href="add_asgn.php">Add Assignment</a></li>
 		<li><a href="edit_user.php">Edit/Delete Student</a></li>
 		<li><a href="edit_asgn.php">Edit/Delete Assigment</a></li>
+		<li><a href="edit_extension.php">Grant Extension</a></li>
 		<li><a href="chomp_pre.php">Pre-Chomp Assignment (Copy blank rubrics, shutdown handins)</a></li>
 		<li><a href="chomp_post.php">Post-Chomp Assignment (Copy grades from rubrics, allow feedback view)</a></li>
 		<li><a href="edit_toggle.php">Toggle Assignment LATE/NREQ/CAN_VIEW_FEEDBACK (Per-Student)</a></li>

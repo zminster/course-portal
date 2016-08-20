@@ -20,7 +20,7 @@
 	if ($method == 'POST') {	// POST: admin is adding asgn
 		
 		// create queries
-		$assignment_insert	= $conn->prepare("INSERT INTO assignment (name, type, pt_value, description, url) VALUES (?, ?, ?, ?, ?)");
+		$assignment_insert	= $conn->prepare("INSERT INTO assignment (name, type, pt_value, trimester, honors_possible, description, url) VALUES (?, ?, ?, ?, ?, ?, ?)");
 		$meta_insert		= $conn->prepare("INSERT INTO assignment_meta (asgn_id, class_pd, date_out, date_due, displayed, can_handin, info_changed) VALUES (?, ?, ?, ?, ?, ?, ?)");
 		$grade_insert		= $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
 
@@ -28,7 +28,8 @@
 		$uids_lookup		= $conn->prepare("SELECT user.uid FROM user INNER JOIN membership ON user.uid = membership.uid WHERE class_pd = ?");
 
 		// assignment queries
-		$assignment_insert->bind_param("siiss", $_POST["name"], $_POST["type"], $_POST["pt_value"], $_POST["description"], $_POST["url"]);
+		$honors_possible = array_key_exists("honors_possible", $_POST) ? 1 : 0;
+		$assignment_insert->bind_param("siiiiss", $_POST["name"], $_POST["type"], $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"]);
 		$assignment_insert->execute();
 		echo($assignment_insert->error);
 
@@ -85,6 +86,13 @@
 
 			<h2>Meta Information:</h2>
 
+				<div><label for="trimester">Trimester:</label>
+					<select id="trimester" name="trimester">
+						<option value="1">T1</option>
+						<option value="2">T2</option>
+						<option value="3">T3</option>
+					</select>
+				</div>
 				<div><label for="name">Title:</label><input type="text" id="name" name="name" placeholder="Title" /></div>
 				<div><label for="type">Type:</label>
 				<select id="type" name="type"><?php 	// type selector
@@ -95,13 +103,14 @@
 					}?>
 				</select></div>
 				<div><label for="pt_value">Points:</label><input type="text" id="pt_value" name="pt_value" placeholder="Point Value" /></div>
+				<div><label for="honors_possible">Honors Option?:</label><input type="checkbox" id="honors_possible" name="honors_possible" value="1" /></div>
 				<div><label for="URL">URL:</label><input type="text" id="url" name="url" placeholder="http://principles.cs.stab.org/asgn/hw01.pdf" /></div>
 
 				<div><label for="description">Description:</label><textarea id="description" name="description" placeholder="Description"></textarea>
 
 			<h2>Per-Class Information:</h2>
 
-				<table>
+				<table border="1">
 					<tr>
 						<th>Period</th>
 						<th>Date Out</th>

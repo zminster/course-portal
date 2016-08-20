@@ -33,12 +33,12 @@
 		$f_rubric = file($rubric_dir . $asgn_id . ".txt");
 	
 		// create queries
-		$meta_select		= $conn->prepare("SELECT date_due, pt_value, name FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id WHERE assignment.asgn_id = ? AND class_pd = ?");
+		$meta_select		= $conn->prepare("SELECT date_due, pt_value, name, honors_possible FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id WHERE assignment.asgn_id = ? AND class_pd = ?");
 		$grade_select		= $conn->prepare("SELECT grades.uid, username, name, late, handin_time, extension FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_meta ON grades.uid = user_meta.uid WHERE handed_in=1 AND asgn_id=? AND class_pd=?");
 		$grade_update		= $conn->prepare("UPDATE grades SET chomped=1 WHERE uid = ? AND asgn_id = ?");
 
 		$meta_select->bind_param("ii", $asgn_id, $class_pd);
-		$meta_select->bind_result($date_due, $pt_value, $asgn_name);
+		$meta_select->bind_result($date_due, $pt_value, $asgn_name, $honors_possible);
 		$grade_select->bind_param("ii", $asgn_id, $class_pd);
 		$grade_select->bind_result($uid, $username, $name, $late, $handin_time, $extension);
 		$grade_update->bind_param("ii", $uid, $asgn_id);
@@ -84,6 +84,7 @@
 						$insert = ["Late Handin Penalty: /0"  . PHP_EOL,
 						$asgn_name . " Total: /" . $pt_value  . PHP_EOL];
 						$late_days ? array_unshift($insert, "Late Days: " . $late_days . PHP_EOL) : NULL;
+						$honors_possible ? array_push($insert, "Honors Earned? : " . PHP_EOL) : NULL;
 						array_splice($rubric, $i, 1, $insert);
 					}
 				}
