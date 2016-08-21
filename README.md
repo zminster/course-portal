@@ -1,5 +1,6 @@
 Installation Notes
 ================== 
+* Package dependencies: Node/NPM LTS Latest, PHP, MySQL, php-pear, php5-dev, pecl install stats
 * Apache will run the PHP backend. VHost needs to be configured with ./backend as the DocumentRoot, and only expose to localhost. Access to the backend is possible only through VPN to server running system. NOTE: this is not a super-secure setup, since the frontend can send POST requests to the backend if compromised. In the future, a better solution should be developed.
 * Add user www-data and instructor user to new group, "instructor" or something similar. Create the following dirs owned by www-data:instructor (the rest are handled by the software)
 	* /course/csp/rubric/
