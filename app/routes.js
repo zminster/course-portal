@@ -18,8 +18,7 @@ module.exports = function(app, passport) {
 	  HOME PAGE (not logged in)
 	 **************************************/
 	app.get('/', function(req, res) {
-		// TODO: Home Page Template
-		res.end("Not authenticated");
+    	res.redirect('/portal');
 	});
 
 	/**************************************
