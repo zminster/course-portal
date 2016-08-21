@@ -71,7 +71,7 @@
 			else if (!$handed_in)
 				array_push($a_nti, [$class_pd, $username]);
 			if ($late)
-				array_push($a_late, [$class_pd, $username, $handin_time]);
+				array_push($a_late, [$class_pd, $username, $handin_time, $extension]);
 			if ($handed_in && (!$chomped || !$score))
 				array_push($a_needgrade, [$class_pd, $username, $chomped]);
 			if ($extension)
@@ -111,10 +111,10 @@
 			echo("<td>" . $u[1] . "</td>");
 			echo("<td>" . $u[2] . "</td>");
 			// calculate difference from handin in seconds, taking extensions into account
-			$due = strtotime($meta[$class_pd]['date_due']);
+			$due = strtotime($meta[$u[0]]['date_due']);
 			$handin = strtotime($u[2]);
-			if ($extension)
-				$due += (3600 * $extension);	// seconds in an hour
+			if ($u[3])
+				$due += (3600 * $u[3]);	// seconds in an hour
 			$diff = $handin - $due;
 			echo ("<td>" . ($diff/3600) . " hrs</td>");
 			?></tr><?php
@@ -165,7 +165,7 @@
 			?><tr><?php
 			echo("<td>" . $u[0] . "</td>");
 			echo("<td>" . $u[1] . "</td>");
-			echo($u[1] ? "<td>Yes</td>" : "<td>No</td>");
+			echo($u[2] ? "<td>Yes</td>" : "<td>No</td>");
 			?></tr><?php
 		}
 		?></table>

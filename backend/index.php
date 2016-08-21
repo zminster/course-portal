@@ -36,7 +36,7 @@
 	<h2>Reports</h2>
 	<ul>
 		<li><a href="report_asgn.php">Individual Assignment Report</a></li>
-		<li><a href="report_latemiss.php">Missing &amp; Late Assignments (Global)</a></li>
+		<li><a href="report_nti.php">Missing &amp; Late Assignments (Global)</a></li>
 		<li><a href="report_student.php">Student Grade Report (Individual)</a></li>
 		<li><a href="report_grades.php">Student Grade Report (Class)</a></li>
 	</ul>
