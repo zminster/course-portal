@@ -82,7 +82,7 @@
 				$due += (3600 * $u[4]);	// seconds in an hour
 			$diff = $handin - $due;
 			echo ("<td>" . ($diff/3600) . " hrs</td>");
-			echo ("<td>" . $u[4] . " hrs</td>");
+			echo ("<td>" . ($u[4] ? $u[4] . "hrs" : "") . "</td>");
 			?></tr><?php
 		}
 		?></table>

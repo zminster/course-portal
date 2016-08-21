@@ -66,7 +66,7 @@
 				?><p>Password changed to: <span style="font-weight:bold">
 					<?php echo($gen_pass); ?></span></p><?php
 			}
-			?><p style="font-weight:bold">User Updated: <?php echo($_POST["name"]); ?></p>
+			?><p style="font-weight:bold">User Updated: <?php echo($_POST["first_name"] . " " . $_POST["last_name"]); ?></p>
 			<div><a href="edit_user.php">Again</a> | 
 			<a href="index.php">Menu</a></div><?php
 		} else {	// user selected, display user information

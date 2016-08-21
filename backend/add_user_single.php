@@ -76,7 +76,7 @@
 
 		// report result
 		?>
-		<h2>Students Added :: Period <?php echo($period); ?></h2>
+		<h2>Student Added :: Period <?php echo($period); ?></h2>
 		<div><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($first_name . " " . $last_name); ?>,
 			<?php echo($gen_pass); ?></div>
 		

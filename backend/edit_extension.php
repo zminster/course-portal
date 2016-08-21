@@ -53,7 +53,7 @@
 			?><tr><td>Assignment Marked:</td><td><b><?php echo($recomputed_late ? "LATE" : "NOT LATE"); ?></b></td></tr><?php
 		}
 
-		?></table><p style="font-weight:bold">Extension Granted: <?php echo($users[$uid]["first_name"] . $users[$uid]["last_name"]); ?> / <?php echo($assignments[$asgn_id]["name"]); ?></p>
+		?></table><p style="font-weight:bold">Extension Granted: <?php echo($users[$uid]["first_name"] . " " . $users[$uid]["last_name"]); ?> / <?php echo($assignments[$asgn_id]["name"]); ?></p>
 			<div><a href="edit_extension.php">Again</a> | 
 			<a href="index.php">Menu</a></div><?php
 

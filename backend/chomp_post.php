@@ -40,10 +40,12 @@
 				for ($i = 0; $i < count($f_rubric); $i++) {
 					if (strpos($f_rubric[$i], $match_str) !== FALSE) {
 						preg_match('/: (\d+\.?\d*)\//', $f_rubric[$i], $m); // regex matches ": XX/"
-						$score = $m[1];
+						if (isset($m[1]))
+							$score = $m[1];
 						if ($assignments[$asgn_id]["honors_possible"]) {
 							preg_match('/\? : ([a-z]*)/i', $f_rubric[$i+1], $m); // regex matches "? : YYY"; YYY should be either "YES" or "NO"
-							$honors_earned = trim($m[1]);
+							if (isset($m[1]))
+								$honors_earned = trim($m[1]);
 						}
 						break;
 					}

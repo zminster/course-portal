@@ -52,7 +52,7 @@
 			// extract vars
 			$username = $data[0];
 			$last_name = $data[1];
-			$first_name = data[2];
+			$first_name = $data[2];
 			$year = $data[3];
 			$email = $data[4];
 
