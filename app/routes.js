@@ -83,7 +83,6 @@ module.exports = function(app, passport) {
 	  PRIVILEGED STATIC PAGES
 	 **************************************/
 	app.get('/resources', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
-		//TODO: Resources page
 		res.render('resources.html', {
 			user : req.user // get the user out of session and pass to template
 		});

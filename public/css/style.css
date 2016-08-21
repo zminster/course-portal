@@ -555,3 +555,68 @@ form #collab-statement {
 .lessons td:nth-child(3), .lessons td:nth-child(4) {
 	text-align:center;
 }
+
+/* RESOURCES PAGE */
+#container2 {
+	clear:left;
+	float:left;
+	width:100%;
+	overflow:hidden;
+	font-size: 18px;
+}
+#container1 {
+	float:left;
+	width:100%;
+	position:relative;
+	right:50%;
+}
+#col1 {
+	float:left;
+	width:48%;
+	position:relative;
+	left:50%;
+	overflow:hidden;
+}
+#col2 {
+	float:left;
+	width:50%;
+	position:relative;
+	left:52%;
+	overflow:hidden;
+}
+
+#container2 ul {
+	list-style-type: none;
+	padding-left: 20px;
+	padding-top:15px;
+}
+
+#container2 ul li span {
+	padding-right:7px;
+}
+
+#hours {
+	text-align:center;
+}
+
+#hours p, #hours h1 {
+	text-align: left;
+}
+
+#hours div {
+	margin-top:20px;
+	border:1px solid #9f6000;
+	text-align:left;
+	font-family: "Helvetica", sans-serif;
+	font-size:13px;
+	line-height:20px;
+	text-transform: none;
+	padding:10px;
+	
+	color: #9f6000;
+	background-color: #feefb3;
+}
+
+#hours iframe {
+	margin-top:15px;
+}
