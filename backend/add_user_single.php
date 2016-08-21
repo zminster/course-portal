@@ -10,7 +10,7 @@
 	include 'common/password_generator.php';
 	$method = $_SERVER['REQUEST_METHOD'];
 
-	if ($method == 'POST') {	// POST: admin is adding users
+	if ($method == 'POST') {	// POST: admin is adding (single) user
 
 		// populate vars
 		$period = $_POST['period'];
@@ -19,17 +19,30 @@
 		$year = $_POST['year'];
 		$email = $_POST['email'];
 
+		// get existing assignments first
+		$asgn_select = $conn->prepare("SELECT asgn_id FROM assignment");
+		$asgns = [];
+		$asgn_select->bind_result($asgn_id);
+		$asgn_select->execute();
+		$asgn_select->store_result();
+		echo($asgn_select->error);
+		while($asgn_select->fetch()) {
+			array_push($asgns, $asgn_id);
+		}
+
 		// initialize & bind queries
 		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag) VALUES (?, ?, 1)");
 		$uid_lookup  = $conn->prepare("SELECT uid FROM user WHERE username = ?");
 		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, name, year, email) VALUES (?, ?, ?, ?)");
 		$membership  = $conn->prepare("INSERT INTO membership (uid, class_pd) VALUES (?, ?)");
+		$grades		 = $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
 
 		$user_insert->bind_param("ss", $username, $password);
 		$uid_lookup->bind_param("s", $username);
 		$uid_lookup->bind_result($uid);
 		$meta_insert->bind_param("isis", $uid, $name, $year, $email);
 		$membership->bind_param("ii", $uid, $period);
+		$grades->bind_param("ii", $uid, $asgn_id);
 
 		// generate password
 		$gen_pass = generate_easy_password();
@@ -53,6 +66,12 @@
 		// insert into membership
 		$membership->execute();
 		echo($membership->error);
+
+		// insert blank grades if assignments already exist
+		foreach ($asgns as $asgn_id) {
+			$grades->execute();
+			echo($grades->error);
+		}
 
 		// report result
 		?>
