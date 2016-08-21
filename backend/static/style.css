@@ -39,3 +39,16 @@ label {
 input, option, select {
 	padding:3px;
 }
+
+table {
+	padding-left:50px;
+}
+
+table {
+	border:0;
+}
+
+h2 {
+	border-bottom:1px #000 solid;
+	padding-left:20px;
+}
