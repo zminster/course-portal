@@ -34,13 +34,13 @@
 	
 		// create queries
 		$meta_select		= $conn->prepare("SELECT date_due, pt_value, name, honors_possible FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id WHERE assignment.asgn_id = ? AND class_pd = ?");
-		$grade_select		= $conn->prepare("SELECT grades.uid, username, name, late, handin_time, extension FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_meta ON grades.uid = user_meta.uid WHERE handed_in=1 AND asgn_id=? AND class_pd=?");
+		$grade_select		= $conn->prepare("SELECT grades.uid, username, first_name, last_name, late, handin_time, extension FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_meta ON grades.uid = user_meta.uid WHERE handed_in=1 AND asgn_id=? AND class_pd=?");
 		$grade_update		= $conn->prepare("UPDATE grades SET chomped=1 WHERE uid = ? AND asgn_id = ?");
 
 		$meta_select->bind_param("ii", $asgn_id, $class_pd);
 		$meta_select->bind_result($date_due, $pt_value, $asgn_name, $honors_possible);
 		$grade_select->bind_param("ii", $asgn_id, $class_pd);
-		$grade_select->bind_result($uid, $username, $name, $late, $handin_time, $extension);
+		$grade_select->bind_result($uid, $username, $first_name, $last_name, $late, $handin_time, $extension);
 		$grade_update->bind_param("ii", $uid, $asgn_id);
 
 		// get meta information (set $date_due, $pt_value)
@@ -73,7 +73,7 @@
 				$rubric = $f_rubric;
 				for ($i = 0; $i < count($rubric); $i++) {
 					if (strpos($rubric[$i], "CSP_HEAD") !== FALSE) {
-						$insert = ["Student: " . $name . " (" . $username . ")" . PHP_EOL,
+						$insert = ["Student: " . $first_name . " " . $last_name . " (" . $username . ")" . PHP_EOL,
 							"Period: " . $class_pd . PHP_EOL,
 							"Turned In: " . date("D, M d, Y g:i A", $handin_t) . 
 							"\t(Due: " . $d_dt->format("D, M d, Y g:i A") . ($extension ? " - extended" : "") . ")"  . PHP_EOL

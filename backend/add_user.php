@@ -18,7 +18,7 @@
 
 		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag) VALUES (?, ?, 1)");
 		$uid_lookup  = $conn->prepare("SELECT uid FROM user WHERE username = ?");
-		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, name, year, email) VALUES (?, ?, ?, ?)");
+		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, first_name, last_name, year, email) VALUES (?, ?, ?, ?, ?)");
 		$membership  = $conn->prepare("INSERT INTO membership (uid, class_pd) VALUES (?, ?)");
 		$asgn_select = $conn->prepare("SELECT asgn_id FROM assignment");
 		$grades		 = $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
@@ -36,7 +36,7 @@
 		$user_insert->bind_param("ss", $username, $password);
 		$uid_lookup->bind_param("s", $username);
 		$uid_lookup->bind_result($uid);
-		$meta_insert->bind_param("isis", $uid, $name, $year, $email);
+		$meta_insert->bind_param("issis", $uid, $first_name, $last_name, $year, $email);
 		$membership->bind_param("ii", $uid, $period);
 		$grades->bind_param("ii", $uid, $asgn_id);
 		?><h2>Students Added :: Period <?php echo($period) ?></h2><ul><?php
@@ -46,14 +46,15 @@
 			$ct++;
 			$data = explode(",", $student);
 
-			if (count($data) != 4)
+			if (count($data) != 5)
 				die("MALFORMED STUDENT LINE " + $ct + ": " + $student);
 
 			// extract vars
 			$username = $data[0];
-			$name = $data[1];
-			$year = $data[2];
-			$email = $data[3];
+			$last_name = $data[1];
+			$first_name = data[2];
+			$year = $data[3];
+			$email = $data[4];
 
 			// generate password
 			$gen_pass = generate_easy_password();
@@ -86,7 +87,7 @@
 
 			// report result
 			?>
-			<li><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($name); ?>,<?php echo($gen_pass); ?></li>
+			<li><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($first_name . " " . $last_name); ?>,<?php echo($gen_pass); ?></li>
 			<?php
 		}
 		?></ul><div><a href="add_user.php">Again</a> | 
@@ -109,7 +110,7 @@
 			</select></div>
 
 			<div>Add users on newlines in the following comma-separated
-			format: [username],[name],[year],[email]</div>
+			format: [username],[last name],[first name],[year],[email]</div>
 			<?php
 
 		} else{

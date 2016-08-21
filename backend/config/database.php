@@ -103,7 +103,7 @@
 	}
 
 	function get_all_userinfo($conn) {
-		$res = $conn->query("SELECT user.uid, class_pd, username, name, year, email FROM user INNER JOIN membership ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid ORDER BY class_pd, username");
+		$res = $conn->query("SELECT user.uid, class_pd, username, first_name, last_name, year, email FROM user INNER JOIN membership ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid ORDER BY class_pd, username");
 		$users = array();
 
 		if ($res->num_rows > 0) {

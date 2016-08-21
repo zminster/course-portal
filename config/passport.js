@@ -23,7 +23,7 @@ module.exports = function(passport) {
     // used to deserialize the user
     // we want full set of information, so we do a JOIN query
     passport.deserializeUser(function(uid, done) {
-        connection.query("SELECT user.uid, class_pd, username, password, change_flag, name, year, email FROM user INNER JOIN membership\
+        connection.query("SELECT user.uid, class_pd, username, password, change_flag, first_name, last_name, year, email FROM user INNER JOIN membership\
          ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid WHERE user.uid = ?",[uid], function(err, rows){
             done(err, rows[0]);
         });

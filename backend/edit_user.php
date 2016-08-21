@@ -38,13 +38,13 @@
 			// create queries
 			$username_update	= $conn->prepare("UPDATE user SET username=? WHERE uid=?");
 			$password_change	= $conn->prepare("UPDATE user SET password=?, change_flag=1 WHERE uid=?");
-			$meta_update		= $conn->prepare("UPDATE user_meta SET name=?, year=?, email=? WHERE uid=?");
+			$meta_update		= $conn->prepare("UPDATE user_meta SET first_name=?, last_name=?, year=?, email=? WHERE uid=?");
 			$period_update		= $conn->prepare("UPDATE membership SET class_pd=? WHERE uid = ?");
 
 			// bindings
 			$username_update->bind_param("si", $_POST["username"], $uid);
 			$password_change->bind_param("si", $password, $uid);
-			$meta_update->bind_param("sssi", $_POST["name"], $_POST["year"], $_POST["email"], $uid);
+			$meta_update->bind_param("ssssi", $_POST["first_name"], $_POST["last_name"], $_POST["year"], $_POST["email"], $uid);
 			$period_update->bind_param("ii", $_POST["class_pd"], $uid);
 
 			// exec default ("always") edits
@@ -97,7 +97,8 @@
 				</div>
 
 				<div><label for="username">Username:</label><input type="text" id="username" name="username" placeholder="Username" value="<?php echo($user["username"]); ?>" /></div>
-				<div><label for="name">Name:</label><input type="text" id="name" name="name" placeholder="Name" value="<?php echo($user["name"]); ?>" /></div>
+				<div><label for="first_name">First Name:</label><input type="text" id="first_name" name="first_name" placeholder="First Name" value="<?php echo($user["first_name"]); ?>" /></div>
+				<div><label for="last_name">Last Name:</label><input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo($user["last_name"]); ?>" /></div>
 				<div><label for="year">Year:</label><input type="text" id="year" name="year" placeholder="e.g. 12" value="<?php echo($user["year"]); ?>" /></div>
 				<div><label for="email">Email:</label><input type="text" id="email" name="email" placeholder="Email" value="<?php echo($user["email"]); ?>" /></div>
 				
@@ -112,7 +113,7 @@
 				<?php
 				foreach ($users as $user) {
 					?><option value="<?php echo($user["uid"]);?>">
-						<?php echo($user["class_pd"]);?>) <?php echo($user["username"]);?> [<?php echo($user["name"]); ?>]
+						<?php echo($user["class_pd"]);?>) <?php echo($user["username"]);?> [<?php echo($user["first_name"]. " " . $user["last_name"]); ?>]
 					</option><?php
 				} ?>
 			</select></div>

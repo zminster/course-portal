@@ -93,7 +93,7 @@
 				<?php
 				foreach ($users as $user) {
 					?><option value="<?php echo($user["uid"]);?>">
-						<?php echo($user["class_pd"]);?>.) <?php echo($user["username"]);?> [<?php echo($user["name"]); ?>]
+						<?php echo($user["class_pd"]);?>.) <?php echo($user["username"]);?> [<?php echo($user["first_name"] . " " . $user["last_name"]); ?>]
 					</option><?php
 				} ?>
 			</select></div>

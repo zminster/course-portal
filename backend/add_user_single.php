@@ -15,7 +15,8 @@
 		// populate vars
 		$period = $_POST['period'];
 		$username = $_POST['username'];
-		$name = $_POST['name'];
+		$first_name = $_POST['first_name'];
+		$last_name = $_POST['last_name'];
 		$year = $_POST['year'];
 		$email = $_POST['email'];
 
@@ -33,14 +34,14 @@
 		// initialize & bind queries
 		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag) VALUES (?, ?, 1)");
 		$uid_lookup  = $conn->prepare("SELECT uid FROM user WHERE username = ?");
-		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, name, year, email) VALUES (?, ?, ?, ?)");
+		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, first_name, last_name, year, email) VALUES (?, ?, ?, ?, ?)");
 		$membership  = $conn->prepare("INSERT INTO membership (uid, class_pd) VALUES (?, ?)");
 		$grades		 = $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
 
 		$user_insert->bind_param("ss", $username, $password);
 		$uid_lookup->bind_param("s", $username);
 		$uid_lookup->bind_result($uid);
-		$meta_insert->bind_param("isis", $uid, $name, $year, $email);
+		$meta_insert->bind_param("issis", $uid, $first_name, $last_name, $year, $email);
 		$membership->bind_param("ii", $uid, $period);
 		$grades->bind_param("ii", $uid, $asgn_id);
 
@@ -76,7 +77,7 @@
 		// report result
 		?>
 		<h2>Students Added :: Period <?php echo($period); ?></h2>
-		<div><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($name); ?>,
+		<div><?php echo($uid); ?>,<b><?php echo($username); ?></b>,<?php echo($first_name . " " . $last_name); ?>,
 			<?php echo($gen_pass); ?></div>
 		
 		<div><a href="add_user_single.php">Again</a> | 
@@ -99,7 +100,8 @@
 			</select></div>
 
 			<div><input type="text" name="username" placeholder="Username" /></div>
-			<div><input type="text" name="name" placeholder="Real Name" /></div>
+			<div><input type="text" name="first_name" placeholder="First Name" /></div>
+			<div><input type="text" name="last_name" placeholder="Last Name" /></div>
 			<div><input type="text" name="year" placeholder="Grade" /></div>
 			<div><input type="text" name="email" placeholder="Email" /></div>
 			<?php

@@ -32,10 +32,11 @@ CREATE TABLE course_portal.class (
 -- user_meta
 -- 	stores meta information about each user
 -- 
--- 	user_meta(uid, name, year, email)
+-- 	user_meta(uid, first_name, last_name, year, email)
 CREATE TABLE course_portal.user_meta (
     `uid` INT UNSIGNED NOT NULL,
-    `name` VARCHAR(255) NOT NULL,
+    `first_name` VARCHAR(255) NOT NULL,
+    `last_name` VARCHAR(255) NOT NULL,
     `year` INT UNSIGNED NOT NULL,
     `email` VARCHAR(255) NOT NULL,
         PRIMARY KEY (`uid`),
