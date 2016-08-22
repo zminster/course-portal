@@ -75,7 +75,7 @@
 						<td><input type="checkbox" id="chomped" name="chomped" <?php echo($chomped ? "checked" : ""); ?>/></td>
 						<td>
 							<?php echo($score ? $score : "NULL"); ?> 
-							<?php echo($score ? "<input type=\"hidden\" name=\"score\" value=\"" + $score + "\" />" : ""); ?>
+							<?php echo($score ? "<input type=\"hidden\" name=\"score\" value=\"" . $score . "\" />" : ""); ?>
 							<input type="checkbox" id="null_score" name="null_score" />
 						</td>
 					</tr>
