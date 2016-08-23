@@ -50,11 +50,11 @@
 				die("MALFORMED STUDENT LINE " + $ct + ": " + $student);
 
 			// extract vars
-			$username = $data[0];
-			$last_name = $data[1];
-			$first_name = $data[2];
-			$year = $data[3];
-			$email = $data[4];
+			$username = trim($data[0]);
+			$last_name = trim($data[1]);
+			$first_name = trim($data[2]);
+			$year = trim($data[3]);
+			$email = trim($data[4]);
 
 			// generate password
 			$gen_pass = generate_easy_password();
