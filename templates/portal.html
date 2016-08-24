@@ -60,7 +60,7 @@
 				<tbody>
 					{{#assignments}}
 						<tr {{#due_warn}}class="{{due_warn}}"{{/due_warn}}>
-							<td class="title"><a href="{{url}}">{{name}}</a>{{#description}}<div class="description">{{description}}</div>{{/description}}</td>
+							<td class="title">{{#url}}<a href="{{url}}" target="_blank">{{/url}}{{name}}{{#url}}</a>{{/url}}{{#description}}<div class="description">{{description}}</div>{{/description}}</td>
 							<td>{{date_out}}</td>
 							<td class="ribbon-container">{{date_due}}{{#time_left}} <span class="time_left">({{time_left}})</span>{{/time_left}}{{#extension}}<div class="ribbon-box"><span>{{extension}} hour extension</span></div>{{/extension}}</td>
 							<td class="title">
