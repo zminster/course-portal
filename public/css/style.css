@@ -479,8 +479,6 @@ form #collab-statement {
     width:100%;
     padding:15px;
     margin-bottom:20px;
-    position:absolute;
-    top:80px;
 }
 
 #collab-statement input, 
@@ -531,11 +529,6 @@ form #collab-statement {
 	margin-top:40px;
 	position:relative;
 	height:220px;
-}
-
-#f_handin #submit {
-	position:absolute;
-	top:160px;
 }
 
 .receipt {
