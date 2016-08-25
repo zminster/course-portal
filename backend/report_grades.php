@@ -31,7 +31,7 @@
 		// this gives us each student's grade on each assignment
 		// ordered by the last name of the student (so all assignments are grouped by student)
 		// 		then ordered by due dates (so assignments are in same order as header row)
-		$grade_select = $conn->prepare("SELECT last_name, first_name, nreq, handed_in, extension, late, chomped, score, honors_possible, honors_earned
+		$grade_select = $conn->prepare("SELECT grades.uid, last_name, first_name, nreq, handed_in, extension, late, chomped, score, honors_possible, honors_earned
 			FROM grades 
 				JOIN membership ON grades.uid = membership.uid
 				JOIN assignment ON grades.asgn_id = assignment.asgn_id 
@@ -43,7 +43,7 @@
 		$grade_select->bind_param("ii", $class_pd, $trimester);
 
 		$asgn_select->bind_result($asgn_id, $name, $date_due, $type, $honors_possible, $pt_value);
-		$grade_select->bind_result($last_name, $first_name, $nreq, $handed_in, $extension, $late, $chomped, $score, $honors_possible, $honors_earned);
+		$grade_select->bind_result($uid, $last_name, $first_name, $nreq, $handed_in, $extension, $late, $chomped, $score, $honors_possible, $honors_earned);
 
 		?><h1>Class Grade Report &raquo; Period <?php echo($class_pd); ?> &raquo; Trimester <?php echo($trimester);?></h1>
 
@@ -82,8 +82,8 @@
 
 			$curr_student = "";
 			while($grade_select->fetch()) {
-				if (strcmp($curr_student, $last_name) != 0) {	// start new row for new student
-					$curr_student = $last_name;
+				if (strcmp($curr_student, $uid) != 0) {	// start new row for new student
+					$curr_student = $uid;
 					?></tr><tr>
 						<td><span><?php echo($last_name); ?></span>, <?php echo($first_name); ?></td><?php
 				}
