@@ -179,9 +179,11 @@ module.exports = function(app, passport) {
 
 					q3(function(err, asgn_arr) {
 						if (!err) {
+							var now = moment();
 							for (var i = 0; i < asgn_arr.length; i++) {
 								var asgn_l = types[asgn_arr[i].type].assignments;	// list of assignments of this type
-								asgn_l.push(construct_assignment(asgn_arr[i]));		// construct assignment object
+								if (now.isAfter(moment(asgn_arr[i].date_out)))
+									asgn_l.push(construct_assignment(asgn_arr[i]));		// construct assignment object
 							}
 
 							/* THIS is a disgusting hack
