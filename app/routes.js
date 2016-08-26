@@ -202,12 +202,12 @@ module.exports = function(app, passport) {
 
 							res.render('portal.html', d);
 						} else {
-							res.render("error.html", {error: "There's a problem accessing portal information from the database right now."});
+							res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
 						}
 					});
 				});
 			} else {
-				res.render("error.html", {error: "There's a problem accessing portal information from the database right now."});
+				res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
 			}	
 		});
 	});
@@ -283,7 +283,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.use(function(req, res, next){
-		res.status(404).render('error.html', {error: "Requested URL does not exist."});
+		res.status(404).render('error.html', {error: "Requested URL does not exist.", user: req.user});
 	});
 };
 

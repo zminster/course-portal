@@ -6,6 +6,7 @@ var err_can_handin 		= "Students in your class period aren't allowed to hand in 
 var err_invalid_handin	= "That's not a valid assignment.";
 var db_error 			= "There was a fatal database error.";
 var err_chomped			= "This assignment is currently being graded; you cannot turn it in again.";
+var err_nreq			= "You are not required to complete this assignment; you cannot turn it in.";
 
 module.exports = {
 	// middleware: ensures user is logged in
@@ -31,13 +32,12 @@ module.exports = {
 					else
 						return next();
 				} else {
-					res.render("error.html", {error: db_error});
+					res.render("error.html", {error: db_error, user:req.user});
 				}
 		});
 	},
 
 	// middleware: ensures handin is legit before processing
-	// TODO: block NREQ from handing in
 	isLegitHandin: function(req, res, next) {
 		var asgn_id = req.params.asgn_id;
 		if (asgn_id) {	// assignment ID specified
@@ -49,26 +49,27 @@ module.exports = {
 						function(err, rows){
 							if (!err && rows.length > 0 && rows[0].can_handin == 1) {
 								req.date_due = rows[0].date_due;
-								conn.query("SELECT chomped, extension FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
-									if (!err && !rows[0].chomped) {
+								conn.query("SELECT nreq, chomped, extension FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
+									if (!err && !rows[0].chomped && !rows[0].nreq) {
 										if (rows[0].extension)
 											req.extension = rows[0].extension;
 										return next();
 									}
-									else {
-										res.render('error.html', {error: err_chomped});
-									}
+									else if (rows[0].nreq)
+										res.render('error.html', {error: err_nreq, user: req.user});
+									else
+										res.render('error.html', {error: err_chomped, user: req.user});
 								})
 							} else {
-								res.render('error.html', {error: err_can_handin});
+								res.render('error.html', {error: err_can_handin, user: req.user});
 							}
 						});
 				} else {
-					res.render('error.html', {error: err_invalid_handin});
+					res.render('error.html', {error: err_invalid_handin, user: req.user});
 				}
 			});
 		} else {
-			res.render('error.html', {error: err_invalid_handin});
+			res.render('error.html', {error: err_invalid_handin, user: req.user});
 		}
 	},
 
