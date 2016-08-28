@@ -33,8 +33,8 @@
 
 .ribbon-box {
   position: absolute;
-  top: 3px;
-  right: -15px;
+  top: -7px;
+  right: -20px;
   overflow: visible;
   /* so we can see the pseudo-elements we're going to add to the anchor */
   

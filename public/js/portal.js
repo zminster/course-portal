@@ -5,13 +5,13 @@ $(document).mousemove( function(e) {
 	mouseY = e.pageY;
 });
 
-$(".title").mouseenter(function(e) {
+$(".overlay").mouseenter(function(e) {
 	$(this).children(".description").css({
 		'top': e.pageY,
 		'left':  e.pageX
 	}).fadeIn('fast');
 })
 
-$(".title").mouseleave(function(e) {
+$(".overlay").mouseleave(function(e) {
 	$(this).children(".description").fadeOut('fast');
 })

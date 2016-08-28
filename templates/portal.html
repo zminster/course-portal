@@ -60,25 +60,31 @@
 				<tbody>
 					{{#assignments}}
 						<tr {{#due_warn}}class="{{due_warn}}"{{/due_warn}}>
-							<td class="title">{{#url}}<a href="{{url}}" target="_blank">{{/url}}{{name}}{{#url}}</a>{{/url}}{{#description}}<div class="description">{{description}}</div>{{/description}}</td>
+							<td class="overlay">{{#url}}<a href="{{url}}" target="_blank">{{/url}}{{name}}{{#url}}</a>{{/url}}{{#description}}<div class="description">{{description}}</div>{{/description}}</td>
 							<td>{{date_out}}</td>
-							<td class="ribbon-container">{{date_due}}{{#time_left}} <span class="time_left">({{time_left}})</span>{{/time_left}}{{#extension}}<div class="ribbon-box"><span>{{extension}} hour extension</span></div>{{/extension}}</td>
-							<td class="title">
+							<td>
+								<div class="ribbon-container">
+									{{date_due}}{{#time_left}} <span class="time_left">({{time_left}})</span>{{/time_left}}{{#extension}}<div class="ribbon-box"><span>{{extension}} hour extension</span></div>{{/extension}}
+								</div>
+							</td>
+							<td class="overlay">
 								{{#handin_status}}<span class="{{handin_status}}"></span>{{/handin_status}}
 								{{^handin_status}}<span class="fa fa-times-circle"></span> <div class="turn-in">(<a href="/handin/{{id}}">Turn In</a>)</div>{{/handin_status}}
 								{{#handin_time}}<div class="description">Received {{handin_time}}</div>{{^chomped}}<div class="turn-in">(<a href="/handin/{{id}}">Turn In Again</a>)</div>{{/chomped}}{{/handin_time}}
 								{{#nreq}}<div class="turn-in">(Not Required)</div>{{/nreq}}
 							</td>
-							<td class="title">
+							<td class="overlay">
 								{{#late}}{{#late_days}}<div class="description">{{late_days}} day(s) late</div>{{/late_days}}<span class="{{late}}"></span>{{/late}}
 							</td>
-							<td class="ribbon-container">
-								{{#changed}}<div class="ribbon-box"><span>Updated!</span></div>{{/changed}}
-								{{#grade_status}}<span class="icon {{grade_status}}"></span>{{/grade_status}}
-								{{^grade_status}}{{score}}{{/grade_status}}
-								/
-								{{pt_value}}
-								{{#feedback}}(<a href="{{feedback}}">View Comments</a>){{/feedback}}
+							<td>
+								<div class="ribbon-container">
+									{{#changed}}<div class="ribbon-box"><span>Updated!</span></div>{{/changed}}
+									{{#grade_status}}<span class="icon {{grade_status}}"></span>{{/grade_status}}
+									{{^grade_status}}{{score}}{{/grade_status}}
+									/
+									{{pt_value}}
+									{{#feedback}}(<a href="{{feedback}}">View Comments</a>){{/feedback}}
+								</div>
 							</td>
 						</tr>
 					{{/assignments}}
