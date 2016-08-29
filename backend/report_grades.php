@@ -37,7 +37,7 @@
 				JOIN assignment ON grades.asgn_id = assignment.asgn_id 
 				JOIN assignment_meta ON assignment_meta.class_pd = membership.class_pd AND grades.asgn_id = assignment_meta.asgn_id
 				JOIN user_meta ON grades.uid = user_meta.uid
-			WHERE membership.class_pd = ? AND trimester = ? ORDER BY last_name, date_due");
+			WHERE membership.class_pd = ? AND trimester = ? ORDER BY last_name, first_name, date_due");
 
 		$asgn_select->bind_param("ii", $class_pd, $trimester);
 		$grade_select->bind_param("ii", $class_pd, $trimester);
