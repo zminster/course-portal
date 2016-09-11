@@ -94,14 +94,17 @@ module.exports = function(app, passport) {
 				for (var i = 0; i < lessons.length; i++) {
 					var release_date = moment(lessons[i].release_date).add(releaseTime, 'm'); // release lessons at time on release date
 					var now = moment();
+					var count = 0;
 					if (now.isAfter(release_date)) {	// only expose visible lessons after release date
 						var lesson_obj = {};
+						lesson_obj.number = count;
 						lesson_obj.trimester = lessons[i].trimester;
 						lesson_obj.topic = lessons[i].topic;
 						lesson_obj.slide_url = lessons[i].slide_url;
 						lesson_obj.extra_url = lessons[i].extra_url;
 						lesson_obj.released = release_date.format('dddd, MMMM Do YYYY');
 						arr_l.push(lesson_obj);
+						count++;
 					}
 				}
 				res.render('lessons.html', {

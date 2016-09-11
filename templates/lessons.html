@@ -47,6 +47,7 @@
 	<div id="page-container">
 		<table class="lessons">
 		<thead>
+			<th>#</th>
 			<th>Topic</th>
 			<th>Date</th>
 			<th>Slides</th>
@@ -55,6 +56,7 @@
 		<tbody>
 		{{#lessons}}
 			<tr>
+				<td>{{number}}</td>
 				<td>{{topic}}</td>
 				<td>{{released}}</td>
 				<td>{{#slide_url}}<a href="{{slide_url}}" target="_blank"><span class="fa fa-external-link"></span></a>{{/slide_url}}</td>
