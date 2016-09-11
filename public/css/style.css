@@ -544,7 +544,7 @@ form #collab-statement {
 	font-weight:bold;
 }
 
-.lessons td:nth-child(3), .lessons td:nth-child(4) {
+.lessons td:nth-child(4), .lessons td:nth-child(5) {
 	text-align:center;
 }
 

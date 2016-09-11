@@ -91,10 +91,10 @@ module.exports = function(app, passport) {
 		conn.query("SELECT trimester, topic, slide_url, extra_url, release_date FROM lesson JOIN lesson_meta ON lesson.id = lesson_meta.id WHERE class_pd = ? AND visible = 1 ORDER BY release_date ASC", [req.user.class_pd],
 			function(err, lessons) {
 				var arr_l = [];
+				var count = 0;
 				for (var i = 0; i < lessons.length; i++) {
 					var release_date = moment(lessons[i].release_date).add(releaseTime, 'm'); // release lessons at time on release date
 					var now = moment();
-					var count = 0;
 					if (now.isAfter(release_date)) {	// only expose visible lessons after release date
 						var lesson_obj = {};
 						lesson_obj.number = count;
