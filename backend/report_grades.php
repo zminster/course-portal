@@ -26,7 +26,7 @@
 				JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id
 				JOIN assignment_type ON assignment.type = assignment_type.type_id
 			WHERE class_pd = ? AND trimester = ?
-			ORDER BY date_due");
+			ORDER BY date_due DESC");
 
 		// this gives us each student's grade on each assignment
 		// ordered by the last name of the student (so all assignments are grouped by student)
@@ -37,7 +37,7 @@
 				JOIN assignment ON grades.asgn_id = assignment.asgn_id 
 				JOIN assignment_meta ON assignment_meta.class_pd = membership.class_pd AND grades.asgn_id = assignment_meta.asgn_id
 				JOIN user_meta ON grades.uid = user_meta.uid
-			WHERE membership.class_pd = ? AND trimester = ? ORDER BY last_name, first_name, date_due");
+			WHERE membership.class_pd = ? AND trimester = ? ORDER BY last_name, first_name, date_due DESC");
 
 		$asgn_select->bind_param("ii", $class_pd, $trimester);
 		$grade_select->bind_param("ii", $class_pd, $trimester);
@@ -110,7 +110,7 @@
 							$entry_text = $entry_text . $score;
 							$entry_class = $entry_class . " graded";
 
-							if ($score <= 60)
+							if (($score / $pt_value) <= 0.6)
 								$entry_class = $entry_class . " low_grade";
 
 							if ($honors_possible && $honors_earned)

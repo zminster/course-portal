@@ -38,10 +38,10 @@
 
 	function print_stats_row($stats, $first) {
 		?><tr><td><?php echo($first); ?></td><?php
-		?><td><?php echo($stats[0]); ?></td><?php
-		?><td><?php echo($stats[1]); ?></td><?php
-		?><td><?php echo($stats[2]); ?></td><?php
-		?><td><?php echo($stats[3]); ?></td></tr><?php
+		?><td><?php echo(round($stats[0],2)); ?></td><?php
+		?><td><?php echo(round($stats[1],2)); ?></td><?php
+		?><td><?php echo(round($stats[2],2)); ?></td><?php
+		?><td><?php echo(round($stats[3],2)); ?></td></tr><?php
 		return;
 	}
 

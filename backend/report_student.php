@@ -87,7 +87,7 @@
 								$entry_text = $entry_text . $score;
 								$entry_class = $entry_class . " graded";
 
-								if ($score <= 60)
+								if (($score / $pt_value) <= 0.6)
 									$entry_class = $entry_class . " low_grade";
 
 								if ($honors_possible && $honors_earned)
