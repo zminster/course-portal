@@ -68,6 +68,8 @@
 					$interval = $h_dt->diff($d_dt);
 					$late_days = $interval->format('%a');
 					$late_days = $late_days+1;
+				} else {
+					$late_days = 0;
 				}
 				// copy & update rubric array as required
 				$rubric = $f_rubric;
