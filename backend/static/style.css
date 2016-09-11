@@ -148,6 +148,10 @@ h2 {
 	background-color:white;
 }
 
+.late.graded {
+	background-color:#FFD880;
+}
+
 .low_grade {
 	color: red;
 	font-weight:bold;

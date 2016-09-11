@@ -103,9 +103,6 @@
 							$entry_text = $entry_text . " (0)";
 					}
 					else { // ignore all other stuff if NTI
-						if ($late)
-							$entry_class = $entry_class . " late";
-
 						if ($chomped && $score){	// graded
 							$entry_text = $entry_text . $score;
 							$entry_class = $entry_class . " graded";
@@ -121,6 +118,9 @@
 
 						if ($extension)
 							$entry_text = $entry_text . "<span>(+" . $extension . "hrs)</span>";
+
+						if ($late)
+							$entry_class = $entry_class . " late";
 					}
 				}
 				echo("<td><div class=\"" . $entry_class . "\">" . $entry_text . "</div></td>");
