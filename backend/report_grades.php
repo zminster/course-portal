@@ -82,6 +82,8 @@
 
 			$curr_student = "";
 			while($grade_select->fetch()) {
+				if (strcmp($last_name, "Test") == 0) // ignore all records matching test students
+					continue;
 				if (strcmp($curr_student, $uid) != 0) {	// start new row for new student
 					$curr_student = $uid;
 					?></tr><tr>
