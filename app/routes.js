@@ -341,7 +341,8 @@ function construct_assignment(row) {
 	// late (symbol class for late column)
 	if (!row['nreq'] && row['late'] && row['handed_in']) {
 		asgn['late'] = 'fa fa-times-circle';
-		asgn['late_days'] = Math.ceil(now.diff(date_due, 'days', true));
+		var handin_time = moment(row['handin_time']);
+		asgn['late_days'] = Math.ceil(handin_time.diff(date_due, 'days', true));
 	}
 	else if (!row['nreq'] && !row['late'] && row['handed_in'])
 		asgn['late'] = 'fa fa-check-circle';
