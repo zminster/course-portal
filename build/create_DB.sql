@@ -4,6 +4,22 @@ CREATE DATABASE course_portal;
 
 USE course_portal;
 
+-- system
+--  stores master system settings as-needed
+-- 
+--  system(name, value_int, value_str)
+CREATE TABLE course_portal.system_settings (
+    `sid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `value_int` INT UNSIGNED,
+    `value_str` VARCHAR(255),
+        PRIMARY KEY (`sid`),
+    UNIQUE INDEX `setting_name_UNIQUE` (`name`)
+);
+
+-- default settings
+INSERT INTO system_settings (name, value_int) VALUES ("current_trimester", 1);
+
 -- user
 -- 	stores information necessary to authorize student users
 -- 

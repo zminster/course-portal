@@ -12,6 +12,7 @@
 		<li><a href="add_user.php">Add Student (Batch)</a></li>
 		<li><a href="add_user_single.php">Add Student (Single)</a></li>
 		<li><a href="add_asgn_type.php">Add Assignment Type</a></li>
+		<li><a href="edit_settings.php">Edit System Settings</a></li>
 	</ul>
 
 	<h2>Grade/Assignment Management</h2>

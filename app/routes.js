@@ -11,6 +11,8 @@ var handinDir 	= '/course/csp/handin/'; 		/* If changing, also change in upload.
 var maxSize 	= 1000000;						/* per-handin upload limit (bytes) */
 var releaseTime = 465;							/* minutes after midnight to release lessons */
 
+const util = require('util')
+
 /* Routes */
 module.exports = function(app, passport) {
 
@@ -141,77 +143,121 @@ module.exports = function(app, passport) {
 		// prepare massive datagram for delivery to portal renderer
 		var d = {};
 		d['user'] = req.user;
-		// q1: get all assignment cats
+		// q0: get currently active trimester setting
+		var q0 = function(cb) {
+			conn.query("SELECT value_int FROM system_settings WHERE name = ?", ["current_trimester"], cb);
+		};
+		// q1: get all active trimesters
 		var q1 = function(cb) {
+			conn.query("SELECT trimester FROM assignment GROUP BY trimester", cb);
+		};
+		// q2: get all assignment cats
+		var q2 = function(cb) {
 			conn.query("SELECT * FROM assignment_type", cb);
 		};
-		// q2: compute cat averages of scored/viewable assignments
-		var q2 = function(cb) {
-			conn.query("SELECT type_id, SUM(score) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND chomped = 1 AND score IS NOT NULL GROUP BY type_id", [req.user.uid], cb);
-		}
-		// q3: get all assignment data in one fell swoop
+		// q3: compute cat averages of scored/viewable assignments TRIMESTER-BY-TRIMESTER
 		var q3 = function(cb) {
-					conn.query("SELECT type, assignment.asgn_id, name, description, url, pt_value,\
-				date_out, date_due, can_handin, info_changed, nreq, handed_in, handin_time,\
-				late, extension, chomped, can_view_feedback, score\
-			FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
-				JOIN grades ON assignment.asgn_id = grades.asgn_id\
-			WHERE uid = ? AND class_pd = ? AND displayed = 1 ORDER BY type, date_out, date_due",
+			conn.query("SELECT type_id, trimester, SUM(score) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND chomped = 1 AND score IS NOT NULL GROUP BY type_id, trimester", [req.user.uid], cb);
+		};
+		// q4: get all assignment data in one fell swoop
+		var q4 = function(cb) {
+			conn.query("SELECT type, assignment.asgn_id, trimester, name, description, url, pt_value,\
+					date_out, date_due, can_handin, info_changed, nreq, handed_in, handin_time,\
+					late, extension, chomped, can_view_feedback, score\
+				FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
+					JOIN grades ON assignment.asgn_id = grades.asgn_id\
+				WHERE uid = ? AND class_pd = ? AND displayed = 1 ORDER BY trimester, type, date_out, date_due",
 			[req.user.uid, req.user.class_pd], cb);
 		};
 
 		// dispatch
-		q1(function(err, cats) {
+		q0(function(err, setting) {	// q0: get currently active trimester setting
 			if (!err) {
-				var types = {}; // create empty asgn type list
-				for (var i = 0; i < cats.length; i++) {	// dump all found categories into datagram
-					var cat = {};
-					cat.name = cats[i].name;
-					cat.weight = cats[i].weight * 100;
-					cat.assignments = [];	// empty assignment list, will add later
-					types[cats[i].type_id] = cat;
+				var current_trimester = 1;	// default value
+				if (setting.length == 1) {	// actual setting found
+					current_trimester = setting[0].value_int;
 				}
 
-				q2(function(err, averages){
+				q1(function(err, trimesters) {	// q1: get all active terms
+					var terms = {};	// terms object forms associative array of Term identifier (string) to Assignment Types (object) (see below)
 					if (!err) {
-						for (var i = 0; i < averages.length; i++) {
-							var smooth_avg = Math.round(averages[i].avg * 1000) / 10;	// avg to one decimal place
-							types[averages[i].type_id].avg = smooth_avg;
+						for (var i = 0; i < trimesters.length; i++) {
+							terms[trimesters[i].trimester] = {};
+							terms[trimesters[i].trimester].name = trimesters[i].trimester;
+							terms[trimesters[i].trimester].types = {};
+							if (current_trimester == trimesters[i].trimester)
+								terms[trimesters[i].trimester].current = 1;
+							else
+								terms[trimesters[i].trimester].current = 0;
 						}
-					}
 
-					q3(function(err, asgn_arr) {
-						if (!err) {
-							var now = moment();
-							for (var i = 0; i < asgn_arr.length; i++) {
-								var asgn_l = types[asgn_arr[i].type].assignments;	// list of assignments of this type
-								if (now.isAfter(moment(asgn_arr[i].date_out)))
-									asgn_l.push(construct_assignment(asgn_arr[i]));		// construct assignment object
+						q2(function(err, cats) {	// q2: get all assignment cats
+							if (!err) {
+								// overall goal: create entry in types associative array corresponding to this cat in every trimester in "terms" assoc. array
+								for (var i = 0; i < cats.length; i++) {	// dump all found categories into datagram
+									Object.keys(terms).forEach(function(term) {
+										var cat = {};
+										cat.name = cats[i].name;
+										cat.weight = cats[i].weight * 100;
+										cat.assignments = [];	// empty assignment list, will add later
+										terms[term].types[cats[i].type_id] = cat;
+									});
+								}
+
+								q3(function(err, averages){	// q3: find cat averages per-trimester
+									if (!err) {
+										for (var i = 0; i < averages.length; i++) {
+											var smooth_avg = Math.round(averages[i].avg * 1000) / 10;	// avg to one decimal place
+											terms[averages[i].trimester].types[averages[i].type_id].avg = smooth_avg;
+										}
+									}
+
+									q4(function(err, asgn_arr) {	// q4: get and associate all assignment data
+										if (!err) {
+											var now = moment();
+											for (var i = 0; i < asgn_arr.length; i++) {
+												var asgn_l = terms[asgn_arr[i].trimester].types[asgn_arr[i].type].assignments;	// list of assignments of this type
+												if (now.isAfter(moment(asgn_arr[i].date_out)))	// only display assignments that are already past "out" date
+													asgn_l.push(construct_assignment(asgn_arr[i]));		// construct assignment object
+											}
+
+											/* THIS is a disgusting hack
+												 basically asgn type IDs may be non-sequential
+												 and mustache needs a list, not an object
+												 so we need to first treat types like an object
+												 (where type ID is the key and assignment is the value)
+												 and then back-convert from an object to a list
+
+												 we can do this because ultimately type IDs don't
+												 matter on the frontend
+												 WEW LAD. */
+
+											Object.keys(terms).forEach(function(term) {
+												terms[term].categories = [];
+												Object.keys(terms[term].types).forEach(function (type) {
+													terms[term].categories.push(terms[term].types[type]);
+												});
+											});
+											d.trimesters = Object.keys(terms).map(function (term) { return terms[term]; });
+											
+											res.render('portal.html', d);
+										} else {
+											res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
+										}
+									});
+								});
+
+							} else {
+									res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
 							}
-
-							/* THIS is a disgusting hack
-								 basically asgn type IDs may be non-sequential
-								 and mustache needs a list, not an object
-								 so we need to first treat types like an object 
-								 and then back-convert from an object to a list
-
-								 we can do this because ultimately type IDs don't
-								 matter on the frontend
-								 WEW LAD. */
-							d.categories = [];
-							Object.keys(types).forEach(function (type) {
-								d.categories.push(types[type]);
-							});
-
-							res.render('portal.html', d);
-						} else {
-							res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
-						}
-					});
+						});
+					} else {
+						res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
+					}
 				});
 			} else {
 				res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
-			}	
+			}
 		});
 	});
 

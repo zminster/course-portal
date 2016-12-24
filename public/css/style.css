@@ -276,6 +276,40 @@ tbody td {
 	float:right;
 }
 
+.trimester_display {
+	display:none;
+}
+
+.trimester_display.selected {
+	display:block;
+}
+
+#trimester_selections {
+	float:right;
+}
+
+.trimester_select {
+	display:inline-block;
+	width:50px;
+	text-align:center;
+	cursor:pointer;
+	font-weight:normal;
+	font-size:14pt;
+	margin-left: 3px;
+	background-color:#f8f8f8;
+	box-shadow: 0 0 5px #e0e0e0;
+	border:1px solid #fff;
+}
+
+.trimester_select:hover {
+	font-weight:bold;
+}
+
+.trimester_select.selected {
+	background-color:#ffd100;
+	color:crimson;
+}
+
 /* LOGIN */
 
 #login-container {
