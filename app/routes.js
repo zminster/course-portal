@@ -90,28 +90,47 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/lessons', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
-		conn.query("SELECT trimester, topic, slide_url, extra_url, release_date FROM lesson JOIN lesson_meta ON lesson.id = lesson_meta.id WHERE class_pd = ? AND visible = 1 ORDER BY release_date ASC", [req.user.class_pd],
+		conn.query("SELECT trimester, topic, slide_url, extra_url, release_date FROM lesson JOIN lesson_meta ON lesson.id = lesson_meta.id WHERE class_pd = ? AND visible = 1 ORDER BY trimester, release_date ASC", [req.user.class_pd],
 			function(err, lessons) {
-				var arr_l = [];
-				var count = 0;
-				for (var i = 0; i < lessons.length; i++) {
-					var release_date = moment(lessons[i].release_date).add(releaseTime, 'm'); // release lessons at time on release date
-					var now = moment();
-					if (now.isAfter(release_date)) {	// only expose visible lessons after release date
-						var lesson_obj = {};
-						lesson_obj.number = count;
-						lesson_obj.trimester = lessons[i].trimester;
-						lesson_obj.topic = lessons[i].topic;
-						lesson_obj.slide_url = lessons[i].slide_url;
-						lesson_obj.extra_url = lessons[i].extra_url;
-						lesson_obj.released = release_date.format('dddd, MMMM Do YYYY');
-						arr_l.push(lesson_obj);
-						count++;
+				conn.query("SELECT value_int FROM system_settings WHERE name = ?", ["current_trimester"], function(err, setting) {
+					var current_trimester = 1;	// default value
+					if (setting.length == 1) {	// actual setting found
+						current_trimester = setting[0].value_int;
 					}
-				}
-				res.render('lessons.html', {
-					user : req.user, // get the user out of session and pass to template
-					lessons: arr_l
+
+					var trimesters = {};
+					var count = 0;
+					for (var i = 0; i < lessons.length; i++) {
+						var release_date = moment(lessons[i].release_date).add(releaseTime, 'm'); // release lessons at time on release date
+						var now = moment();
+						if (now.isAfter(release_date)) {	// only expose visible lessons after release date
+							var lesson_obj = {};
+							lesson_obj.number = count;
+							lesson_obj.trimester = lessons[i].trimester;
+							lesson_obj.topic = lessons[i].topic;
+							lesson_obj.slide_url = lessons[i].slide_url;
+							lesson_obj.extra_url = lessons[i].extra_url;
+							lesson_obj.released = release_date.format('dddd, MMMM Do YYYY');
+
+							if (trimesters[lessons[i].trimester] === undefined) {
+								var trimester_obj = {};
+								trimester_obj.name = lessons[i].trimester;
+								trimester_obj.lessons = [];
+								if (current_trimester == trimester_obj.name)
+									trimester_obj.current = 1;
+								else
+									trimester_obj.current = 0;
+								trimesters[lessons[i].trimester] = trimester_obj;
+							}
+							
+							trimesters[lesson_obj.trimester].lessons.push(lesson_obj);
+							count++;
+						}
+					}
+					res.render('lessons.html', {
+						user : req.user, // get the user out of session and pass to template
+						trimesters: Object.keys(trimesters).map(function (key) { return trimesters[key]; })
+					});
 				});
 			});
 	});

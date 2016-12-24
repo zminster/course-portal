@@ -45,26 +45,35 @@
 	<div id="header" class="lessons"><h1>Lessons</h1></div>
 
 	<div id="page-container">
+		<div id="trimester_selections" class="lessons">
+			{{#trimesters}}
+				<span id="{{name}}" class="trimester_select{{#current}} selected{{/current}}">T{{name}}</span>
+			{{/trimesters}}
+		</div>
+		{{#trimesters}}
+		<div class="trimester_display{{#current}} selected{{/current}}" id="{{name}}_display">
 		<table class="lessons">
-		<thead>
-			<th>#</th>
-			<th>Topic</th>
-			<th>Date</th>
-			<th>Slides</th>
-			<th>Extra</th>
-		</thead>
-		<tbody>
-		{{#lessons}}
-			<tr>
-				<td>{{number}}</td>
-				<td>{{topic}}</td>
-				<td>{{released}}</td>
-				<td>{{#slide_url}}<a href="{{slide_url}}" target="_blank"><span class="fa fa-external-link"></span></a>{{/slide_url}}</td>
-				<td>{{#extra_url}}<a href="{{extra_url}}" target="_blank"><span class="fa fa-external-link"></span></a>{{/extra_url}}</td>
-			</tr>
-		{{/lessons}}
+			<thead>
+				<th>#</th>
+				<th>Topic</th>
+				<th>Date</th>
+				<th>Slides</th>
+				<th>Extra</th>
+			</thead>
+			<tbody>
+			{{#lessons}}
+				<tr>
+					<td>{{number}}</td>
+					<td>{{topic}}</td>
+					<td>{{released}}</td>
+					<td>{{#slide_url}}<a href="{{slide_url}}" target="_blank"><span class="fa fa-external-link"></span></a>{{/slide_url}}</td>
+					<td>{{#extra_url}}<a href="{{extra_url}}" target="_blank"><span class="fa fa-external-link"></span></a>{{/extra_url}}</td>
+				</tr>
+			{{/lessons}}
 		</tbody>
 		</table>
+		</div>
+		{{/trimesters}}
 	</div>
 
 	<script src="/js/global.js"></script>

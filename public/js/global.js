@@ -7,3 +7,16 @@ $(function() {
 $("#user").click(function(e) {
 	$("#user_flyout").toggle('slow');
 });
+
+$(".trimester_select").click(function(e) {
+	$(".trimester_select").each(function() {
+		$(this).removeClass("selected");
+	});
+	$(".trimester_display").each(function() {
+		$(this).removeClass("selected");
+	});
+
+	var trimester = $(this).attr("id");
+	$("#" + trimester).addClass("selected");
+	$("#" + trimester + "_display").addClass("selected");
+});

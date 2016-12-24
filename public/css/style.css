@@ -288,6 +288,13 @@ tbody td {
 	float:right;
 }
 
+#trimester_selections.lessons {
+	float:none;
+	width:100%;
+	text-align:center;
+	margin-bottom:15px;
+}
+
 .trimester_select {
 	display:inline-block;
 	width:50px;
@@ -576,6 +583,7 @@ form #collab-statement {
 
 .lessons td:first-child {
 	font-weight:bold;
+	text-align:center;
 }
 
 .lessons td:nth-child(4), .lessons td:nth-child(5) {
