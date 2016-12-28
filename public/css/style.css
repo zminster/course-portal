@@ -317,6 +317,12 @@ tbody td {
 	color:crimson;
 }
 
+.honors {
+	font-size:10px;
+	position:absolute;
+	bottom:0;
+}
+
 /* LOGIN */
 
 #login-container {

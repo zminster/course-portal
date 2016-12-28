@@ -182,7 +182,7 @@ module.exports = function(app, passport) {
 		var q4 = function(cb) {
 			conn.query("SELECT type, assignment.asgn_id, trimester, name, description, url, pt_value,\
 					date_out, date_due, can_handin, info_changed, nreq, handed_in, handin_time,\
-					late, extension, chomped, can_view_feedback, score\
+					late, extension, chomped, can_view_feedback, score, honors_possible, honors_earned\
 				FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
 					JOIN grades ON assignment.asgn_id = grades.asgn_id\
 				WHERE uid = ? AND class_pd = ? AND displayed = 1 ORDER BY trimester, type, date_out, date_due",
@@ -421,6 +421,14 @@ function construct_assignment(row) {
 		asgn['grade_status'] = 'fa fa-cog fa-spin';					//   spinning cog
 	else															// Scored:
 		asgn['score'] = row['score'];								//   show score instead of symbol
+		
+	if (row['honors_possible'])
+		if (!row['handed_in'] || !row['chomped'] || !row['score'] || !row['can_view_feedback'])
+			asgn['honors'] = 'fa fa-question';
+		else if (row['honors_earned'])
+			asgn['honors'] = 'fa fa-thumbs-o-up';
+		else
+			asgn['honors'] = 'fa fa-thumbs-o-down';
 
 	asgn['pt_value'] = row['pt_value'];
 
