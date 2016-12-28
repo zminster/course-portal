@@ -82,13 +82,13 @@
 									{{#late}}{{#late_days}}<div class="description">{{late_days}} day(s) late</div>{{/late_days}}<span class="{{late}}"></span>{{/late}}
 								</td>
 								<td class="ribbon-container">
-										{{#changed}}<div class="ribbon-box"><span>Updated!</span></div>{{/changed}}
-										{{#grade_status}}<span class="icon {{grade_status}}"></span>{{/grade_status}}
-										{{^grade_status}}{{score}}{{/grade_status}}
-										/
-										{{pt_value}}
-										{{#feedback}}(<a href="{{feedback}}">View Comments</a>){{/feedback}}
-									{{#honors}}<div class="turn-in">AP: <span class="{{honors}}"></span></div>{{/honors}}
+									{{#changed}}<div class="ribbon-box"><span>Updated!</span></div>{{/changed}}
+									{{#grade_status}}<span class="icon {{grade_status}}"></span>{{/grade_status}}
+									{{^grade_status}}{{score}}{{/grade_status}}
+									/
+									{{pt_value}}
+									{{#feedback}}(<a href="{{feedback}}">View Comments</a>){{/feedback}}
+									{{#honors}}<div class="turn-in honors"><span>A</span><span>P</span>: <span class="{{honors}}"></span></div>{{/honors}}
 								</td>
 							</tr>
 						{{/assignments}}
