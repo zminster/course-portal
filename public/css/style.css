@@ -317,6 +317,19 @@ tbody td {
 	color:crimson;
 }
 
+.honors {
+	color:#0089d0;
+}
+
+/* Optional AP colors
+.honors > span:nth-child(1) {
+	color:#074166;
+}
+
+.honors > span:nth-child(2) {
+	color:#72c367;
+}*/
+
 /* LOGIN */
 
 #login-container {
