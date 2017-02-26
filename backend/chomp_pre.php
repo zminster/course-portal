@@ -86,7 +86,7 @@
 						$insert = ["Late Handin Penalty: /0"  . PHP_EOL,
 						$asgn_name . " Total: /" . $pt_value  . PHP_EOL];
 						isset($late_days) && $late_days ? array_unshift($insert, "Late Days: " . $late_days . PHP_EOL) : NULL;
-						$honors_possible ? array_push($insert, "Honors Earned? : " . PHP_EOL) : NULL;
+						$honors_possible ? array_push($insert, "AP Credit Earned? : " . PHP_EOL) : NULL;
 						array_splice($rubric, $i, 1, $insert);
 					}
 				}
