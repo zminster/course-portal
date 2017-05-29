@@ -23,6 +23,7 @@
 		<li><a href="edit_extension.php">Grant Extension</a></li>
 		<li><a href="chomp_pre.php">Pre-Chomp Assignment (Copy blank rubrics, shutdown handins)</a></li>
 		<li><a href="chomp_post.php">Post-Chomp Assignment (Copy grades from rubrics, allow feedback view)</a></li>
+		<li><a href="chomp_force.php">Force-Chomp Assignment (Copy blank rubrics for NTI assignments, optionally shutdown handins)</a></li>
 		<li><a href="edit_toggle.php">Toggle Assignment LATE/NREQ/CAN_VIEW_FEEDBACK (Per-Student)</a></li>
 		<li><a href="edit_nullify.php">Nullify Assignment (Mark Zero) (Per-Student)</a></li>
 		<li><a href="edit_amnesty.php">Toggle Amnesty Period</a></li>

@@ -167,7 +167,7 @@
 		}
 	} else {	// GET: display edit options
 		?><form action="chomp_force.php" method="POST">
-			<p>Select an assignment to force chomp. This process copies stripped-down rubrics on assignments and marks them turned in (not late), then locks future handin. This is useful for participation/discussion grades (no deliverable), group projects in which one student turned in on behalf of multiple students, or Performance Tasks (handin is done via the College Board).</p>
+			<p>Select an assignment to force chomp. This process copies stripped-down rubrics on assignments and marks them turned in (not late), then (optionally) locks future handin. This is useful for participation/discussion grades (no deliverable), group projects in which one student turned in on behalf of multiple students, or Performance Tasks (handin is done via the College Board).</p>
 
 			<div><label for="asgn_id">Assignment:</label><select id="asgn_id" name="asgn_id">
 				<?php
