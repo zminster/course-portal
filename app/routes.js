@@ -399,7 +399,8 @@ function construct_assignment(row) {
 		asgn['handin_status'] = 'fa fa-check-circle';
 		var handin_time = moment(row['handin_time']).format('llll');
 		asgn['handin_time'] = handin_time;
-	}
+	} else if (!row['handed_in'] && row['score'])
+		asgn['handin_status'] = 'fa fa-times-circle';
 	if (row['chomped'])
 		asgn['chomped'] = 'true';
 
@@ -413,14 +414,14 @@ function construct_assignment(row) {
 		asgn['late'] = 'fa fa-check-circle';
 
 	// grade status
-	if (row['nreq'])												// NREQ:
-		asgn['grade_status'] = 'fa fa-ban';							//   ban symbol
-	else if (!row['handed_in'] || !row['chomped'])					// NTI OR Not Chomped:
-		asgn['grade_status'] = 'fa fa-question-circle';				//   question mark
-	else if (!row['score'])											// Chomped but not yet scored:
-		asgn['grade_status'] = 'fa fa-cog fa-spin';					//   spinning cog
-	else															// Scored:
-		asgn['score'] = row['score'];								//   show score instead of symbol
+	if (row['nreq'])													// NREQ:
+		asgn['grade_status'] = 'fa fa-ban';								//   ban symbol
+	else if ((!row['score'] && !row['handed_in']) || !row['chomped'])	// NTI OR Not Chomped:
+		asgn['grade_status'] = 'fa fa-question-circle';					//   question mark
+	else if (!row['score'])												// Chomped but not yet scored:
+		asgn['grade_status'] = 'fa fa-cog fa-spin';						//   spinning cog
+	else																// Scored:
+		asgn['score'] = row['score']									//   show score instead of symbol
 		
 	if (row['honors_possible'])
 		if (!row['handed_in'] || !row['chomped'] || !row['score'] || !row['can_view_feedback'])
