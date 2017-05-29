@@ -111,7 +111,7 @@
 
 					$newfile = implode("<br>", $rubric);
 					set_error_handler(function($errno, $errstr) use (&$rnr, &$do_not_update) {
-						$rnr = " <span style=\"color:red;\"><b>FILE ERROR: " . $errstr . "</b> (database unchanged)</span>";
+						$rnr = " <span style=\"color:red;\"><b>GRADE FILE ERROR: " . $errstr . "</b> (database unchanged)</span>";
 						$do_not_update = 1; });
 					file_put_contents($rubric_filename, implode("", $rubric)); // write rubric to user's handin dir
 					restore_error_handler();

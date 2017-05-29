@@ -29,7 +29,7 @@
 		$overwrite = array_key_exists("overwrite", $_POST) ? 1 : 0;
 
 		// get rubric file (will safely error out if it doesn't exist)
-		//set_error_handler("warning_handler", E_WARNING);
+		set_error_handler("warning_handler", E_WARNING);
 		$f_rubric = file($rubric_dir . $asgn_id . ".txt");
 	
 		// create queries
@@ -92,6 +92,9 @@
 				}
 
 				$newfile = implode("<br>", $rubric);
+				set_error_handler(function($errno, $errstr) use (&$rnr) {
+					$rnr = " <span style=\"color:red;\"><b>GRADE FILE ERROR: " . $errstr . "</b> </span>"; });
+				restore_error_handler();
 				file_put_contents($rubric_filename, implode("", $rubric)); // write rubric to user's handin dir
 			} else {
 				$rnr = " (Old rubric not replaced)";
