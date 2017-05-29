@@ -120,9 +120,8 @@
 				}
 
 				if (!$do_not_update) {
-					$remove_nti = array_key_exists($_POST['remove'], $uid) ? 1 : 0;
+					$remove_nti = array_key_exists($uid, $_POST['remove']) ? 1 : 0;
 					$grade_update->execute();
-					echo($grade_update->error);
 				}
 				?><p> Force Chomped: <?php echo($student['username']); echo($rnr ? $rnr : ""); ?></p><?php
 			}
