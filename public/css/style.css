@@ -7,7 +7,7 @@ html, body {
 	height:100%;
 	overflow:auto;
 	background-image: url('../assets/bg.jpg');
-	background-position:center center;
+	background-position:center top;
 	min-width:500px;
 
 	font-family: 'Reem Kufi', sans-serif;
@@ -233,7 +233,8 @@ th, td {
 }
 
 thead {
-	background-color:#ffd100;
+	background-color:#de644d;
+	color:#fff;
 }
 
 tbody tr {
@@ -313,8 +314,8 @@ tbody td {
 }
 
 .trimester_select.selected {
-	background-color:#ffd100;
-	color:crimson;
+	background-color:#de644d;
+	color:#fff;
 }
 
 .honors {
@@ -413,7 +414,7 @@ form input {
     font-family: 'Reem Kufi', sans-serif;
     padding:15px;
     width:100%;
-    background:#ffd100;
+    background:#de644d;
     text-align:center;
     margin:0;
     color:#111;
@@ -506,7 +507,7 @@ pre#data {
 	display:block;
     padding:15px;
     width:100%;
-    background:#ffd100;
+    background:#de644d;
     text-align:center;
     color:#111;
     font-size:20px;
@@ -650,7 +651,15 @@ form #collab-statement {
 	text-align: left;
 }
 
-#hours div {
+div.resources_content {
+	padding:20px;
+}
+
+div.resources_content p {
+	margin-top:5px;
+}
+
+div.notice {
 	margin-top:20px;
 	border:1px solid #9f6000;
 	text-align:left;
