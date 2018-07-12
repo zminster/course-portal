@@ -1,7 +1,7 @@
 <?php
 	$servername = "localhost";
-	$username = "course_portal";
-	$password = "hHt4gW3FWhvEbQYz";
+	$username = "course-portal";
+	$password = "testpass";
 	$dbname = "course_portal";
 
 	// Create connection

@@ -2,8 +2,8 @@
 module.exports = {
     'connection': {
         'host': 'localhost',
-        'user': 'course_portal',
-        'password': 'hHt4gW3FWhvEbQYz'
+        'user': 'course-portal',
+        'password': 'testpass'
     },
 	'database': 'course_portal'
 };
