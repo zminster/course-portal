@@ -72,6 +72,26 @@ CREATE TABLE course_portal.membership (
    FOREIGN KEY (`class_pd`) REFERENCES class(`class_pd`)
 );
 
+-- assignment format table
+--  stores information about possible assignment formats
+--  usage: - format validation occurs student-side according to regex
+--         - is_file indicates whether submission is text box or binary
+--         - regex is nullable field, value indicates validation should be done
+--         - validation_help contains HTML if regex fails
+--
+--  assignment(asgn_id, name, type, pt_value, trimester, honors_possible, description, url)
+
+CREATE TABLE course_portal.assignment_format (
+    `format_id` INT UNSIGNED NOT NULL AUTOINCREMENT,
+    `name` VARCHAR (255) NOT NULL,
+    `description` TEXT,
+    `is_file` TINYINT(1),
+    `regex` TEXT,
+    `validation_help` TEXT,
+        PRIMARY KEY (`format_id`),
+    UNIQUE INDEX `format_name_UNIQUE` (`name`)
+);
+
 -- assignment type table
 --  stores weights/names of assignment categories
 --  used to calculate students' overall grades
@@ -93,12 +113,14 @@ CREATE TABLE course_portal.assignment (
     `asgn_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `type` INT UNSIGNED NOT NULL,
+    `format` INT UNSIGNED NOT NULL,
     `pt_value` INT UNSIGNED NOT NULL,
     `trimester` INT UNSIGNED NOT NULL,
     `honors_possible` TINYINT(1),
     `description` TEXT,
     `url` TEXT,
         PRIMARY KEY (`asgn_id`),
+    FOREIGN KEY (`format`) REFERENCES assignment_format(`format_id`);
     FOREIGN KEY (`type`) REFERENCES assignment_type(`type_id`),
     UNIQUE INDEX `asgn_name_UNIQUE` (`name`)
 );
