@@ -284,15 +284,12 @@ module.exports = function(app, passport) {
 	  HANDIN FLOW
 	 **************************************/
 	app.get('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, function(req, res) {
-		var date_due = moment(req.date_due);
-		if (req.extension)
-			date_due.add(req.extension, 'h');
-		var late = moment().isAfter(date_due) ? 1 : 0;
 		res.render('handin.html', {
 			message: req.flash('handinMessage'),
 			asgn_id: req.params.asgn_id,
-			asgn_name: req.asgn_name,
-			late: late,
+			asgn_name: req.asgn.name,
+			description: req.asgn.description,
+			late: req.late_days,
 			user: req.user
 		});
 	});
@@ -311,15 +308,6 @@ module.exports = function(app, passport) {
 				req.flash('handinMessage', 'I didn\'t receive any files. Try to hand in again.');
 				res.redirect('/handin/' + req.params.asgn_id);
 			} else {
-				// capture due date
-				var now = moment();
-				var due = moment(req.date_due);
-				if (req.extension)
-					due.add(req.extension, 'h');
-				var time = moment().format('YYYY-MM-DD HH:mm:ss');
-				var late = now.isAfter(due) ? 1 : 0;
-				var late_days = Math.ceil(now.diff(due, 'days', true));
-				late_days = (late_days < 0 ? 0 : late_days);
 				var friendly_time = now.format('llll');
 				// record handin
 				conn.query("UPDATE grades SET handed_in=1, handin_time=?, late=? WHERE uid=? AND asgn_id=?",[time, late, req.user.uid, req.params.asgn_id],
@@ -327,9 +315,9 @@ module.exports = function(app, passport) {
 						if (!err) {
 							res.render("handin_success.html", {
 								asgn_id: req.params.asgn_id,
-								asgn_name: req.asgn_name,
+								asgn_name: req.asgn.name,
 								time: friendly_time,
-								late: late_days,
+								late: req.late_days,
 								files: req.files,
 								user: req.user
 							});

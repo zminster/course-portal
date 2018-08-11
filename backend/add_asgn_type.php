@@ -1,10 +1,10 @@
 <html>
 <head>
-	<title>Portal Admin :: Add Assignment Type</title>
+	<title>Portal Admin :: Add Assignment Category</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 </head>
 <body>
-	<h1>Add Assignment Type</h1>
+	<h1>Add Assignment Category</h1>
 	<?php
 	include 'config/database.php';
 
@@ -12,10 +12,10 @@
 
 	if ($res->num_rows > 0) {
 
-		?><div>Existing assignment types:</div>
+		?><div>Existing assignment categories:</div>
 		<table>
 			<tr>
-				<th>Type ID</th>
+				<th>Category ID</th>
 				<th>Name</th>
 				<th>Weight</th>
 			</tr>
@@ -43,7 +43,7 @@
 		$class_insert->bind_param("sd", $name, $weight);
 		$class_insert->execute();
 
-		?><p style="font-weight:bold">Type Added</p>
+		?><p style="font-weight:bold">Category Added</p>
 		<p><a href="add_asgn_type.php">Again</a> | <a href="index.php">Menu</a></p><?php
 
 	} else {	// GET: display add type screen

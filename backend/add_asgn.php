@@ -20,7 +20,7 @@
 	if ($method == 'POST') {	// POST: admin is adding asgn
 		
 		// create queries
-		$assignment_insert	= $conn->prepare("INSERT INTO assignment (name, type, pt_value, trimester, honors_possible, description, url) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		$assignment_insert	= $conn->prepare("INSERT INTO assignment (name, type, format, pt_value, trimester, honors_possible, description, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 		$meta_insert		= $conn->prepare("INSERT INTO assignment_meta (asgn_id, class_pd, date_out, date_due, displayed, can_handin, info_changed) VALUES (?, ?, ?, ?, ?, ?, ?)");
 		$grade_insert		= $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
 
@@ -29,7 +29,8 @@
 
 		// assignment queries
 		$honors_possible = array_key_exists("honors_possible", $_POST) ? 1 : 0;
-		$assignment_insert->bind_param("siiiiss", $_POST["name"], $_POST["type"], $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"]);
+		$format = 1;
+		$assignment_insert->bind_param("siiiiiss", $_POST["name"], $_POST["type"], $format, $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"]);
 		$assignment_insert->execute();
 		echo($assignment_insert->error);
 

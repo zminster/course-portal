@@ -1,6 +1,7 @@
 //app/middleware.js
 
 var conn 				= require('./database_ops').connection;
+var moment				= require('moment');			/* timing handins */
 
 var err_can_handin 		= "Students in your class period aren't allowed to hand in this assignment right now.";
 var err_invalid_handin	= "That's not a valid assignment.";
@@ -42,17 +43,25 @@ module.exports = {
 		var asgn_id = req.params.asgn_id;
 		if (asgn_id) {	// assignment ID specified
 			// query for valid assignment ID
-			conn.query("SELECT * FROM assignment WHERE asgn_id = ?",[asgn_id], function(err, rows){
+			conn.query("SELECT * FROM assignment JOIN assignment_format ON assignment.format = assignment_format.format_id WHERE asgn_id = ?",[asgn_id], function(err, rows){
 				if (!err && rows.length > 0) {
-					req.asgn_name = rows[0].name;
+					req.asgn = rows[0];
 					conn.query("SELECT can_handin, date_due FROM assignment_meta WHERE asgn_id = ? AND class_pd = ?",[asgn_id, req.user.class_pd],
 						function(err, rows){
 							if (!err && rows.length > 0 && rows[0].can_handin == 1) {
 								req.date_due = rows[0].date_due;
 								conn.query("SELECT nreq, chomped, extension FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
 									if (!err && !rows[0].chomped && !rows[0].nreq) {
+										// associate extension
 										if (rows[0].extension)
 											req.extension = rows[0].extension;
+										// calculate timeliness
+										var now = moment();
+										var due = moment(req.date_due);
+										if (req.extension)
+											due.add(req.extension, 'h');
+										var late_days = Math.ceil(now.diff(due, 'days', true));
+										req.late_days = (late_days < 0 ? 0 : late_days);
 										return next();
 									}
 									else if (rows[0].nreq)
