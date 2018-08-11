@@ -94,14 +94,12 @@ module.exports = {
 
 	// middleware: ensures regex match on enabled assignment formats
 	isRegexValidHandin: function(req, res, next) {
-		if (!req.asgn.format.regex)	// skip formats with regex disabled
+		if (!req.asgn.format.regex)	// skip formats with regex disabled {
 			next();
-
-		if (!req.asgn.format.validation_pass) {
+		else if (!req.asgn.format.validation_pass) {
 			req.flash('handinMessage', req.asgn.format.validation_help);
 			res.redirect('/handin/' + req.params.asgn_id);
 			res.end();
-
 		} else next();
 	},
 
