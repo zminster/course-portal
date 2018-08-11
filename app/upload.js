@@ -29,13 +29,20 @@ module.exports = function (req, res, next) {
 				}
 
 				req.files = [];
+				req.asgn.format.validation_pass = false;
+				var regex = new RegExp(req.asgn.format.regex, 'g');
 				var files = 0, finished = false, write_rows = [];
 
 				// field processing - add to req.body
 				req.busboy.on('field', function(fieldname, val) {
 					req.body[fieldname] = val;
-					if (!req.asgn.format.is_file)	// prepare text fields for writing if this is non-file
-						write_rows.push(fieldname + ": " + val);
+					if (!req.asgn.format.is_file) {	// prepare text fields for writing if this is non-file
+						if (fieldname === "submission")	// verify regex match
+							if (req.asgn.format.regex && val.match(regex)) {
+								req.asgn.format.validation_pass = true;
+								write_rows.push(val);
+							}
+					}
 				});
 
 				// file processing - route streams properly and add to req.files
@@ -50,6 +57,10 @@ module.exports = function (req, res, next) {
 						Reduce file size or put files in an archive, then try to upload again.';
 						next();
 					});
+
+					// verify regex match of at least one filename
+					if (req.asgn.format.regex && filename.match(regex))
+						req.asgn.format.validation_pass = true;
 
 					files++;
 					fstream = fs.createWriteStream(req.handin_path + '/' + filename);

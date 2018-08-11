@@ -296,7 +296,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, upload,
+	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, upload, middleware.isRegexValidHandin,
 		function(req, res) {
 			if (req.err) {
 				req.flash('handinMessage', req.err);
