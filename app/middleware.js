@@ -1,6 +1,7 @@
 //app/middleware.js
 
 var conn 				= require('./database_ops').connection;
+var moment				= require('moment');			/* timing handins */
 
 var err_can_handin 		= "Students in your class period aren't allowed to hand in this assignment right now.";
 var err_invalid_handin	= "That's not a valid assignment.";
@@ -44,26 +45,44 @@ module.exports = {
 			// query for valid assignment ID
 			conn.query("SELECT * FROM assignment WHERE asgn_id = ?",[asgn_id], function(err, rows){
 				if (!err && rows.length > 0) {
-					req.asgn_name = rows[0].name;
-					conn.query("SELECT can_handin, date_due FROM assignment_meta WHERE asgn_id = ? AND class_pd = ?",[asgn_id, req.user.class_pd],
+					req.asgn = rows[0];
+					// get format information
+					conn.query("SELECT format_id, f.name, f.description, is_file, regex, validation_help\
+						FROM assignment a JOIN assignment_format f ON a.format = f.format_id WHERE a.asgn_id = ?",[asgn_id],
 						function(err, rows){
-							if (!err && rows.length > 0 && rows[0].can_handin == 1) {
-								req.date_due = rows[0].date_due;
-								conn.query("SELECT nreq, chomped, extension FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
-									if (!err && !rows[0].chomped && !rows[0].nreq) {
-										if (rows[0].extension)
-											req.extension = rows[0].extension;
-										return next();
+						if (!err, rows.length > 0){
+							req.asgn.format = rows[0];	// store format information in accessible object
+							conn.query("SELECT can_handin, date_due FROM assignment_meta WHERE asgn_id = ? AND class_pd = ?",[asgn_id, req.user.class_pd],
+								function(err, rows){
+									if (!err && rows.length > 0 && rows[0].can_handin == 1) {
+										req.date_due = rows[0].date_due;
+										conn.query("SELECT nreq, chomped, extension FROM grades WHERE asgn_id = ? AND uid = ?",[asgn_id, req.user.uid], function(err, rows) {
+											if (!err && !rows[0].chomped && !rows[0].nreq) {
+												// associate extension
+												if (rows[0].extension)
+													req.extension = rows[0].extension;
+												// calculate timeliness
+												var now = moment();
+												var due = moment(req.date_due);
+												if (req.extension)
+													due.add(req.extension, 'h');
+												var late_days = Math.ceil(now.diff(due, 'days', true));
+												req.late_days = (late_days < 0 ? 0 : late_days);
+												return next();
+											}
+											else if (rows[0].nreq)
+												res.render('error.html', {error: err_nreq, user: req.user});
+											else
+												res.render('error.html', {error: err_chomped, user: req.user});
+										})
+									} else {
+										res.render('error.html', {error: err_can_handin, user: req.user});
 									}
-									else if (rows[0].nreq)
-										res.render('error.html', {error: err_nreq, user: req.user});
-									else
-										res.render('error.html', {error: err_chomped, user: req.user});
-								})
-							} else {
-								res.render('error.html', {error: err_can_handin, user: req.user});
-							}
-						});
+							});
+						} else {
+							res.render('error.html', {error: err_invalid_handin, user: req.user});
+						}
+					});
 				} else {
 					res.render('error.html', {error: err_invalid_handin, user: req.user});
 				}
@@ -71,6 +90,17 @@ module.exports = {
 		} else {
 			res.render('error.html', {error: err_invalid_handin, user: req.user});
 		}
+	},
+
+	// middleware: ensures regex match on enabled assignment formats
+	isRegexValidHandin: function(req, res, next) {
+		if (!req.asgn.format.regex)	// skip formats with regex disabled {
+			return next();
+		else if (!req.asgn.format.validation_pass) {
+			req.flash('handinMessage', req.asgn.format.validation_help);
+			res.redirect('/handin/' + req.params.asgn_id);
+			res.end();
+		} else return next();
 	},
 
 	// middleware: ensures feedback is visible before exposing

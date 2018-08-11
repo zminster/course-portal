@@ -11,7 +11,10 @@
 		<li><a href="add_class.php">Add Class Period</a></li>
 		<li><a href="add_user.php">Add Student (Batch)</a></li>
 		<li><a href="add_user_single.php">Add Student (Single)</a></li>
-		<li><a href="add_asgn_type.php">Add Assignment Type</a></li>
+		<li><a href="add_asgn_type.php">Add Assignment Category</a></li>
+		<li><a href="edit_asgn_type.php">Edit/Delete Assignment Category</a></li>
+		<li><a href="add_asgn_format.php">Add Assignment Format</a></li>
+		<li><a href="edit_asgn_format.php">Edit/Delete Assignment Format</a></li>
 		<li><a href="edit_settings.php">Edit System Settings</a></li>
 	</ul>
 

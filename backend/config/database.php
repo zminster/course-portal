@@ -33,12 +33,27 @@
 
 		if ($res->num_rows > 0) {
 			while ($type = $res->fetch_assoc()) {
-				$types[] = $type;
+				$types[$type["type_id"]] = $type;
 			}
 			return $types;
 		} else{
 			die("<span style=\"color:red;\"><b>
 				You must <a href=\"add_asgn_type.php\">add an assignment type</a>.</b></span>");
+		}
+	}
+
+	function get_asgn_formats($conn) {
+		$res = $conn->query("SELECT * FROM assignment_format");
+		$formats = array();
+
+		if ($res->num_rows > 0) {
+			while ($format = $res->fetch_assoc()) {
+				$formats[$format["format_id"]] = $format;
+			}
+			return $formats;
+		} else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_asgn_format.php\">add an assignment format</a>.</b></span>");
 		}
 	}
 

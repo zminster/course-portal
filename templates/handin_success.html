@@ -59,6 +59,7 @@
 					<td>{{time}}</td>
 				</tr>
 
+				{{#format}}{{#is_file}}
 				<tr>
 					<td>Files Received:</td>
 					<td>
@@ -69,6 +70,7 @@
 						</ol>
 					</td>
 				</tr>
+				{{/is_file}}{{/format}}
 			</table>
 
 			<a id="big-back" class="bottom" href="/portal"><span class="fa fa-arrow-circle-left"></span> Back to Assignments &amp; Grades</a>

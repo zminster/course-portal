@@ -284,20 +284,19 @@ module.exports = function(app, passport) {
 	  HANDIN FLOW
 	 **************************************/
 	app.get('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, function(req, res) {
-		var date_due = moment(req.date_due);
-		if (req.extension)
-			date_due.add(req.extension, 'h');
-		var late = moment().isAfter(date_due) ? 1 : 0;
 		res.render('handin.html', {
 			message: req.flash('handinMessage'),
 			asgn_id: req.params.asgn_id,
-			asgn_name: req.asgn_name,
-			late: late,
-			user: req.user
+			asgn_name: req.asgn.name,
+			description: req.asgn.description,
+			late: req.late_days,
+			user: req.user,
+			date_due: moment(req.date_due).format('llll'),
+			format: req.asgn.format
 		});
 	});
 
-	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, upload,
+	app.post('/handin/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitHandin, upload, middleware.isRegexValidHandin,
 		function(req, res) {
 			if (req.err) {
 				req.flash('handinMessage', req.err);
@@ -307,31 +306,23 @@ module.exports = function(app, passport) {
 				req.flash('handinMessage', 'You must agree to the Collaboration Statement and upload again.');
 				res.redirect('/handin/' + req.params.asgn_id);
 			}
-			else if (!req.files || req.files.length == 0) {
+			else if (req.asgn.format.is_file && (!req.files || req.files.length == 0)) {
 				req.flash('handinMessage', 'I didn\'t receive any files. Try to hand in again.');
 				res.redirect('/handin/' + req.params.asgn_id);
 			} else {
-				// capture due date
 				var now = moment();
-				var due = moment(req.date_due);
-				if (req.extension)
-					due.add(req.extension, 'h');
-				var time = moment().format('YYYY-MM-DD HH:mm:ss');
-				var late = now.isAfter(due) ? 1 : 0;
-				var late_days = Math.ceil(now.diff(due, 'days', true));
-				late_days = (late_days < 0 ? 0 : late_days);
-				var friendly_time = now.format('llll');
 				// record handin
-				conn.query("UPDATE grades SET handed_in=1, handin_time=?, late=? WHERE uid=? AND asgn_id=?",[time, late, req.user.uid, req.params.asgn_id],
+				conn.query("UPDATE grades SET handed_in=1, handin_time=?, late=? WHERE uid=? AND asgn_id=?",[now.format('YYYY-MM-DD HH:mm:ss'), (req.late_days ? 1 : 0), req.user.uid, req.params.asgn_id],
 					function(err, rows) {
 						if (!err) {
 							res.render("handin_success.html", {
 								asgn_id: req.params.asgn_id,
-								asgn_name: req.asgn_name,
-								time: friendly_time,
-								late: late_days,
+								asgn_name: req.asgn.name,
+								time: now.format('llll'),
+								late: req.late_days,
 								files: req.files,
-								user: req.user
+								user: req.user,
+								format: req.asgn.format
 							});
 						} else {
 							req.flash('handinMessage', 'There was an issue recording your handin time in the database. Try to hand in again.');
