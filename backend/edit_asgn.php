@@ -16,6 +16,7 @@
 	$method = $_SERVER['REQUEST_METHOD'];
 	$classes = get_class_pds($conn);
 	$types = get_asgn_types($conn);
+	$formats = get_asgn_formats($conn);
 	$assignments = get_all_assignments($conn);
 
 	if ($method == 'POST') {	// POST
@@ -39,7 +40,7 @@
 		} else if(array_key_exists("edit", $_POST)) {	// edit assignment, update all fields to match form values
 		
 			// create queries
-			$assignment_update	= $conn->prepare("UPDATE assignment SET name=?, type=?, pt_value=?, trimester=?, honors_possible=?, description=?, url=? WHERE asgn_id=?");
+			$assignment_update	= $conn->prepare("UPDATE assignment SET name=?, type=?, format=?, pt_value=?, trimester=?, honors_possible=?, description=?, url=? WHERE asgn_id=?");
 			$meta_update		= $conn->prepare("UPDATE assignment_meta SET date_out=?, date_due=?, displayed=?, can_handin=?, info_changed=? WHERE asgn_id=? AND class_pd=?");
 			$grade_update		= $conn->prepare("UPDATE grades SET late=? WHERE uid = ? AND asgn_id = ?");
 			$canview_update		= $conn->prepare("UPDATE grades SET can_view_feedback=? WHERE uid = ? AND asgn_id = ?");
@@ -49,7 +50,7 @@
 
 			// assignment queries
 			$honors_possible = array_key_exists("honors_possible", $_POST) ? 1 : 0;
-			$assignment_update->bind_param("siiiissi", $_POST["name"], $_POST["type"], $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"], $asgn_id);
+			$assignment_update->bind_param("siiiiissi", $_POST["name"], $_POST["type"], $_POST["format"], $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"], $asgn_id);
 			$assignment_update->execute();
 			echo($assignment_update->error);
 
@@ -120,6 +121,7 @@
 			$trimester 	= $assignments[$asgn_id]["trimester"];
 			$name		= $assignments[$asgn_id]["name"];
 			$meta_type 	= $assignments[$asgn_id]["type"];
+			$meta_format= $assignments[$asgn_id]["format"];
 			$pt_value 	= $assignments[$asgn_id]["pt_value"];
 			$description= $assignments[$asgn_id]["description"];
 			$honors 	= $assignments[$asgn_id]["honors_possible"];
@@ -133,11 +135,10 @@
 
 					<div><label for="delete">Delete?</label><input type="checkbox" id="delete" name="delete" /></div>
 
-					<div><label for="trimester">Trimester:</label>
+					<div><label for="trimester">Term:</label>
 						<select id="trimester" name="trimester">
-							<option value="1" <?php echo($trimester == 1 ? "selected" : ""); ?>>T1</option>
-							<option value="2" <?php echo($trimester == 2 ? "selected" : ""); ?>>T2</option>
-							<option value="3" <?php echo($trimester == 3 ? "selected" : ""); ?>>T3</option>
+							<option value="1" <?php echo($trimester == 1 ? "selected" : ""); ?>>S1</option>
+							<option value="2" <?php echo($trimester == 2 ? "selected" : ""); ?>>S2</option>
 						</select>
 					</div>
 					<div><label for="name">Title:</label><input type="text" id="name" name="name" placeholder="Title" value="<?php echo($name); ?>" /></div>
@@ -149,8 +150,16 @@
 							</option><?php
 						}?>
 					</select></div>
+					<div><label for="type">Format:</label>
+					<select id="format" name="format"><?php 	// format selector
+						foreach ($formats as $format) {
+							?><option value="<?php echo($format["format_id"]);?>" <?php echo($meta_format == $format["format_id"] ? "selected" : ""); ?>>
+								<?php echo($format["format_id"]);?>.) <?php echo($format["name"]); ?> [<?php echo($format["is_file"] ? "File Upload" : "Text Box"); ?>]
+							</option><?php
+						}?>
+					</select></div>
 					<div><label for="pt_value">Points:</label><input type="text" id="pt_value" name="pt_value" placeholder="Point Value" value="<?php echo($pt_value); ?>" /></div>
-					<div><label for="honors_possible">Honors Option?:</label><input type="checkbox" id="honors_possible" name="honors_possible" value="1" <?php echo($honors ? "checked" : ""); ?> /></div>
+					<div><label for="honors_possible">AP Option?:</label><input type="checkbox" id="honors_possible" name="honors_possible" value="1" <?php echo($honors ? "checked" : ""); ?> /></div>
 					<div><label for="URL">URL:</label><input type="text" id="url" name="url" placeholder="http://principles.cs.stab.org/asgn/hw01.pdf" value="<?php echo($url); ?>" /></div>
 
 					<div><label for="description">Description:</label><textarea id="description" name="description" placeholder="Description"><?php echo($description); ?></textarea>

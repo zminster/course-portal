@@ -8,37 +8,6 @@
 	<?php
 	include 'config/database.php';
 
-	$res = $conn->query("SELECT * FROM assignment_format");
-
-	if ($res->num_rows > 0) {
-
-		?><h2>Existing Formats:</h2>
-		<a href="edit_asgn_format.php">(Edit an existing format)</a>
-		<table>
-			<tr>
-				<th>Format ID</th>
-				<th>Name</th>
-				<th>Friendly Description</th>
-				<th>File Upload?</th>
-				<th>Regex Validation String</th>
-				<th>Validation Help Message</th>
-			</tr>
-			<?php
-		while ($format = $res->fetch_assoc()) {
-			?><tr>
-				<td><?php echo($format["format_id"]); ?></td>
-				<td><?php echo($format["name"]); ?></td>
-				<td><?php echo($format["description"]); ?></td>
-				<td><?php echo($format["is_file"] ? "YES" : "NO"); ?></td>
-				<td><pre><?php echo($format["regex"]); ?></pre></td>
-				<td><?php echo($format["validation_help"]); ?></td>
-			</tr>
-		<?php } ?>
-		</table>
-		<?php
-
-	}
-
 	$method = $_SERVER['REQUEST_METHOD'];
 
 	if ($method == 'POST') {	// POST: admin is adding type
@@ -52,6 +21,37 @@
 		<p><a href="add_asgn_format.php">Again</a> | <a href="index.php">Menu</a></p><?php
 
 	} else {	// GET: display add type screen
+
+			$res = $conn->query("SELECT * FROM assignment_format");
+
+	if ($res->num_rows > 0) {
+
+		?><h2>Existing Formats:</h2>
+			<a href="edit_asgn_format.php">(Edit an existing format)</a>
+			<table>
+				<tr>
+					<th>Format ID</th>
+					<th>Name</th>
+					<th>Friendly Description</th>
+					<th>File Upload?</th>
+					<th>Regex Validation String</th>
+					<th>Validation Help Message</th>
+				</tr>
+				<?php
+			while ($format = $res->fetch_assoc()) {
+				?><tr>
+					<td><?php echo($format["format_id"]); ?></td>
+					<td><?php echo($format["name"]); ?></td>
+					<td><?php echo($format["description"]); ?></td>
+					<td><?php echo($format["is_file"] ? "YES" : "NO"); ?></td>
+					<td><pre><?php echo($format["regex"]); ?></pre></td>
+					<td><?php echo($format["validation_help"]); ?></td>
+				</tr>
+			<?php } ?>
+			</table>
+			<?php
+
+		}
 
 		?><form action="add_asgn_format.php" method="post">
 

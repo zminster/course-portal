@@ -16,6 +16,7 @@
 	$method = $_SERVER['REQUEST_METHOD'];
 	$classes = get_class_pds($conn);
 	$types = get_asgn_types($conn);
+	$formats = get_asgn_formats($conn);
 
 	if ($method == 'POST') {	// POST: admin is adding asgn
 		
@@ -30,7 +31,7 @@
 		// assignment queries
 		$honors_possible = array_key_exists("honors_possible", $_POST) ? 1 : 0;
 		$format = 1;
-		$assignment_insert->bind_param("siiiiiss", $_POST["name"], $_POST["type"], $format, $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"]);
+		$assignment_insert->bind_param("siiiiiss", $_POST["name"], $_POST["type"], $_POST["format"], $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"]);
 		$assignment_insert->execute();
 		echo($assignment_insert->error);
 
@@ -87,15 +88,14 @@
 
 			<h2>Meta Information:</h2>
 
-				<div><label for="trimester">Trimester:</label>
+				<div><label for="trimester">Term:</label>
 					<select id="trimester" name="trimester">
-						<option value="1">T1</option>
-						<option value="2">T2</option>
-						<option value="3">T3</option>
+						<option value="1">S1</option>
+						<option value="2">S2</option>
 					</select>
 				</div>
 				<div><label for="name">Title:</label><input type="text" id="name" name="name" placeholder="Title" /></div>
-				<div><label for="type">Type:</label>
+				<div><label for="type">Category:</label>
 				<select id="type" name="type"><?php 	// type selector
 					foreach ($types as $type) {
 						?><option value="<?php echo($type["type_id"]);?>">
@@ -103,8 +103,16 @@
 						</option><?php
 					}?>
 				</select></div>
+				<div><label for="format">Format:</label>
+				<select id="format" name="format"><?php 	// format selector
+					foreach ($formats as $format) {
+						?><option value="<?php echo($format["format_id"]);?>">
+							<?php echo($format["format_id"]);?>.) <?php echo($format["name"]); ?> [<?php echo($format["is_file"] ? "File Upload" : "Text Box"); ?>]
+						</option><?php
+					}?>
+				</select></div>
 				<div><label for="pt_value">Points:</label><input type="text" id="pt_value" name="pt_value" placeholder="Point Value" /></div>
-				<div><label for="honors_possible">Honors Option?:</label><input type="checkbox" id="honors_possible" name="honors_possible" value="1" /></div>
+				<div><label for="honors_possible">AP Option?:</label><input type="checkbox" id="honors_possible" name="honors_possible" value="1" /></div>
 				<div><label for="URL">URL:</label><input type="text" id="url" name="url" placeholder="http://principles.cs.stab.org/asgn/hw01.pdf" /></div>
 
 				<div><label for="description">Description:</label><textarea id="description" name="description" placeholder="Description"></textarea>
