@@ -118,14 +118,14 @@
 			$asgn_data = get_all_assignment_data($conn, $asgn_id);
 
 			// meta grab
-			$trimester 	= $assignments[$asgn_id]["trimester"];
-			$name		= $assignments[$asgn_id]["name"];
-			$meta_type 	= $assignments[$asgn_id]["type"];
-			$meta_format= $assignments[$asgn_id]["format"];
-			$pt_value 	= $assignments[$asgn_id]["pt_value"];
-			$description= $assignments[$asgn_id]["description"];
-			$honors 	= $assignments[$asgn_id]["honors_possible"];
-			$url 		= $assignments[$asgn_id]["url"];
+			$trimester 		= $assignments[$asgn_id]["trimester"];
+			$name			= $assignments[$asgn_id]["name"];
+			$meta_type 		= $assignments[$asgn_id]["type"];
+			$meta_format	= $assignments[$asgn_id]["format"];
+			$pt_value 		= $assignments[$asgn_id]["pt_value"];
+			$description 	= $assignments[$asgn_id]["description"];
+			$honors 		= $assignments[$asgn_id]["honors_possible"];
+			$url 			= $assignments[$asgn_id]["url"];
 			?>
 			<form action="edit_asgn.php" method="post">
 				<input type="hidden" name="asgn_id" value="<?php echo($asgn_id);?>" />

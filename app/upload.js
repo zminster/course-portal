@@ -38,9 +38,9 @@ module.exports = function (req, res, next) {
 					req.body[fieldname] = val;
 					if (!req.asgn.format.is_file) {	// prepare text fields for writing if this is non-file
 						if (fieldname === "submission")	// verify regex match
+							write_rows.push(val);
 							if (req.asgn.format.regex && val.match(regex)) {
 								req.asgn.format.validation_pass = true;
-								write_rows.push(val);
 							}
 					}
 				});
@@ -49,13 +49,13 @@ module.exports = function (req, res, next) {
 				req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 					if (!req.asgn.format.is_file) {	// reject files for non-file handins
 						req.err = 'You may not upload files for this assignment. Please review the instructions.';
-						next();
+						return next();
 					}
 
 					file.on('limit', function () {
 						req.err = 'You may only upload files of maximum size ' + (limits.fileSize / 1024 / 1000) + 'MB.\
 						Reduce file size or put files in an archive, then try to upload again.';
-						next();
+						return next();
 					});
 
 					// verify regex match of at least one filename
@@ -70,14 +70,14 @@ module.exports = function (req, res, next) {
 						req.files.push(filename);
 						--files;
 						if (!files && finished)
-							next();
+							return next();
 					});
 				});
 
 				// too many files?
 				req.busboy.on('filesLimit', function() {
 					req.err = 'You may only upload a maximum of ' + limits.files + ' files.';
-					next();
+					return next();
 				});
 
 				// continue only when all form data received
@@ -87,12 +87,12 @@ module.exports = function (req, res, next) {
 						console.log("writing to stream");
 						var fstream = fs.createWriteStream(req.handin_path + '/submission.txt');
 						fstream.on('error', function(err) { res.render('error.html', {error: err_fs, user: req.user}); });
-						fstream.on('finish', function() { next(); });
+						fstream.on('finish', function() { return next(); });
 						write_rows.forEach(function(item) { fstream.write(item + '\n'); });
 						fstream.end();
 					}
 					else if (!files)
-						next();
+						return next();
 				});
 
 		    	req.pipe(req.busboy);

@@ -30,7 +30,6 @@
 
 		// assignment queries
 		$honors_possible = array_key_exists("honors_possible", $_POST) ? 1 : 0;
-		$format = 1;
 		$assignment_insert->bind_param("siiiiiss", $_POST["name"], $_POST["type"], $_POST["format"], $_POST["pt_value"], $_POST["trimester"], $honors_possible, $_POST["description"], $_POST["url"]);
 		$assignment_insert->execute();
 		echo($assignment_insert->error);
