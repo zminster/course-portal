@@ -51,15 +51,13 @@
 		<h1>{{asgn_name}}</h1>
 			<table class="receipt">
 				<tr>
-					<td>Description</td>
+					<td>Assignment Description</td>
 					<td>{{{description}}}</td>
 				</tr>
-				{{#format}}
 				<tr>
-					<td>{{name}}</td>
-					<td>{{{description}}}</td>
+					<td>Due Date</td>
+					<td>{{date_due}}</td>
 				</tr>
-				{{/format}}
 				<tr>
 					<td>On Time?</td>
 					<td{{#late}} class="overlay"{{/late}}>{{#late}}<span class="fa fa-times-circle"></span> {{late}} day(s) late (rounded up){{/late}}{{^late}}<span class="fa fa-check-circle"></span>{{/late}}
@@ -68,48 +66,51 @@
 			</table>
 
 
-		<h1>Submission</h1>
+		<h1>Submission{{#format}}: {{name}}{{/format}}</h1>
 		<form action="/handin/{{asgn_id}}" enctype="multipart/form-data" method="post" id="f_handin">
 			<input type="hidden" name="post" value="1" />
 
-			{{#is_file}}
-			<div>
-				<p>This assignment requires you to turn in <em>files</em>. Follow these instructions:</p>
-				<ol>
-					<li>Identify and locate the files you need to turn in for this assignment. If in doubt, check the assignment or slides again for an explanation.</li>
-					<li>Click the "Browse..." button and select all the files you need to turn in. Hold down the CONTROL (COMMAND on Mac) key while clicking on files to select multiple files.</li>
-					<li>Verify you have included all necessary, agree to the Collaboration Statement, then press submit. <em>Make sure the receipt on the next page lists all the files you needed to turn in.</em></li>
-					<li><em>Limits:</em> You may turn in no more than 10MB total for any assignment, and no more than 100 individual files per assignment.</li>
-				</ol>
-				<input type="file" id="handin" name="handin" multiple />
-			</div>
-			{{/is_file}}
-
-			{{^is_file}}
-			<div>
-				<p>Please paste your response into the box below:</p>
-				<input type="text" id="handin" name="handin" />
-			</div>
-			{{/is_file}}
-
-			{{#readme_required}}
-			<h2>README</h2>
+			{{#format}}
+				<div style="margin-bottom:10px;">{{{description}}}</div>
+				{{#is_file}}
 				<div>
-					<p>This assignment requires a README. A README should include:</p>
-					<ul>
-						<li>A list of the students/groups with whom you collaborated in any way on this assignment (<em>Be honest!</em> Failure to disclose this information is a violation of the Collaboration Policy.)</li>
-						<li>Any extra information mentioned in the assignment.</li>
-						<li>(If code:) A description of any possible bugs or problems with your program (rest assured, you will lose fewer points for documented bugs than undocumented ones).</li>
-						<li>(If code:) Any special instructions required to run your project.</li>
-						<li>(If code:) A description of any extra features you chose to implement.</li>
-					</ul>
+					<p>This assignment requires you to turn in <em>files</em>. Follow these instructions:</p>
+					<ol style="margin-bottom:10px;">
+						<li>Identify and locate the files you need to turn in for this assignment. If in doubt, check the assignment or slides again for an explanation.</li>
+						<li>Click the "Browse..." button and select all the files you need to turn in. Hold down the CONTROL (COMMAND on Mac) key while clicking on files to select multiple files.</li>
+						<li>Verify you have included all necessary, agree to the Collaboration Statement, then press submit. <em>Make sure the receipt on the next page lists all the files you needed to turn in.</em></li>
+						<li><em>Limits:</em> You may turn in no more than 10MB total for any assignment, and no more than 100 individual files per assignment.</li>
+					</ol>
+					<input type="file" id="handin" name="handin" multiple />
 				</div>
+				{{/is_file}}
 
-			<textarea id="readme" name="readme"></textarea>
-			{{/readme_required}}
+				{{^is_file}}
+				<div>
+					<p>Paste your submission into the box below:</p>
+					<input type="text" id="handin" name="submission" />
+				</div>
+				{{/is_file}}
+
+				{{#readme_required}}
+				<h2>README</h2>
+					<div>
+						<p>This assignment requires a README. A README should include:</p>
+						<ul>
+							<li>A list of the students/groups with whom you collaborated in any way on this assignment (<em>Be honest!</em> Failure to disclose this information is a violation of the Collaboration Policy.)</li>
+							<li>Any extra information mentioned in the assignment.</li>
+							<li>(If code:) A description of any possible bugs or problems with your program (rest assured, you will lose fewer points for documented bugs than undocumented ones).</li>
+							<li>(If code:) Any special instructions required to run your project.</li>
+							<li>(If code:) A description of any extra features you chose to implement.</li>
+						</ul>
+					</div>
+
+				<textarea id="readme" name="readme"></textarea>
+				{{/readme_required}}
+			{{/format}}
 
 			<div id="collab-statement">
-				<input type="checkbox" id="collab" name="collab" value="collab" /><label for="collab">I have followed the course Collaboration Policy; have not copied any of my work; and have cited the names of students with whom I collaborated in my submission.</label>
+				<input type="checkbox" id="collab" name="collab" value="collab" /><label for="collab">I have followed the course <a href="/policies.pdf" target="_blank">Collaboration Policy</a>; have not copied any of my work; and have cited the names of students with whom I collaborated in my submission.</label>
 			</div>
 				
 			<input id="submit" class="submit disabled" type="submit" value="Turn In Now" disabled>

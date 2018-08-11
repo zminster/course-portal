@@ -527,6 +527,12 @@ pre#data {
 }
 
 /* HANDIN */
+input#handin {
+	color: #9f6000;
+	background-color: #feefb3;
+	border:1px solid #9f6000;
+}
+
 form #collab-statement {
 	line-height:30px;
     background:#ececec;
@@ -580,9 +586,8 @@ form #collab-statement {
 }
 
 #f_handin {
-	margin-top:40px;
+	margin-top:10px;
 	position:relative;
-	height:220px;
 }
 
 .receipt {
