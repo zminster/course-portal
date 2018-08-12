@@ -26,8 +26,8 @@ module.exports = {
 		if (req.user.access_backend)
 			return next();
 
-		// if user's Role is not sufficient, redirect them to their portal
-		res.redirect('/portal');
+		// if user's Role is not sufficient, render error page (security feature)
+		res.status(404).render('error.html', {error: "Requested URL does not exist.", user: req.user});
 	},
 
 	// middleware: ensures password change if change_flag is set
