@@ -20,6 +20,16 @@ module.exports = {
 		res.redirect('/login');
 	},
 
+	// middleware: restricts secure pages to administrative users
+	isAdmin: function(req, res, next) {
+		// restricted to users with access_backend flag set in their Role
+		if (req.user.access_backend)
+			return next();
+
+		// if user's Role is not sufficient, redirect them to their portal
+		res.redirect('/portal');
+	},
+
 	// middleware: ensures password change if change_flag is set
 	isPasswordFresh: function(req, res, next) {
 				// ensure password does not need to be changed

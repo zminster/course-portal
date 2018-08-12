@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Turn In Assignment :: CS Principles Mystery Shack Edition</title>
+	<title>Portal Admin :: CS Principles Mystery Shack Edition</title>
 
 	<link rel="stylesheet" href="/css/style.css">
 	<link rel="stylesheet" href="/css/ribbon.css">
@@ -12,7 +12,6 @@
 	<link rel="shortcut icon" href="/assets/favicon.ico" />
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
-
 </head>
 
 <body>
@@ -23,7 +22,6 @@
 				<li><a href="/lessons"><span class="fa fa-pencil"></span>Lessons</a></li>
 				<li><a href="/resources"><span class="fa fa-question"></span>Resources &amp; TA Hours</a></li>
 				{{#user.access_backend}}<li><a href="/admin"><span class="fa fa-wrench"></span>Portal Admin</a></li>{{/user.access_backend}}
-
 			</ul>
 		</div>
 		<div id="user">
@@ -45,41 +43,14 @@
 	</div>
 
 
-	<div id="header"><h1>Receipt</h1></div>
+	<div id="header"><h1>Portal Admin</h1></div>
 
 	<div id="page-container">
-
-		<h1>Receipt for {{asgn_name}}</h1>
-			<table class="receipt">
-				<tr>
-					<td>On Time?</td>
-					<td>{{#late}}<span class="fa fa-times-circle"></span> {{late}} day(s) late (rounded up){{/late}}{{^late}}<span class="fa fa-check-circle"></span>{{/late}}</td>
-				</tr>
-
-				<tr>
-					<td>Timestamp</td>
-					<td>{{time}}</td>
-				</tr>
-
-				{{#format}}{{#is_file}}
-				<tr>
-					<td>Files Received:</td>
-					<td>
-						<ol>
-						{{#files}}
-							<li>{{.}}</li>
-						{{/files}}
-						</ol>
-					</td>
-				</tr>
-				{{/is_file}}{{/format}}
-			</table>
-
-			<a id="big-back" class="bottom" href="/portal"><span class="fa fa-arrow-circle-left"></span> Back to Assignments &amp; Grades</a>
-
+		<button id="big-back"><span class="fa fa-arrow-circle-left"></span> Portal Home</button>
+		<iframe id="backend" src="/backend/" style="width:100%; height:1000px;"></iframe> 
 	</div>
 
 	<script src="/js/global.js"></script>
-
+	<script src="/js/admin.js"></script>
 </body>
 </html>

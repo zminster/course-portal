@@ -1,15 +1,16 @@
 // app/routes.js
 
-var upload 		= require('./upload.js');		/* upload handling for handins */
-var middleware	= require('./middleware.js');	/* login & handin verification */
-var moment		= require('moment');			/* timing handins */
+var upload 		= require('./upload.js');			/* upload handling for handins */
+var middleware	= require('./middleware.js');		/* login & handin verification */
+var moment		= require('moment');				/* timing handins */
 var conn		= require('./database_ops.js').connection;
-var bcrypt 		= require('bcrypt-nodejs');		/* changing passwords */
-var fs 			= require('fs');				/* read feedback files */
+var bcrypt 		= require('bcrypt-nodejs');			/* changing passwords */
+var fs 			= require('fs');					/* read feedback files */
+var proxy 		= require('express-http-proxy');	/* proxy admin through to backend */
 
-var handinDir 	= '/course/csp/handin/'; 		/* If changing, also change in upload.js */
-var maxSize 	= 1000000;						/* per-handin upload limit (bytes) */
-var releaseTime = 465;							/* minutes after midnight to release lessons */
+var handinDir 	= '/course/csp/handin/'; 			/* If changing, also change in upload.js */
+var maxSize 	= 1000000;							/* per-handin upload limit (bytes) */
+var releaseTime = 465;								/* minutes after midnight to release lessons */
 
 const util = require('util')
 
@@ -79,6 +80,19 @@ module.exports = function(app, passport) {
     		});
         }
     });
+
+	/**************************************
+	  ADMINISTRATIVE BACKEND ACCESS
+	 **************************************/
+	 // expose backend PHP to administrative users on the /backend route
+	app.use('/backend/', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isAdmin, proxy('localhost'));
+
+	 // GET /admin is a shell that loads PHP backend in iframes
+	app.get('/admin', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isAdmin, function(req, res) {
+		res.render('admin.html', {
+			user : req.user // get the user out of session and pass to template
+		});
+	})
 
 	/**************************************
 	  PRIVILEGED STATIC PAGES
@@ -159,6 +173,7 @@ module.exports = function(app, passport) {
 	  ASSIGNMENTS & GRADES PORTAL
 	 **************************************/
 	app.get('/portal', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
+		console.log("BACKEND" + req.user.access_backend);
 		// prepare massive datagram for delivery to portal renderer
 		var d = {};
 		d['user'] = req.user;
