@@ -64,7 +64,7 @@
 			<div class="trimester_display{{#current}} selected{{/current}}" id="{{name}}_display">
 			{{#categories}}
 				<h1>{{name}}</h1>
-				<div class="avg">Weight: {{weight}}%{{#user.reporting_enabled}}; Current Average: {{#avg}}{{avg}}%{{/avg}}{{^avg}}N/A{{/avg}}{{/user.reporting_enabled}}</div>
+				<div class="avg">Weight: {{weight}}%{{#user.handin_enabled}}; Current Average: {{#avg}}{{avg}}%{{/avg}}{{^avg}}N/A{{/avg}}{{/user.handin_enabled}}</div>
 
 				<table>
 					<thead>
