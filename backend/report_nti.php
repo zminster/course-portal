@@ -17,7 +17,7 @@
 		$trimester = $_POST["trimester"];
 		$assignments = get_all_assignments($conn);
 
-		$stat_select = $conn->prepare("SELECT username, grades.asgn_id, class_pd, nreq, late, handed_in, handin_time, chomped, extension, score FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN assignment ON grades.asgn_id = assignment.asgn_id WHERE trimester = ? ORDER BY class_pd, asgn_id, username");
+		$stat_select = $conn->prepare("SELECT username, grades.asgn_id, class_pd, nreq, late, handed_in, handin_time, chomped, extension, score FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid JOIN assignment ON grades.asgn_id = assignment.asgn_id WHERE trimester = ? AND reporting_enabled = 1 ORDER BY class_pd, asgn_id, username");
 
 		$stat_select->bind_param("i", $trimester);
 		$stat_select->bind_result($username, $asgn_id, $class_pd, $nreq, $late, $handed_in, $handin_time, $chomped, $extension, $score);
@@ -81,7 +81,8 @@
 			if ($u[4])
 				$due += (3600 * $u[4]);	// seconds in an hour
 			$diff = $handin - $due;
-			echo ("<td>" . ($diff/3600) . " hrs</td>");
+			$hrs_late = floor($diff/3600);
+			echo ("<td" . ($hrs_late > 47 ? " class='nti'" : "") . ">" . $hrs_late . ":" . floor(($diff % 3600) / 60) . ":" . ($diff % 3600) % 60 . "</td>");
 			echo ("<td>" . ($u[4] ? $u[4] . "hrs" : "") . "</td>");
 			?></tr><?php
 		}
