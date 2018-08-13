@@ -46,8 +46,17 @@
 
 	<div id="header" class="lessons"><h1>Lessons</h1></div>
 
+	{{^user.class_membership}}<div id="viewmode">
+	<span>{{user.role}} Mode:</span> Viewing section {{user.class_pd}}. 
+	<div class="selections">
+		<span>Switch Section:</span>
+		{{#sections}}
+			<a href="/portal/{{class_pd}}" id="section_{{class_pd}}" class="section select{{#current}} selected{{/current}}">{{class_pd}}</a>
+		{{/sections}}
+	</div>
+	</div>{{/user.class_membership}} 
 	<div id="page-container">
-		<div id="trimester_selections" class="lessons">
+		<div class="selections lessons">
 			{{#trimesters}}
 				<span id="{{name}}" class="trimester_select{{#current}} selected{{/current}}">S{{name}}</span>
 			{{/trimesters}}

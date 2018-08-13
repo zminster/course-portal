@@ -23,9 +23,14 @@ module.exports = function(passport) {
     // used to deserialize the user
     // we want full set of information, so we do a JOIN query
     passport.deserializeUser(function(uid, done) {
-        connection.query("SELECT user.uid, class_pd, username, password, change_flag, first_name, last_name, year, email, user_role.name as role, access_backend, class_membership, handin_enabled, reporting_enabled FROM user LEFT JOIN membership\
-         ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid INNER JOIN user_role ON user.role = user_role.rid WHERE user.uid = ?",[uid], function(err, rows){
-            console.log(JSON.stringify(rows[0]));
+        connection.query("SELECT user.uid, IFNULL(class_pd, (SELECT class_pd FROM class LIMIT 1)) AS class_pd,\
+            username, password, change_flag, first_name, last_name, year, email, user_role.name as role,\
+            access_backend, class_membership, handin_enabled, reporting_enabled\
+            FROM user \
+                LEFT JOIN membership ON user.uid = membership.uid \
+                INNER JOIN user_meta ON user.uid = user_meta.uid \
+                INNER JOIN user_role ON user.role = user_role.rid \
+            WHERE user.uid = ?",[uid], function(err, rows){
             done(err, rows[0]);
         });
     });

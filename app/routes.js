@@ -11,6 +11,7 @@ var proxy 		= require('express-http-proxy');	/* proxy admin through to backend *
 var handinDir 	= '/course/csp/handin/'; 			/* If changing, also change in upload.js */
 var maxSize 	= 1000000;							/* per-handin upload limit (bytes) */
 var releaseTime = 465;								/* minutes after midnight to release lessons */
+var sessions	= {};								/* maintains section selection for class_membership disabled roles */
 
 const util = require('util')
 
@@ -97,6 +98,23 @@ module.exports = function(app, passport) {
 	/**************************************
 	  PRIVILEGED STATIC PAGES
 	 **************************************/
+	 // attaches active section to passed in object for rendering section options (for eligible Roles)
+	var attachActiveSections = function(d, req, cb) {
+		conn.query('SELECT class_pd FROM class', function (err, class_pds) {
+			if (!err && class_pds) {
+				d.sections = class_pds;
+				for (var i = 0; i < d.sections.length; i++) {
+					if (req.user.class_pd == d.sections[i].class_pd)
+						d.sections[i].current = 1;
+					else
+						d.sections[i].current = 0;
+				}
+				cb(null, d);
+			} else
+				cb(err, d);
+		});
+	};
+
 	app.get('/resources', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
 		res.render('resources.html', {
 			user : req.user // get the user out of session and pass to template
@@ -104,6 +122,8 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/lessons', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
+		// enforce previously selected section choice for users without assigned section
+		req.user.class_pd = (sessions[req.user.uid] ? sessions[req.user.uid] : req.user.class_pd);
 		conn.query("SELECT trimester, topic, slide_url, extra_url, release_date FROM lesson JOIN lesson_meta ON lesson.id = lesson_meta.id WHERE class_pd = ? AND visible = 1 ORDER BY trimester, release_date ASC", [req.user.class_pd],
 			function(err, lessons) {
 				conn.query("SELECT value_int FROM system_settings WHERE name = ?", ["current_trimester"], function(err, setting) {
@@ -141,9 +161,15 @@ module.exports = function(app, passport) {
 							count++;
 						}
 					}
-					res.render('lessons.html', {
+					var render_object = {
 						user : req.user, // get the user out of session and pass to template
 						trimesters: Object.keys(trimesters).map(function (key) { return trimesters[key]; })
+					};
+					attachActiveSections(render_object, req, function(err, d) {
+						if (!err)
+							res.render('lessons.html', d);
+						else
+							res.render("error.html", {error: "There's a problem accessing lesson information from the database right now.", user: req.user});
 					});
 				});
 			});
@@ -172,8 +198,25 @@ module.exports = function(app, passport) {
 	/**************************************
 	  ASSIGNMENTS & GRADES PORTAL
 	 **************************************/
+	// privileged user changing active class section
+	app.get('/portal/:class_pd', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
+		// if user's Role is not sufficient, render error page (security feature)
+		if (req.user.class_membership)
+			return res.redirect('/portal');
+
+		// validate requested section
+		conn.query('SELECT * FROM class', function (err, class_pds) {
+			class_pds.forEach(function(row) {
+				if (row.class_pd == req.params.class_pd)
+					sessions[req.user.uid] = req.params.class_pd
+			});
+			res.redirect('back');
+		});
+	});
+
 	app.get('/portal', middleware.isLoggedIn, middleware.isPasswordFresh, function(req, res) {
-		console.log("BACKEND" + req.user.access_backend);
+		// enforce previously selected section choice for users without assigned section
+		req.user.class_pd = (sessions[req.user.uid] ? sessions[req.user.uid] : req.user.class_pd);
 		// prepare massive datagram for delivery to portal renderer
 		var d = {};
 		d['user'] = req.user;
@@ -191,17 +234,27 @@ module.exports = function(app, passport) {
 		};
 		// q3: compute cat averages of scored/viewable assignments TRIMESTER-BY-TRIMESTER
 		var q3 = function(cb) {
-			conn.query("SELECT type_id, trimester, SUM(score) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND chomped = 1 AND score IS NOT NULL GROUP BY type_id, trimester", [req.user.uid], cb);
+			if (req.user.handin_enabled)	// only need averages for graded users
+				conn.query("SELECT type_id, trimester, SUM(score) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND chomped = 1 AND score IS NOT NULL GROUP BY type_id, trimester", [req.user.uid], cb);
+			else return cb();
 		};
 		// q4: get all assignment data in one fell swoop
 		var q4 = function(cb) {
-			conn.query("SELECT type, assignment.asgn_id, trimester, name, description, url, pt_value,\
-					date_out, date_due, can_handin, info_changed, nreq, handed_in, handin_time,\
-					late, extension, chomped, can_view_feedback, score, honors_possible, honors_earned\
-				FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
-					JOIN grades ON assignment.asgn_id = grades.asgn_id\
-				WHERE uid = ? AND class_pd = ? AND displayed = 1 ORDER BY trimester, type, date_out, date_due",
-			[req.user.uid, req.user.class_pd], cb);
+			if (req.user.handin_enabled) {	// specific information about this user's grade record
+				conn.query("SELECT type, assignment.asgn_id, trimester, name, description, url, pt_value,\
+						date_out, date_due, can_handin, info_changed, nreq, handed_in, handin_time,\
+						late, extension, chomped, can_view_feedback, score, honors_possible, honors_earned\
+					FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
+						JOIN grades ON assignment.asgn_id = grades.asgn_id\
+					WHERE uid = ? AND class_pd = ? AND displayed = 1 ORDER BY trimester, type, date_out, date_due",
+				[req.user.uid, req.user.class_pd], cb);
+			} else {						// assignment meta information only
+				conn.query("SELECT type, assignment.asgn_id, trimester, name, description, url, pt_value,\
+						date_out, date_due, info_changed, honors_possible\
+					FROM assignment JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id\
+					WHERE class_pd = ? AND displayed = 1 ORDER BY trimester, type, date_out, date_due",
+				[req.user.class_pd], cb);
+			}
 		};
 
 		// dispatch
@@ -239,7 +292,7 @@ module.exports = function(app, passport) {
 								}
 
 								q3(function(err, averages){	// q3: find cat averages per-trimester
-									if (!err) {
+									if (!err && averages) {
 										for (var i = 0; i < averages.length; i++) {
 											var smooth_avg = Math.round(averages[i].avg * 1000) / 10;	// avg to one decimal place
 											terms[averages[i].trimester].types[averages[i].type_id].avg = smooth_avg;
@@ -252,7 +305,7 @@ module.exports = function(app, passport) {
 											for (var i = 0; i < asgn_arr.length; i++) {
 												var asgn_l = terms[asgn_arr[i].trimester].types[asgn_arr[i].type].assignments;	// list of assignments of this type
 												if (now.isAfter(moment(asgn_arr[i].date_out)))	// only display assignments that are already past "out" date
-													asgn_l.push(construct_assignment(asgn_arr[i]));		// construct assignment object
+													asgn_l.push(construct_assignment(asgn_arr[i], !req.user.handin_enabled));		// construct assignment object
 											}
 
 											/* THIS is a disgusting hack
@@ -274,7 +327,13 @@ module.exports = function(app, passport) {
 											});
 											d.trimesters = Object.keys(terms).map(function (term) { return terms[term]; });
 											
-											res.render('portal.html', d);
+											attachActiveSections(d, req, function (err, d) {
+												if (!err)
+													res.render('portal.html', d);
+												else
+													res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
+											});
+											
 										} else {
 											res.render("error.html", {error: "There's a problem accessing portal information from the database right now.", user: req.user});
 										}
@@ -361,7 +420,7 @@ module.exports = function(app, passport) {
 	});
 };
 
-function construct_assignment(row) {
+function construct_assignment(row, isGradeless) {
 	var asgn 		= {};
 
 	var date_out 	= moment(row['date_out']);
@@ -395,7 +454,7 @@ function construct_assignment(row) {
 	// due warnings - classes change background colors of assignment display
 	if (now.isBetween(days_before, date_due) && !row['handed_in'])	// assignment due in 24 hrs and NTI
 		asgn['due_warn'] = 'today';
-	else if (now.isAfter(date_due) && !row['handed_in']) // assignment overdue (NTI, due date passed)
+	else if (!isGradeless && now.isAfter(date_due) && !row['handed_in']) // assignment overdue (NTI, due date passed)
 		asgn['due_warn'] = 'overdue';
 
 	// handin status (symbol class) & time if applicable
@@ -419,7 +478,7 @@ function construct_assignment(row) {
 		asgn['late'] = 'fa fa-check-circle';
 
 	// grade status
-	if (row['nreq'])												// NREQ:
+	if (isGradeless || row['nreq'])									// Doesn't get grades OR NREQ:
 		asgn['grade_status'] = 'fa fa-ban';							//   ban symbol
 	else if (!row['handed_in'] || !row['chomped'])					// NTI OR Not Chomped:
 		asgn['grade_status'] = 'fa fa-question-circle';				//   question mark
@@ -429,6 +488,8 @@ function construct_assignment(row) {
 		asgn['score'] = row['score'];								//   show score instead of symbol
 		
 	if (row['honors_possible'])
+		if (isGradeless)
+			asgn['honors'] = 'fa fa-ban';
 		if (!row['handed_in'] || !row['chomped'] || !row['score'] || !row['can_view_feedback'])
 			asgn['honors'] = 'fa fa-question';
 		else if (row['honors_earned'])
