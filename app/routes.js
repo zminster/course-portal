@@ -486,7 +486,7 @@ function construct_assignment(row, isGradeless) {
 	else if (!row['score'])												// Chomped but not yet scored:
 		asgn['grade_status'] = 'fa fa-cog fa-spin';						//   spinning cog
 	else																// Scored:
-		asgn['score'] = row['score']									//   show score instead of symbol
+		asgn['score'] = +row['score'].toFixed(2)						//   show score instead of symbol
 		
 	if (row['honors_possible'])
 		if (isGradeless)
