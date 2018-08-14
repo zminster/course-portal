@@ -79,14 +79,14 @@
 							$entry_class = $entry_class . "nti";
 							$entry_text = $entry_text . "NTI";
 							if ($chomped) // this means the student was marked 0 for not turning in
-								$entry_text = $entry_text . " (0)";
+								$entry_text = $entry_text . " (Zero)";
 						}
 						else { // ignore all other stuff if NTI
 							if ($late)
 								$entry_class = $entry_class . " late";
 	
 							if ($chomped && $score){	// graded
-								$entry_text = $entry_text . $score;
+								$entry_text = $entry_text . round($score,2);
 								$entry_class = $entry_class . " graded";
 
 								if (($score / $pt_value) <= 0.6)
