@@ -2,6 +2,7 @@
 <head>
 	<title>Portal Admin :: Add User Role</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
 </head>
 <body>
 	<h1>Add User Role</h1>
@@ -70,5 +71,26 @@
 		</form><?php
 	}
 	?>
+	<!-- Role cascade validation -->
+	<script type="text/javascript">
+		function validate() {
+			if ($('#class_membership').prop('checked')) {
+				$('#handin_enabled').prop('disabled', false);
+				if ($('#handin_enabled').prop('checked')) {
+					$('#reporting_enabled').prop('disabled', false);
+				} else {
+					$('#reporting_enabled').prop('checked', false);
+					$('#reporting_enabled').prop('disabled', true);
+				}
+			} else {
+				$('#reporting_enabled').prop('disabled', true);
+				$('#handin_enabled').prop('disabled', true);
+				$('#reporting_enabled').prop('checked', false);
+				$('#handin_enabled').prop('checked', false);
+			}
+		}
+		$('input').click(validate);
+		$(validate);
+	</script>
 </body>
 </html>

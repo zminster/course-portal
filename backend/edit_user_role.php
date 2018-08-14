@@ -2,6 +2,7 @@
 <head>
 	<title>Portal Admin :: Edit/Delete User Role</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
 </head>
 <body>
 	<h1>Edit/Delete User Role</h1>
@@ -61,6 +62,26 @@
 				
 				<input type="submit" />
 			</form>
+			<script type="text/javascript">
+			function validate() {
+				if ($('#class_membership').prop('checked')) {
+					$('#handin_enabled').prop('disabled', false);
+					if ($('#handin_enabled').prop('checked')) {
+						$('#reporting_enabled').prop('disabled', false);
+					} else {
+						$('#reporting_enabled').prop('checked', false);
+						$('#reporting_enabled').prop('disabled', true);
+					}
+				} else {
+					$('#reporting_enabled').prop('disabled', true);
+					$('#handin_enabled').prop('disabled', true);
+					$('#reporting_enabled').prop('checked', false);
+					$('#handin_enabled').prop('checked', false);
+				}
+			}
+			$('input').click(validate);
+			$(validate);
+		</script>
 		<?php }
 	} else {	// GET: display edit options
 		$roles = get_user_roles($conn);
