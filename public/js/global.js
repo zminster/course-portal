@@ -8,8 +8,8 @@ $("#user").click(function(e) {
 	$("#user_flyout").toggle('slow');
 });
 
-$(".trimester_select").click(function(e) {
-	$(".trimester_select").each(function() {
+$(".trimester.select").click(function(e) {
+	$(".trimester.select").each(function() {
 		$(this).removeClass("selected");
 	});
 	$(".trimester_display").each(function() {

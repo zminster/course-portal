@@ -7,7 +7,7 @@ html, body {
 	height:100%;
 	overflow:auto;
 	background-image: url('../assets/bg.jpg');
-	background-position:center center;
+	background-position:center top;
 	min-width:500px;
 
 	font-family: 'Reem Kufi', sans-serif;
@@ -194,7 +194,7 @@ header ul>li a:hover {
 	margin: 4px 0;
 }
 
-#page-container{
+#page-container, #viewmode{
 	margin:auto;
 	max-width:85%;
 	min-width:900px;
@@ -203,6 +203,17 @@ header ul>li a:hover {
 
 	box-shadow: 0 0 20px #000;
 	margin-bottom:30px;
+}
+
+#viewmode{
+	background-image:url('../assets/warn_bg.png');
+	color:#fff;
+	margin-bottom:0;
+}
+
+#viewmode span {
+	text-transform: uppercase;
+	font-weight:bold;
 }
 
 .fa-check-circle {
@@ -233,7 +244,8 @@ th, td {
 }
 
 thead {
-	background-color:#ffd100;
+	background-color:#de644d;
+	color:#fff;
 }
 
 tbody tr {
@@ -284,18 +296,18 @@ tbody td {
 	display:block;
 }
 
-#trimester_selections {
+.selections {
 	float:right;
 }
 
-#trimester_selections.lessons {
+.selections.lessons {
 	float:none;
 	width:100%;
 	text-align:center;
 	margin-bottom:15px;
 }
 
-.trimester_select {
+.select {
 	display:inline-block;
 	width:50px;
 	text-align:center;
@@ -306,15 +318,16 @@ tbody td {
 	background-color:#f8f8f8;
 	box-shadow: 0 0 5px #e0e0e0;
 	border:1px solid #fff;
+	color:#000;
 }
 
-.trimester_select:hover {
+.select:hover {
 	font-weight:bold;
 }
 
-.trimester_select.selected {
-	background-color:#ffd100;
-	color:crimson;
+.select.selected {
+	background-color:#de644d;
+	color:#fff;
 }
 
 .honors {
@@ -413,7 +426,7 @@ form input {
     font-family: 'Reem Kufi', sans-serif;
     padding:15px;
     width:100%;
-    background:#ffd100;
+    background:#de644d;
     text-align:center;
     margin:0;
     color:#111;
@@ -506,7 +519,7 @@ pre#data {
 	display:block;
     padding:15px;
     width:100%;
-    background:#ffd100;
+    background:#de644d;
     text-align:center;
     color:#111;
     font-size:20px;
@@ -579,9 +592,8 @@ form #collab-statement {
 }
 
 #f_handin {
-	margin-top:40px;
+	margin-top:10px;
 	position:relative;
-	height:220px;
 }
 
 .receipt {
@@ -650,7 +662,15 @@ form #collab-statement {
 	text-align: left;
 }
 
-#hours div {
+div.resources_content {
+	padding:20px;
+}
+
+div.resources_content p {
+	margin-top:5px;
+}
+
+div.notice {
 	margin-top:20px;
 	border:1px solid #9f6000;
 	text-align:left;

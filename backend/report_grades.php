@@ -31,19 +31,21 @@
 		// this gives us each student's grade on each assignment
 		// ordered by the last name of the student (so all assignments are grouped by student)
 		// 		then ordered by due dates (so assignments are in same order as header row)
-		$grade_select = $conn->prepare("SELECT grades.uid, last_name, first_name, nreq, handed_in, extension, late, chomped, score, honors_possible, honors_earned
+		$grade_select = $conn->prepare("SELECT grades.uid, last_name, first_name, nreq, handed_in, extension, late, chomped, score, honors_possible, honors_earned, grades.asgn_id
 			FROM grades 
 				JOIN membership ON grades.uid = membership.uid
 				JOIN assignment ON grades.asgn_id = assignment.asgn_id 
 				JOIN assignment_meta ON assignment_meta.class_pd = membership.class_pd AND grades.asgn_id = assignment_meta.asgn_id
 				JOIN user_meta ON grades.uid = user_meta.uid
-			WHERE membership.class_pd = ? AND trimester = ? ORDER BY last_name, first_name, date_due DESC");
+				JOIN user ON user_meta.uid = user.uid
+				JOIN user_role ON user.role = user_role.rid
+			WHERE membership.class_pd = ? AND trimester = ? AND reporting_enabled = 1 ORDER BY last_name, first_name, date_due DESC");
 
 		$asgn_select->bind_param("ii", $class_pd, $trimester);
 		$grade_select->bind_param("ii", $class_pd, $trimester);
 
 		$asgn_select->bind_result($asgn_id, $name, $date_due, $type, $honors_possible, $pt_value);
-		$grade_select->bind_result($uid, $last_name, $first_name, $nreq, $handed_in, $extension, $late, $chomped, $score, $honors_possible, $honors_earned);
+		$grade_select->bind_result($uid, $last_name, $first_name, $nreq, $handed_in, $extension, $late, $chomped, $score, $honors_possible, $honors_earned, $asgn_id);
 
 		?><h1>Class Grade Report &raquo; Period <?php echo($class_pd); ?> &raquo; Trimester <?php echo($trimester);?></h1>
 
@@ -56,6 +58,8 @@
 
 		<h2>Gradebook</h2>
 		<?php
+		// keep track of point values (to highlight failing grades)
+		$pt_values = [];
 		// begin: header row
 		$asgn_select->execute();
 		$asgn_select->store_result();
@@ -67,6 +71,7 @@
 			<?php
 			while($asgn_select->fetch()) {
 				$dt_due = new DateTime($date_due);
+				$pt_values[$asgn_id] = $pt_value;
 				?><th<?php echo($honors_possible ? " class=\"honors_possible\"" : NULL); ?>>
 					<span><?php echo($dt_due->format('D - M d')); ?></span>
 					<span><?php echo($type); ?></span>
@@ -82,8 +87,6 @@
 
 			$curr_student = "";
 			while($grade_select->fetch()) {
-				if (strcmp($last_name, "Test") == 0) // ignore all records matching test students
-					continue;
 				if (strcmp($curr_student, $uid) != 0) {	// start new row for new student
 					$curr_student = $uid;
 					?></tr><tr>
@@ -109,7 +112,7 @@
 							$entry_text = $entry_text . $score;
 							$entry_class = $entry_class . " graded";
 
-							if (($score / (float) $pt_value) <= 0.6)
+							if (($score / (float) $pt_values[$asgn_id]) <= 0.6)
 								$entry_class = $entry_class . " low_grade";
 
 							if ($honors_possible && $honors_earned)

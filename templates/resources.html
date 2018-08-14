@@ -4,11 +4,12 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Resources :: Adventures in Computer Science</title>
+	<title>Resources :: CS Principles Mystery Shack Edition</title>
 
 	<link rel="stylesheet" href="/css/style.css">
 	<link rel="stylesheet" href="/css/ribbon.css">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+	<link rel="shortcut icon" href="/assets/favicon.ico" />
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
 
@@ -20,7 +21,8 @@
 			<ul>
 				<li><a href="/portal"><span class="fa fa-graduation-cap"></span>Assignments &amp; Grades</a></li>
 				<li><a href="/lessons"><span class="fa fa-pencil"></span>Lessons</a></li>
-				<li class="selected"><a href="/resources"><span class="fa fa-question"></span>Help Resources</a></li>
+				<li class="selected"><a href="/resources"><span class="fa fa-question"></span>Resources &amp; TA Hours</a></li>
+				{{#user.access_backend}}<li><a href="/admin"><span class="fa fa-wrench"></span>Portal Admin</a></li>{{/user.access_backend}}
 			</ul>
 		</div>
 		<div id="user">
@@ -32,8 +34,9 @@
 		<div class="top">
 			<div id="icon" class="fa fa-user fa-4x"></div>
 			<p class="name">{{user.first_name}} {{user.last_name}}</p>
-			<p class="sub">{{user.email}}</p>
-			<p class="sub">Period {{user.class_pd}} / Grade {{user.year}}</p>
+			<p class="sub">{{user.role}}</p>
+			{{#user.class_membership}}<p class="sub">Period {{user.class_pd}} / Grade {{user.year}}</p>{{/user.class_membership}}
+			{{^user.class_membership}}<p class="sub">{{user.email}}</p>{{/user.class_membership}}
 		</div>
 		<ul>
 			<li><a href="/password"><span class="fa fa-key"></span> Change Password</a></li>
@@ -42,7 +45,7 @@
 	</div>
 
 
-	<div id="header" class="resources"><h1>Resources</h1></div>
+	<div id="header" class="resources"><h1>Resources &amp; TA Hours</h1></div>
 
 	<div id="page-container">
 		<div id="container2">
@@ -50,36 +53,107 @@
 			<div id="col1">
 				<h1>Essential Links</h1>
 				<ul>
-					<!--<li><a href="http://snap.berkeley.edu/">
+					<li><a href="http://snap.berkeley.edu/" target="_blank">
 						<span class="fa fa-external-link"></span> Berkeley Snap!
-					</a></li>-->
+					</a></li>
+					<li><a href="http://processing.org/" target="_blank">
+						<span class="fa fa-external-link"></span> Processing
+					</a></li>
+					<li><a href="http://thimble.mozilla.org/" target="_blank">
+						<span class="fa fa-external-link"></span> Mozilla Thimble
+					</a></li>
+					<li><a href="http://jsfiddle.net/" target="_blank">
+						<span class="fa fa-external-link"></span> JSFiddle
+					</a></li>
 				</ul>
 			</div>
 
 			<div id="col2">
 				<h1>Course Documents</h1>
 				<ul>
-					<!--<li><a href="http://csp.cs.stab.org/doc/syllabus.pdf">
-						<span class="fa fa-external-link"></span> Syllabus &amp; Policies
-					</a></li>-->
-					<!--<li><a href="http://csp.cs.stab.org/doc/collab.pdf">
-						<span class="fa fa-external-link"></span> Collaboration Policy
-					</a></li>-->
+					<li><a href="/missive.pdf" target="_blank">
+						<span class="fa fa-external-link"></span> Syllabus
+					</a></li>
+					<li><a href="/policies.pdf" target="_blank">
+						<span class="fa fa-external-link"></span> Collaboration &amp; Late Policies
+					</a></li>
+					<li><span style="font-weight:bold">AP Resources</span><ul>
+                                        <li><a href="/create_task.pdf" target="_blank">
+                                                <span class="fa fa-external-link"></span> <span style="font-weight:bold">CREATE Task Guidelines
+                                        </a></li>
+					<li><a href="/explore_task.pdf" target="_blank">
+                                                <span class="fa fa-external-link"></span> <span style="font-weight:bold">EXPLORE (Impact) Task Guidelines
+                                        </a></li>
+                                        <li><a href="http://digitalportfolio.collegeboard.org/" target="_blank">
+                                                <span class="fa fa-external-link"></span> College Board Digital Portfolio
+                                        </a></li>
+					<li><a href="https://apcentral.collegeboard.org/pdf/ap-csp-student-task-directions.pdf?course=ap-computer-science-principles" target="_blank">
+						<span class="fa fa-external-link"></span> AP Exam: Overview &amp; Directions Packet
+					</a></li>
+	                                <li><a href="http://apcentral.collegeboard.com/apc/public/exam/exam_information/231726.html" target="_blank">
+                                                <span class="fa fa-external-link"></span> AP Exam: Home Page
+                                        </a></li>
+					</ul></li>
+
 				</ul>
 			</div>
 		</div>
 		</div>
 
 		<div id="hours">
-			<h1>Help Hours</h1>
-			<div>
-				<p>Both Mr. Minster and peer mentors (students who already have experience in computer science) are available often for help on assignments and with course content.</p>
-				<p>You may always contact Mr. Minster to schedule a private appointment outside of these times.</p>
+			<h1>TA Hours</h1>
+
+			<div class="resources_content">
+				<p>TA Hours are a chance for you to ask questions, seek advice, or talk about computer science with trained peers who have been in your shoes!</p>
+				<p>X Block TA Hours are held in the <b>TA Lab</b>, Mrs. Robertson's office in the basement of Randolph Hall.</p>
+				<p>Opp Block TA Hours are held in the <b>CS Lab</b> in the SCAS.</p>
+				<p><b>(New!)</b> Need help finding X Block TA Hours? Check out <a href="https://www.youtube.com/watch?v=HFC__VpWcAY" target="_blank">this helpful video</a> from the TAs.</p>
 			</div>
-			<iframe src="https://calendar.google.com/calendar/embed?title=CSP%20Open%20Help%20Hours&amp;mode=WEEK&amp;height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src=stab.org_1d5gei7e53qe2coe8b6t1i2nk0%40group.calendar.google.com&amp;color=%23B1440E&amp;ctz=America%2FNew_York" style="border-width:0; text-align:center" width="860" height="600" frameborder="0" scrolling="no"></iframe>
+			<table>
+				<thead>
+					<th width="10%"></th>
+					<th>A Day (1-2-3)</th>
+					<th>B Day (6-5-4)</th>
+					<th>C Day (2-3-1)</th>
+					<th>D Day (4-5-6)</th>
+					<th>E Day (3-2-1)</th>
+					<th>F Day (5-6-4)</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td><span style="font-weight:bold;">X Block:</span></td>
+						<td>Katie D.<br /> Liza K.<br />Greg S.<br />Milo L.</td>
+						<td>Sebastian C. <br /> Shawn L. <br /> William D.</td>
+						<td>Katie G. <br /> Johnny L. <br /> Hewson D.</td>
+						<td>Will E. <br /> Anders K. <br /> Kellie B. <br /> Edward K.</td>
+						<td>Jerry Y. <br /> Andy W. <br /> Van S.</td>
+						<td>Thomas C. <br /> Jack R. <br /> Megan K.</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table>
+				<thead>
+					<th width="10%"></th>
+					<th>Tuesday</th>
+					<th>Friday</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td><span style="font-weight:bold;">Opp Block:</span></td>
+						<td>Tom P.</td>
+						<td>TBD</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="notice">
+				<p>You may always <a href="mailto:zminster@stab.org">contact Mr. Minster</a> to schedule an appointment in the morning, after school, or during the day.</p>
+			</div>
+
 		</div>
 
-		<h1>Coming Soon - FlowDock</h1>
+		<h1>TA Email List (Coming Soon)</h1>
 	</div>
 
 	<script src="/js/global.js"></script>

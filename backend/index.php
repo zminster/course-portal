@@ -4,21 +4,32 @@
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 </head>
 <body>
-	<h1>STAB CS Principles :: Portal Admin</h1>
+	<h1>STAB CS :: Portal Admin (<?php echo(gethostname()); ?>)</h1>
 
 	<h2>Setup</h2>
 	<ul>
 		<li><a href="add_class.php">Add Class Period</a></li>
-		<li><a href="add_user.php">Add Student (Batch)</a></li>
-		<li><a href="add_user_single.php">Add Student (Single)</a></li>
-		<li><a href="add_asgn_type.php">Add Assignment Type</a></li>
+		<li><a href="add_user_role.php">Add User Role</a></li>
+		<li><a href="edit_user_role.php">Edit/Delete User Role</a></li>
+		<li><a href="add_asgn_type.php">Add Assignment Category</a></li>
+		<li><a href="edit_asgn_type.php">Edit/Delete Assignment Category</a></li>
+		<li><a href="add_asgn_format.php">Add Assignment Format</a></li>
+		<li><a href="edit_asgn_format.php">Edit/Delete Assignment Format</a></li>
 		<li><a href="edit_settings.php">Edit System Settings</a></li>
 	</ul>
+
+	<h2>User Management</h2>
+	<ul>
+		<li><a href="report_users.php">Show All Users</a></li>
+		<li><a href="add_user.php">Add User (Batch)</a></li>
+		<li><a href="add_user_single.php">Add User (Single)</a></li>
+		<li><a href="edit_user.php">Edit/Delete User</a></li>
+	</ul>
+
 
 	<h2>Grade/Assignment Management</h2>
 	<ul>
 		<li><a href="add_asgn.php">Add Assignment</a></li>
-		<li><a href="edit_user.php">Edit/Delete Student</a></li>
 		<li><a href="edit_asgn.php">Edit/Delete Assigment</a></li>
 		<li><a href="edit_extension.php">Grant Extension</a></li>
 		<li><a href="chomp_pre.php">Pre-Chomp Assignment (Copy blank rubrics, shutdown handins)</a></li>

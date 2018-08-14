@@ -2,6 +2,7 @@
 <head>
 	<title>Portal Admin :: Add User (Batch)</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
 </head>
 <body>
 	<h1>Add User (Batch)</h1>
@@ -9,14 +10,16 @@
 	include 'config/database.php';
 	include 'common/password_generator.php';
 	$method = $_SERVER['REQUEST_METHOD'];
+	$roles = get_user_roles($conn);
 
 	if ($method == 'POST') {	// POST: admin is adding users
 
 		$period = $_POST['period'];
+		$role = $_POST['role'];
 
 		$students = explode("\n", $_POST['students']);
 
-		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag) VALUES (?, ?, 1)");
+		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag, role) VALUES (?, ?, 1, ?)");
 		$uid_lookup  = $conn->prepare("SELECT uid FROM user WHERE username = ?");
 		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, first_name, last_name, year, email) VALUES (?, ?, ?, ?, ?)");
 		$membership  = $conn->prepare("INSERT INTO membership (uid, class_pd) VALUES (?, ?)");
@@ -33,13 +36,13 @@
 			array_push($asgns, $asgn_id);
 		}
 
-		$user_insert->bind_param("ss", $username, $password);
+		$user_insert->bind_param("ssi", $username, $password, $role);
 		$uid_lookup->bind_param("s", $username);
 		$uid_lookup->bind_result($uid);
 		$meta_insert->bind_param("issis", $uid, $first_name, $last_name, $year, $email);
 		$membership->bind_param("ii", $uid, $period);
 		$grades->bind_param("ii", $uid, $asgn_id);
-		?><h2>Students Added :: Period <?php echo($period) ?></h2><ul><?php
+		?><h2><?php echo($roles[$role]['name']); ?> Users Added<?php echo($roles[$role]['class_membership'] ? " :: Period " . $period : ""); ?></h2><ul><?php
 		$ct = 0;
 
 		foreach ($students as $student) {
@@ -75,9 +78,11 @@
 			$meta_insert->execute();
 			echo($meta_insert->error); 
 
-			// insert into membership
-			$membership->execute();
-			echo($membership->error);
+			// insert into membership (if Role requires)
+			if ($roles[$role]['class_membership']) {
+				$membership->execute();
+				echo($membership->error);
+			}
 
 			// insert blank grades if assignments already exist
 			foreach ($asgns as $asgn_id) {
@@ -93,34 +98,51 @@
 		?></ul><div><a href="add_user.php">Again</a> | 
 		<a href="index.php">Menu</a></div><?php
 	} else {	// GET: display add user screen
-
+		$class_pds = get_class_pds($conn);
 		?><form action="add_user.php" method="post">
-		<div>Class Period (<a href="add_class.php">Add</a>):<?php
-		
-		$res = $conn->query("SELECT * FROM class");
+		<div>
+			<label for="role">Role for these users:</label>
+			<select id="role" name="role">
+				<?php
+				foreach ($roles as $role) {
+					?><option value="<?php echo($role["rid"]);?>">
+						<?php echo($role["rid"]);?>) <?php echo($role["name"]);?>
+					</option><?php
+				} ?>
+			</select>
+		</div>
 
-		if ($res->num_rows > 0) {
+		<div id="class_pd" style="display:none;">
+			<label for="period">Class Period (<a href="add_class.php">Add?</a>):</label>
+			<select id="period" name="period"><?php
+				foreach ($class_pds as $class_pd) {
+					?><option value="<?php echo($class_pd);?>">
+						<?php echo($class_pd); ?>
+					</option><?php
+				}?>
+			</select><span style="font-weight:bold; color:LimeGreen;"> (Users in this role require a section assignment.)</span>
+		</div>
 
-			?><select name="period"><?php
-			while ($class_pd = $res->fetch_assoc()) {
-				?><option value="<?php echo($class_pd["class_pd"]);?>">
-					<?php echo($class_pd["class_pd"]); ?>
-				</option><?php
-			}?>
-			</select></div>
-
-			<div>Add users on newlines in the following comma-separated
-			format: [username],[last name],[first name],[year],[email]</div>
-			<?php
-
-		} else{
-			die("<span style=\"color:red;\"><b>
-				You must <a href=\"add_class.php\">add a class</a>.</b></span>");
-		}?>
+		<div>Add users on newlines in the following comma-separated
+		format: [username],[last name],[first name],[year],[email]</div>
 
 		<textarea id="students" name="students"></textarea>
 		<input type="submit">
-		</form><?php
+		</form>
+		<!-- Require class membership information only if Role dictates it -->
+		<script type="text/javascript">
+			$('#role').val('');
+			$('#period').val('');
+			$('#role').change(function() {
+				var rid = parseInt($('select#role option:selected').val());
+				if (<?php foreach($roles as $role) { if ($role['class_membership']) echo("rid===" . $role['rid'] . "||"); } ?>false) {
+					$("#class_pd").show();
+				} else {
+					$("#class_pd").hide();
+				}
+			});
+		</script>
+		<?php
 	}
 	?>
 </body>

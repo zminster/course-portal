@@ -33,12 +33,27 @@
 
 		if ($res->num_rows > 0) {
 			while ($type = $res->fetch_assoc()) {
-				$types[] = $type;
+				$types[$type["type_id"]] = $type;
 			}
 			return $types;
 		} else{
 			die("<span style=\"color:red;\"><b>
 				You must <a href=\"add_asgn_type.php\">add an assignment type</a>.</b></span>");
+		}
+	}
+
+	function get_asgn_formats($conn) {
+		$res = $conn->query("SELECT * FROM assignment_format");
+		$formats = array();
+
+		if ($res->num_rows > 0) {
+			while ($format = $res->fetch_assoc()) {
+				$formats[$format["format_id"]] = $format;
+			}
+			return $formats;
+		} else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_asgn_format.php\">add an assignment format</a>.</b></span>");
 		}
 	}
 
@@ -102,8 +117,23 @@
 		}
 	}
 
+	function get_user_roles($conn) {
+		$res = $conn->query("SELECT * FROM user_role");
+		$roles = array();
+
+		if ($res->num_rows > 0) {
+			while ($role = $res->fetch_assoc()) {
+				$roles[$role["rid"]] = $role;
+			}
+			return $roles;
+		} else{
+			die("<span style=\"color:red;\"><b>
+				You must <a href=\"add_user_role.php\">add a user role</a>.</b></span>");
+		}
+	}
+
 	function get_all_userinfo($conn) {
-		$res = $conn->query("SELECT user.uid, class_pd, username, first_name, last_name, year, email FROM user INNER JOIN membership ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid ORDER BY class_pd, username");
+		$res = $conn->query("SELECT user.uid, role, class_pd, username, first_name, last_name, year, email FROM user LEFT JOIN membership ON user.uid = membership.uid INNER JOIN user_meta ON user.uid = user_meta.uid ORDER BY role, class_pd, username");
 		$users = array();
 
 		if ($res->num_rows > 0) {

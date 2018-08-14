@@ -24,15 +24,22 @@
     "consolidate": "^0.14.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "express-http-proxy": "^1.2.0",
     "express-session": "^1.14.0",
     "hogan.js": "^3.0.2",
-    "letsencrypt-express": "^1.1.5",
+    "le-acme-core": "^2.0.6",
+    "le-challenge-fs": "^2.0.4",
+    "le-sni-auto": "^2.0.1",
+    "le-store-certbot": "^2.0.3",
+    "letsencrypt": "^2.1.4",
+    "letsencrypt-express": "^2.0.2",
     "mkdirp": "^0.5.1",
     "moment": "^2.14.1",
     "morgan": "^1.7.0",
     "mysql": "^2.11.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "redirect-https": "^1.1.0",
     "spdy": "^3.3.4"
   }
 }

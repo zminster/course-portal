@@ -8,6 +8,7 @@
 	include 'config/database.php';
 	$method = $_SERVER['REQUEST_METHOD'];
 	$users = get_all_userinfo($conn);
+	$roles = get_user_roles($conn);
 
 	if ($method == 'POST') {	// POST
 		// goal:
@@ -35,7 +36,7 @@
 		$grade_select->bind_result($asgn_id, $name, $date_due, $type, $nreq, $handed_in, $extension, $late, $chomped, $score, $honors_possible, $honors_earned, $pt_value);
 		$avg_select->bind_result($type, $weight, $avg);
 
-		?><h1>Individual Grade Report &raquo; <?php echo($user_meta["first_name"] . " " . $user_meta["last_name"] . " &raquo; Trimester " . $trimester); ?></h1>
+		?><h1>Individual Grade Report &raquo; <?php echo($user_meta["first_name"] . " " . $user_meta["last_name"] . " (" . $roles[$user_meta[role]]['name'] . ")" . " &raquo; Term " . $trimester); ?></h1>
 
 		<ul>
 			<li>Headings highlighted in <span style="background-color:#D5E3F1; font-weight:bold;">BLUE</span> indicate that AP credit could be earned on the assignment. Scores bounded in <span style="background-color:#D5E3F1; font-weight:bold;">BLUE</span> indicate credit was earned.</li>
@@ -45,6 +46,7 @@
 		</ul>
 
 		<h2>Gradebook State</h2>
+		<?php if (!$roles[$user_meta[role]]['reporting_enabled']) echo("<div style='color:red; font-weight:bold; margin-bottom:20px;'>NOTICE: This user does not affect reporting.</div>"); ?>
 		<?php
 		// gradebook view
 		$grade_select->execute();
@@ -140,22 +142,24 @@
 		?>
 		<h1>Individual Grade Report</h1>
 		<form action="report_student.php" method="POST">
-			<p>Select student and trimester for whom to generate an individual grade report.</p>
+			<p>Select student and term for whom to generate an individual grade report.</p>
 
-			<div><label for="trimester">Trimester:</label>
+			<div><label for="trimester">Term:</label>
 				<select id="trimester" name="trimester">
-					<option value="1">T1</option>
-					<option value="2">T2</option>
-					<option value="3">T3</option>
+					<option value="1">S1</option>
+					<option value="2">S2</option>
 				</select>
 			</div>
 
 			<div><select name="uid">
 				<?php
 				foreach ($users as $user) {
+					$role = $roles[$user["role"]];
+					if ($role['handin_enabled']) {
 					?><option value="<?php echo($user["uid"]);?>">
-						<?php echo($user["class_pd"]);?>) <?php echo($user["username"]);?> [<?php echo($user["first_name"]. " " . $user["last_name"]); ?>]
+						[<?php echo($role["name"]);?>] <?php echo($role['class_membership'] ? "Pd. ".$user["class_pd"].")" : "");?> <?php echo($user["username"]);?> [<?php echo($user["first_name"]. " " . $user["last_name"]); ?>]
 					</option><?php
+					}
 				} ?>
 			</select></div>
 
