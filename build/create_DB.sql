@@ -20,6 +20,31 @@ CREATE TABLE course_portal.system_settings (
 -- default settings
 INSERT INTO system_settings (name, value_int) VALUES ("current_trimester", 1);
 
+-- user_role
+--  stores information about system roles & permissions
+--  can flexibly add columns later to cover additional perms
+-- 
+--  user_role(rid, name, access_backend, class_membership, reporting_enabled)
+CREATE TABLE course_portal.user_role (
+    `rid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `access_backend` TINYINT(1),    -- enables/disables admin access
+    `class_membership` TINYINT(1),  -- enables/disables frontend class switching
+    `handin_enabled` TINYINT(1),    -- enables/disables turning in & chomping
+    `reporting_enabled` TINYINT(1), -- enables/disables affect on grade/asgn reports
+        PRIMARY KEY (`rid`)
+);
+
+-- establish default roles (can be modified later)
+INSERT INTO user_role (name, access_backend, class_membership, handin_enabled, reporting_enabled)
+    VALUES ("Instructor", 1, 0, 0, 0);
+INSERT INTO user_role (name, access_backend, class_membership, handin_enabled, reporting_enabled)
+    VALUES ("Teaching Assistant", 0, 0, 0, 0);
+INSERT INTO user_role (name, access_backend, class_membership, handin_enabled, reporting_enabled)
+    VALUES ("Auditor", 0, 1, 1, 0);
+INSERT INTO user_role (name, access_backend, class_membership, handin_enabled, reporting_enabled)
+    VALUES ("Student", 0, 1, 1, 1);
+
 -- user
 -- 	stores information necessary to authorize student users
 -- 
@@ -29,7 +54,9 @@ CREATE TABLE course_portal.user (
     `username` VARCHAR(20) NOT NULL,
     `password` CHAR(60) NOT NULL,
     `change_flag` TINYINT(1), -- password reset flag
+    `role` INT UNSIGNED NOT NULL,   -- assigned role
         PRIMARY KEY (`uid`),
+    FOREIGN KEY (`role`) REFERENCES user_role(`rid`),
     UNIQUE INDEX `uid_UNIQUE` (`uid` ASC),
     UNIQUE INDEX `username_UNIQUE` (`username` ASC)
 );

@@ -52,9 +52,9 @@
 		$meta = get_all_assignment_data($conn, $asgn_id);
 
 		?><h1>General Stats</h1><?php
-		$stat_select = $conn->prepare("SELECT username, class_pd, nreq, late, handed_in, handin_time, chomped, extension, score FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid WHERE asgn_id = ? ORDER BY class_pd, username");
+		$stat_select = $conn->prepare("SELECT username, class_pd, nreq, late, handed_in, handin_time, chomped, extension, score, reporting_enabled FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid WHERE asgn_id = ? ORDER BY class_pd, username");
 		$stat_select->bind_param("i", $asgn_id);
-		$stat_select->bind_result($username, $class_pd, $nreq, $late, $handed_in, $handin_time, $chomped, $extension, $score);
+		$stat_select->bind_result($username, $class_pd, $nreq, $late, $handed_in, $handin_time, $chomped, $extension, $score, $reporting_enabled);
 		$stat_select->execute();
 		$stat_select->store_result();
 		echo($stat_select->error);
@@ -66,6 +66,8 @@
 		$a_extension 	= [];
 
 		while($stat_select->fetch()) {
+			if(!$reporting_enabled)
+				continue;
 			if ($nreq)
 				array_push($a_nreq, [$class_pd, $username]);
 			else if (!$handed_in)
@@ -102,7 +104,7 @@
 				<th>Class Period</th>
 				<th>Username</th>
 				<th>Handin Time</th>
-				<th>Diff (Including Extension)</th>
+				<th>Late (HH:MM:SS) (Including Extension)</th>
 			</tr>
 		<?php
 		foreach ($a_late as $u) {
@@ -116,7 +118,8 @@
 			if ($u[3])
 				$due += (3600 * $u[3]);	// seconds in an hour
 			$diff = $handin - $due;
-			echo ("<td>" . ($diff/3600) . " hrs</td>");
+			$hrs_late = floor($diff/3600);
+			echo ("<td" . ($hrs_late > 47 ? " class='nti'" : "") . ">" . $hrs_late . ":" . floor(($diff % 3600) / 60) . ":" . ($diff % 3600) % 60 . "</td>");
 			?></tr><?php
 		}
 		?></table>
@@ -175,9 +178,9 @@
 		// Aggregate stats per period (mean, median, range, std. dev)
 		// Aggregate stats total (across all periods)
 		
-		$stat_select = $conn->prepare("SELECT score, handin_time, extension, class_pd FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid WHERE asgn_id = ? AND handed_in = 1 AND chomped = 1 AND score IS NOT NULL ORDER BY handin_time, grades.uid");
+		$stat_select = $conn->prepare("SELECT score, handin_time, extension, class_pd, reporting_enabled FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid WHERE asgn_id = ? AND handed_in = 1 AND chomped = 1 AND score IS NOT NULL ORDER BY handin_time, grades.uid");
 		$stat_select->bind_param("i", $asgn_id);
-		$stat_select->bind_result($score, $handin_time, $extension, $class_pd);
+		$stat_select->bind_result($score, $handin_time, $extension, $class_pd, $reporting_enabled);
 		$stat_select->execute();
 		$stat_select->store_result();
 		echo($stat_select->error);
@@ -191,6 +194,8 @@
 		}
 
 		while($stat_select->fetch()) {
+			if (!$reporting_enabled)
+				continue;
 			array_push($a_score[$class_pd], $score);
 
 			// calculate difference from handin in seconds, taking extensions into account
