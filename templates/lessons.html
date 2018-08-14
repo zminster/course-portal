@@ -34,8 +34,9 @@
 		<div class="top">
 			<div id="icon" class="fa fa-user fa-4x"></div>
 			<p class="name">{{user.first_name}} {{user.last_name}}</p>
-			<p class="sub">{{user.email}}</p>
-			<p class="sub">Period {{user.class_pd}} / Grade {{user.year}}</p>
+			<p class="sub">{{user.role}}</p>
+			{{#user.class_membership}}<p class="sub">Period {{user.class_pd}} / Grade {{user.year}}</p>{{/user.class_membership}}
+			{{^user.class_membership}}<p class="sub">{{user.email}}</p>{{/user.class_membership}}
 		</div>
 		<ul>
 			<li><a href="/password"><span class="fa fa-key"></span> Change Password</a></li>
@@ -47,7 +48,7 @@
 	<div id="header" class="lessons"><h1>Lessons</h1></div>
 
 	{{^user.class_membership}}<div id="viewmode">
-	<span>{{user.role}} Mode:</span> Viewing section {{user.class_pd}}. 
+	<span>{{user.role}} Mode</span>
 	<div class="selections">
 		<span>Switch Section:</span>
 		{{#sections}}
