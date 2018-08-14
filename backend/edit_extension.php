@@ -58,15 +58,19 @@
 			<a href="index.php">Menu</a></div><?php
 
 	} else {	// GET: display edit options
+		$roles = get_user_roles($conn);
 		?><form action="edit_extension.php" method="POST">
 			<p>Select student and assignment to extend, then input number of extension hours.</p>
 
-			<div><label for="uid">Student:</label><select id="uid" name="uid">
+			<div><label for="uid">Student</label><select id="uid" name="uid">
 				<?php
 				foreach ($users as $user) {
+					$role = $roles[$user["role"]];
+					if ($role['handin_enabled']) {
 					?><option value="<?php echo($user["uid"]);?>">
-						<?php echo($user["class_pd"]);?>.) <?php echo($user["username"]);?> [<?php echo($user["first_name"] . " " . $user["last_name"]); ?>]
+						[<?php echo($role["name"]);?>] <?php echo($role['class_membership'] ? "Pd. ".$user["class_pd"].")" : "");?> <?php echo($user["username"]);?> [<?php echo($user["first_name"]. " " . $user["last_name"]); ?>]
 					</option><?php
+					}
 				} ?>
 			</select></div>
 

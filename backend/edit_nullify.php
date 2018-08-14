@@ -31,15 +31,19 @@
 	} else {	// GET: display edit options
 		$users = get_all_userinfo($conn);
 		$assignments = get_all_assignments($conn);
+		$roles = get_user_roles($conn);
 		?><form action="edit_nullify.php" method="POST">
 			<p>Select a student and assignment to nullify. This process sets score to 0 and <b>permanently disables handing the assignment in</b> for this student.</p>
 
-			<div><label for="uid">Student:</label><select id="uid" name="uid">
+			<div><label for="uid">Student</label><select id="uid" name="uid">
 				<?php
 				foreach ($users as $user) {
+					$role = $roles[$user["role"]];
+					if ($role['handin_enabled']) {
 					?><option value="<?php echo($user["uid"]);?>">
-						<?php echo($user["class_pd"]);?>) <?php echo($user["username"]);?> [<?php echo($user["first_name"] . " " . $user["last_name"]); ?>]
+						[<?php echo($role["name"]);?>] <?php echo($role['class_membership'] ? "Pd. ".$user["class_pd"].")" : "");?> <?php echo($user["username"]);?> [<?php echo($user["first_name"]. " " . $user["last_name"]); ?>]
 					</option><?php
+					}
 				} ?>
 			</select></div>
 

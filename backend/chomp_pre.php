@@ -106,9 +106,9 @@
 
 		// report NTIs, lates, & NREQs
 		?><h2>Stats Brief</h2><?php
-		$stat_select = $conn->prepare("SELECT username, nreq, late, handed_in FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid WHERE asgn_id = ? AND class_pd = ? ORDER BY username ASC");
+		$stat_select = $conn->prepare("SELECT username, nreq, late, handed_in, reporting_enabled FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid WHERE asgn_id = ? AND class_pd = ? ORDER BY username ASC");
 		$stat_select->bind_param("ii", $asgn_id, $class_pd);
-		$stat_select->bind_result($username, $nreq, $late, $handed_in);
+		$stat_select->bind_result($username, $nreq, $late, $handed_in, $reporting_enabled);
 		$stat_select->execute();
 		$stat_select->store_result();
 		echo($stat_select->error);
@@ -118,6 +118,8 @@
 		$a_nti  = [];
 
 		while($stat_select->fetch()) {
+			if (!$reporting_enabled)
+				continue;
 			if ($nreq)
 				array_push($a_nreq, $username);
 			else if (!$handed_in)
