@@ -491,7 +491,7 @@ function construct_assignment(row, isGradeless) {
 	if (row['honors_possible'])
 		if (isGradeless)
 			asgn['honors'] = 'fa fa-ban';
-		if (!row['handed_in'] || !row['chomped'] || !row['score'] || !row['can_view_feedback'])
+		else if (!row['handed_in'] || !row['chomped'] || !row['score'] || !row['can_view_feedback'])
 			asgn['honors'] = 'fa fa-question';
 		else if (row['honors_earned'])
 			asgn['honors'] = 'fa fa-thumbs-o-up';
