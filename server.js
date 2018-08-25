@@ -39,7 +39,7 @@ require('./config/passport')(passport);	// passport gets configured
 
 app.engine('html', engines.hogan);
 app.set('views', __dirname +'/templates');
-settings.production ? NULL : app.use(morgan('dev'));
+if (!settings.production) app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
 	extended: true
