@@ -9,7 +9,7 @@ var bodyParser 	= require('body-parser');
 var morgan		= require('morgan');
 var passport	= require('passport');
 var flash		= require('connect-flash');
-var lex			= require('letsencrypt-express').testing();
+var lex			= require('greenlock-express');
 var engines		= require('consolidate');
 
 // consts
@@ -18,21 +18,17 @@ var DOMAIN		= 'cs.stab.org';
 var EMAIL		= 'zminster@stab.org';
 
 var app 		= express();
-if (process.env.NODE_ENV == 'production') {
-	'use strict';
-	var lex = lex.create({
-		configDir: require('os').homedir() + '/letsencrypt/etc',
-		approveRegistration: function (hostname, approve) {
-			if (hostname === DOMAIN) {
-				approve(null, {
-					domains: [DOMAIN],
-					email: EMAIL,
-					agreeTos: true
-				});
-			}
-		}
-	});
-}
+
+'use strict';
+var lex = lex.create({
+	version: 'draft-11',
+	server: 'https://acme-v02.api.letsencrypt.org/directory',
+	challenges: {'http-01': require('le-challenge-fs').create({ webrootPath: '/tmp/acme-challenges' }) },
+	store: require('le-store-certbot').create({ webrootPath: '/tmp/acme-challenges' }),
+	approveDomains: [ 'cs.stab.org', 'localhost' ],
+	email: 'zminster@stab.org',
+	agreeTos: true
+});
 
 // configuration
 process.umask(0);
@@ -45,6 +41,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
+app.use(bodyParser.json());
 app.use(session({
 	secret: '3GcdA580QSFonX4MZ9z6rvY0G1WRCFB1',
 	resave: true,
@@ -59,17 +56,10 @@ app.use(express.static(__dirname + '/public'));
 require('./app/routes.js')(app, passport);
 
 // production: 80/443/5001 (SSL enabled)
-if (process.env.NODE_ENV == 'production') {
-	lex.onRequest = app;
+require('http').createServer(lex.middleware(require('redirect-https')())).listen(8080, function () {
+  console.log("Listening for ACME http-01 challenges on", this.address());
+});
 
-	lex.listen([80], [443, 5001], function () {
-		var protocol = ('requestCert' in this) ? 'https': 'http';
-		console.log("Listening at " + protocol + '://localhost:' + this.address().port);
-	});
-}
-// dev: 8080 (SSL disabled)
-else {
-	app.listen(DEV_PORT, function() {
-		console.log("Listening at http://localhost:8080");
-	})
-}
+require('https').createServer(lex.httpsOptions, lex.middleware(app)).listen(443, function () {
+  console.log("Listening for ACME tls-sni-01 challenges and serve app on", this.address());
+});
