@@ -53,7 +53,7 @@
 		$grade_select->execute();
 		$grade_select->store_result();
 		while ($grade_select->fetch()) {
-			$rubric_filename = $handin_dir . $asgn_id . "/" . $username . "/" . "grade_comments.txt";
+			$rubric_filename = $handin_dir . $asgn_id . "/" . $class_pd . "/" $username . "/" . "grade_comments.txt";
 			$rnr = "";
 			if ($overwrite || !file_exists($rubric_filename)) {
 				// determine late days

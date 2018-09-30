@@ -68,7 +68,7 @@
 				echo($grade_select->error);
 
 				// create handin directory (if necessary)
-				$rubric_path = $handin_dir . $asgn_id . "/" . $student['username'] . "/";
+				$rubric_path = $handin_dir . $asgn_id . "/" . $class_pd . "/" . $student['username'] . "/";
 				$old = umask(0);
 				if (!is_dir($rubric_path)) {
 					if (!mkdir($rubric_path, 0770)) {

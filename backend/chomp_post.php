@@ -33,7 +33,7 @@
 		$student_select->execute();
 		$student_select->store_result();
 		while ($student_select->fetch()) {
-			$rubric_filename = $handin_dir . $asgn_id . "/" . $username . "/" . "grade_comments.txt";
+			$rubric_filename = $handin_dir . $asgn_id . "/" . $class_pd . "/" . $username . "/" . "grade_comments.txt";
 			if (file_exists($rubric_filename)) {
 				$f_rubric = file($rubric_filename);
 				$match_str = $asgn_name . " Total: ";
