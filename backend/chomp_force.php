@@ -71,7 +71,7 @@
 				$rubric_path = $handin_dir . $asgn_id . "/" . $class_pd . "/" . $student['username'] . "/";
 				$old = umask(0);
 				if (!is_dir($rubric_path)) {
-					if (!mkdir($rubric_path, 0770)) {
+					if (!mkdir($rubric_path, 0770, TRUE)) {
 						echo("<p><span style=\"color:red;\"><b>ERROR: Could not create assignment rubric path: " 
 							. $rubric_path . "</b></span></p>");
 					}
