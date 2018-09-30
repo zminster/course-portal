@@ -17,7 +17,7 @@ var err_fs		= "There was a fatal error saving your response.";
 
 // middleware: prepares filesystem and dumps files encoded in form
 module.exports = function (req, res, next) {
-	req.handin_path = handinDir + req.params.asgn_id + '/' + req.user.username;
+	req.handin_path = handinDir + req.params.asgn_id + '/' + req.user.class_pd + '/' + req.user.username;
 	exec('rm -rf ' + req.handin_path + '/*', function (err, stdout, stderr) { 	// remove old handin dir (ignore EEXIST)
 		mkdirp(req.handin_path, {mode: 0770}, function(err, made) {				// create new handin dir
 			var bb = busboy({limits: limits});					// read & begin processing handin form

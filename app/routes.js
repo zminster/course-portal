@@ -177,7 +177,7 @@ module.exports = function(app, passport) {
 
 	app.get('/feedback/:asgn_id', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isLegitFeedback, function(req, res) {
 		// find feedback in filesystem
-		var file_path = handinDir + req.params.asgn_id + '/' + req.user.username + '/grade_comments.txt';
+		var file_path = handinDir + req.params.asgn_id + '/' + req.user.class_pd + '/' + req.user.username + '/grade_comments.txt';
 		fs.stat(file_path, function(err, stat) {
 			if (!err) {
 				fs.readFile(file_path, function(err, data) {
