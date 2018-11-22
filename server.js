@@ -21,15 +21,13 @@ var EMAIL		= 'zminster@stab.org';
 var app 		= express();
 
 if (settings.production) {
-	'use strict';
 	var lex = lex.create({
 		version: 'draft-11',
 		server: 'https://acme-v02.api.letsencrypt.org/directory',
-		challenges: {'http-01': require('le-challenge-fs').create({ webrootPath: '/tmp/acme-challenges' }) },
-		store: require('le-store-certbot').create({ webrootPath: '/tmp/acme-challenges' }),
-		approveDomains: [ 'cs.stab.org', 'localhost' ],
-		email: 'zminster@stab.org',
-		agreeTos: true
+		approveDomains: [ DOMAIN, 'localhost' ],
+		email: EMAIL,
+		agreeTos: true,
+		communityMember:true
 	});
 }
 
@@ -64,7 +62,7 @@ if (settings.production) {
 	  console.log("Listening for ACME http-01 challenges on", this.address());
 	});
 
-	require('https').createServer(lex.httpsOptions, lex.middleware(app)).listen(443, function () {
+	require('https').createServer(lex.httpsOptions, app).listen(443, function () {
 	  console.log("Listening for ACME tls-sni-01 challenges and serve app on", this.address());
 	});
 } else {
