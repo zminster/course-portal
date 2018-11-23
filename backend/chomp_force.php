@@ -26,6 +26,7 @@
 	include 'config/database.php';
 	$method = $_SERVER['REQUEST_METHOD'];
 	$assignments = get_all_assignments($conn);
+	$classes = get_class_pds($conn);
 
 	if ($method == 'POST') {	// POST
 		$asgn_id = $_POST["asgn_id"];
@@ -128,10 +129,11 @@
 
 		} else { // present stage 2 options (form with checkboxes for assignments)
 			?><h2>Assignment: <?php echo($assignments[$asgn_id]['name'] . "(" . $asgn_id . ")"); ?> </h2> <?php
-			$lookup = $conn->prepare("SELECT grades.uid, username, class_pd, handed_in FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid WHERE asgn_id=? AND handed_in=0 ORDER BY class_pd, username ASC;");
+			$class_pd = $_POST["class_pd"];	// fectch selected class period
+			$lookup = $conn->prepare("SELECT grades.uid, username, handed_in FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid WHERE asgn_id=? AND class_pd=? AND handed_in=0 ORDER BY username ASC;");
 
-			$lookup->bind_param("i", $asgn_id);
-			$lookup->bind_result($uid, $username, $class_pd, $handed_in);
+			$lookup->bind_param("ii", $asgn_id, $class_pd);
+			$lookup->bind_result($uid, $username, $handed_in);
 
 			$lookup->execute();
 			$lookup->store_result(); ?>
@@ -174,6 +176,16 @@
 				foreach ($assignments as $asgn) {
 					?><option value="<?php echo($asgn["asgn_id"]);?>">
 						<?php echo($asgn["asgn_id"]);?>.) <?php echo($asgn["name"]);?>
+					</option><?php
+				} ?>
+			</select></div>
+
+
+			<div><label for="class_pd">Class Period:</label><select id="class_pd" name="class_pd">
+				<?php
+				foreach ($classes as $class_pd) {
+					?><option value="<?php echo($class_pd);?>">
+						<?php echo($class_pd); ?>
 					</option><?php
 				} ?>
 			</select></div>
