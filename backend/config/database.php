@@ -1,7 +1,7 @@
 <?php
 	$servername = "localhost";
-	$username = "course-portal";
-	$password = "testpass";
+	$username = "course_portal";
+	$password = "a258Sta4kfMMcPJZ";
 	$dbname = "course_portal";
 
 	// Create connection
@@ -13,7 +13,7 @@
 	}
 
 	function get_class_pds($conn) {
-		$res = $conn->query("SELECT * FROM class");
+		$res = mysqli_query($conn, "SELECT * FROM class");
 		$classes = array();
 
 		if ($res->num_rows > 0) {

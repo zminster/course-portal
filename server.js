@@ -16,6 +16,7 @@ var settings	= require('./config/settings');
 // consts
 var DEV_PORT 	= 8080;
 var DOMAIN		= 'cs.stab.org';
+var DOMAIN_WWW		= 'www.cs.stab.org';
 var EMAIL		= 'zminster@stab.org';
 
 var app 		= express();
@@ -24,7 +25,7 @@ if (settings.production) {
 	var lex = lex.create({
 		version: 'draft-11',
 		server: 'https://acme-v02.api.letsencrypt.org/directory',
-		approveDomains: [ DOMAIN, 'localhost' ],
+		approveDomains: [ DOMAIN, DOMAIN_WWW ],
 		email: EMAIL,
 		agreeTos: true,
 		communityMember:true
