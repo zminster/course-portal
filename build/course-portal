@@ -9,15 +9,15 @@
 # Short-Description: node.js course-portal frontend
 ### END INIT INFO
 
+NODE_ENV="production"
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
-DAEMON_ARGS="/var/www/course-portal/server.js" 
+DAEMON_ARGS="/usr/bin/node /var/www/course-portal/server.js" 
 DESC="CS Course Portal Frontend Server"
 NODEUSER=www-data:instructor
 LOCAL_VAR_RUN=/var/run
-NAME=node
+NAME=authbind
 DAEMON=/usr/bin/$NAME
 LOGFILE=/var/log/course-portal-node.log
-NODE_ENV=production
 
 # Do NOT "set -e"
 

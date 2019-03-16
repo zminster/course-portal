@@ -1,6 +1,12 @@
 # Database configuration stuff (for security)
 config/database.js
 
+# Consumable stuff
+public/asgn
+public/*.pdf
+public/*.txt
+public/*.png
+
 # Logs
 logs
 *.log
