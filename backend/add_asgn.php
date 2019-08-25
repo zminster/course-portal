@@ -46,8 +46,6 @@
 		foreach (array_keys($meta) as $class_pd) {
 			$date_out = date("Y-m-d H:i", strtotime($meta[$class_pd]["out-date"] . " " . $meta[$class_pd]["out-time"]));
 			$date_due = date("Y-m-d H:i", strtotime($meta[$class_pd]["due-date"] . " " . $meta[$class_pd]["due-time"]));
-			echo($date_out);
-			echo($date_due);
 			$displayed = array_key_exists("displayed", $meta[$class_pd]) ? 1 : 0;
 			$can_handin = array_key_exists("can_handin", $meta[$class_pd]) ? 1 : 0;
 			$info_changed = array_key_exists("info_changed", $meta[$class_pd]) ? 1 : 0;

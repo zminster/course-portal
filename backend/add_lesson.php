@@ -3,11 +3,6 @@
 	<title>Portal Admin :: Add Lesson</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 	<script src="https://code.jquery.com/jquery-1.10.1.min.js" type="text/javascript"></script>
-	<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-	<script>
-	    webshims.setOptions('forms-ext', {types: 'date'});
-		webshims.polyfill('forms forms-ext');
-	</script>
 </head>
 <body>
 	<h1>Add Lesson</h1>

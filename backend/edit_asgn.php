@@ -3,11 +3,6 @@
 	<title>Portal Admin :: Edit/Delete Assignment</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 	<script src="https://code.jquery.com/jquery-1.10.1.min.js" type="text/javascript"></script>
-	<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-	<script>
-	    webshims.setOptions('forms-ext', {types: 'datetime-local'});
-		webshims.polyfill('forms forms-ext');
-	</script>
 </head>
 <body>
 	<h1>Edit/Delete Assignment</h1>
@@ -67,9 +62,8 @@
 			$meta = $_POST["asgn"];
 			foreach (array_keys($meta) as $class_pd) {
 				// meta updates
-				$date_out = date("Y-m-d H:i:s", strtotime($meta[$class_pd]["out"]));
-				$php_date_due = strtotime($meta[$class_pd]["due"]);
-				$date_due = date("Y-m-d H:i:s", $php_date_due);
+				$date_out = date("Y-m-d H:i", strtotime($meta[$class_pd]["out-date"] . " " . $meta[$class_pd]["out-time"]));
+				$date_due = date("Y-m-d H:i", strtotime($meta[$class_pd]["due-date"] . " " . $meta[$class_pd]["due-time"]));
 				$displayed = array_key_exists("displayed", $meta[$class_pd]) ? 1 : 0;
 				$can_handin = array_key_exists("can_handin", $meta[$class_pd]) ? 1 : 0;
 				$info_changed = array_key_exists("info_changed", $meta[$class_pd]) ? 1 : 0;
@@ -170,7 +164,9 @@
 						<tr>
 							<th>Period</th>
 							<th>Date Out</th>
+							<th>Time Out</th>
 							<th>Date Due</th>
+							<th>Time Due</th>
 							<th>Display on Portal</th>
 							<th>Can Handin</th>
 							<th>Info Changed?</th>
@@ -180,12 +176,16 @@
 						</tr>
 						<?php
 						foreach ($classes as $pd) {
-							$formatted_out = date("m/d/Y h:i A", strtotime($asgn_data[$pd]["date_out"]));
-							$formatted_in  = date("m/d/Y h:i A", strtotime($asgn_data[$pd]["date_due"]));
+							$formatted_out_date = date("Y-m-d", strtotime($asgn_data[$pd]["date_out"]));
+							$formatted_out_time = date("H:i", strtotime($asgn_data[$pd]["date_out"]));
+							$formatted_due_date = date("Y-m-d", strtotime($asgn_data[$pd]["date_due"]));
+							$formatted_due_time = date("H:i", strtotime($asgn_data[$pd]["date_due"]));
 							?><tr>
 								<td><?php echo($pd); ?></td>
-								<td><input id="asgn[<?php echo($pd); ?>][out]" name="asgn[<?php echo($pd); ?>][out]" type="datetime-local" value="<?php echo($formatted_out); ?>" /></td>
-								<td><input id="asgn[<?php echo($pd); ?>][due]" name="asgn[<?php echo($pd); ?>][due]" type="datetime-local" value="<?php echo($formatted_in); ?>" /></td>
+								<td><input id="asgn[<?php echo($pd); ?>][out-date]" name="asgn[<?php echo($pd); ?>][out-date]" type="date" value="<?php echo($formatted_out_date); ?>" /></td>
+								<td><input id="asgn[<?php echo($pd); ?>][out-time]" name="asgn[<?php echo($pd); ?>][out-time]" type="time" value="<?php echo($formatted_out_time); ?>" /></td>
+								<td><input id="asgn[<?php echo($pd); ?>][due-date]" name="asgn[<?php echo($pd); ?>][due-date]" type="date" value="<?php echo($formatted_due_date); ?>" /></td>
+								<td><input id="asgn[<?php echo($pd); ?>][due-time]" name="asgn[<?php echo($pd); ?>][due-time]" type="time" value="<?php echo($formatted_due_time); ?>" /></td>
 								<td><input id="asgn[<?php echo($pd); ?>][displayed]" name="asgn[<?php echo($pd); ?>][displayed]" type="checkbox" value="1" <?php echo($asgn_data[$pd]["displayed"] ? "checked" : ""); ?>/></td>
 								<td><input id="asgn[<?php echo($pd); ?>][can_handin]" name="asgn[<?php echo($pd); ?>][can_handin]" type="checkbox" value="1" <?php echo($asgn_data[$pd]["can_handin"] ? "checked" : ""); ?>/></td>
 								<td><input id="asgn[<?php echo($pd); ?>][info_changed]" name="asgn[<?php echo($pd); ?>][info_changed]" type="checkbox" value="1" <?php echo($asgn_data[$pd]["info_changed"] ? "checked" : ""); ?> /></td>

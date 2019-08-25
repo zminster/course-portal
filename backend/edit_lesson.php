@@ -3,11 +3,6 @@
 	<title>Portal Admin :: Edit/Delete Lesson</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 	<script src="https://code.jquery.com/jquery-1.10.1.min.js" type="text/javascript"></script>
-	<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-	<script>
-	    webshims.setOptions('forms-ext', {types: 'date'});
-		webshims.polyfill('forms forms-ext');
-	</script>
 </head>
 <body>
 	<h1>Edit/Delete Lesson</h1>
@@ -97,7 +92,7 @@
 						</tr>
 						<?php
 						foreach ($classes as $pd) {
-							$formatted_release = date("m/d/Y", strtotime($lesson_data[$pd]["release_date"]));
+							$formatted_release = date("Y-m-d", strtotime($lesson_data[$pd]["release_date"]));
 							?><tr>
 								<td><?php echo($pd); ?></td>
 								<td><input id="lesson[<?php echo($pd); ?>][release_date]" name="lesson[<?php echo($pd); ?>][release_date]" type="date" value="<?php echo($formatted_release); ?>" /></td>
