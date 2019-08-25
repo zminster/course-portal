@@ -98,7 +98,7 @@
 			return $lessons;
 		} else{
 			die("<span style=\"color:red;\"><b>
-				You must <a href=\"add_asgn.php\">add a lesson</a>.</b></span>");
+				You must <a href=\"add_lesson.php\">add a lesson</a>.</b></span>");
 		}
 	}
 
