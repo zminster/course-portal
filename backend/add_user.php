@@ -63,13 +63,13 @@
 			$gen_pass = generate_easy_password();
 			$password = password_hash($gen_pass, PASSWORD_BCRYPT);
 			$password[2] = 'a';
-
 			// insert into auth table
 			$user_insert->execute();
 			echo($user_insert->error); 
 
 			// find assigned UID
 			$uid_lookup->execute();
+			$uid_lookup->bind_result($uid);
 			echo($uid_lookup->error); 
 			$uid_lookup->fetch();
 			$uid_lookup->free_result();
