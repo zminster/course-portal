@@ -3,11 +3,6 @@
 	<title>Portal Admin :: Add Assignment</title>
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 	<script src="https://code.jquery.com/jquery-1.10.1.min.js" type="text/javascript"></script>
-	<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-	<script>
-	    webshims.setOptions('forms-ext', {types: 'datetime-local'});
-		webshims.polyfill('forms forms-ext');
-	</script>
 </head>
 <body>
 	<h1>Add Assignment</h1>
@@ -49,8 +44,10 @@
 
 		$meta = $_POST["asgn"];
 		foreach (array_keys($meta) as $class_pd) {
-			$date_out = date("Y-m-d H:i:s", strtotime($meta[$class_pd]["out"]));
-			$date_due = date("Y-m-d H:i:s", strtotime($meta[$class_pd]["due"]));
+			$date_out = date("Y-m-d H:i", strtotime($meta[$class_pd]["out-date"] . " " . $meta[$class_pd]["out-time"]));
+			$date_due = date("Y-m-d H:i", strtotime($meta[$class_pd]["due-date"] . " " . $meta[$class_pd]["due-time"]));
+			echo($date_out);
+			echo($date_due);
 			$displayed = array_key_exists("displayed", $meta[$class_pd]) ? 1 : 0;
 			$can_handin = array_key_exists("can_handin", $meta[$class_pd]) ? 1 : 0;
 			$info_changed = array_key_exists("info_changed", $meta[$class_pd]) ? 1 : 0;
@@ -122,7 +119,9 @@
 					<tr>
 						<th>Period</th>
 						<th>Date Out</th>
-						<th>Date Due</td>
+						<th>Time Out</th>
+						<th>Date Due</th>
+						<th>Time Due</th>
 						<th>Display on Portal</th>
 						<th>Can Handin</th>
 						<th>Info Changed?</th>
@@ -131,8 +130,10 @@
 					foreach ($classes as $pd) {
 						?><tr>
 							<td><?php echo($pd); ?></td>
-							<td><input id="asgn[<?php echo($pd); ?>][out]" name="asgn[<?php echo($pd); ?>][out]" type="datetime-local" /></td>
-							<td><input id="asgn[<?php echo($pd); ?>][due]" name="asgn[<?php echo($pd); ?>][due]" type="datetime-local" /></td>
+							<td><input type="date" id="asgn[<?php echo($pd); ?>][out-date]" name="asgn[<?php echo($pd); ?>][out-date]" /></td>
+							<td><input type="time" id="asgn[<?php echo($pd); ?>][out-time]" name="asgn[<?php echo($pd); ?>][out-time]" /></td>
+							<td><input type="date" id="asgn[<?php echo($pd); ?>][due-date]" name="asgn[<?php echo($pd); ?>][due-date]" /></td>
+							<td><input type="time" id="asgn[<?php echo($pd); ?>][due-time]" name="asgn[<?php echo($pd); ?>][due-time]" /></td>
 							<td><input id="asgn[<?php echo($pd); ?>][displayed]" name="asgn[<?php echo($pd); ?>][displayed]" type="checkbox" value="1" /></td>
 							<td><input id="asgn[<?php echo($pd); ?>][can_handin]" name="asgn[<?php echo($pd); ?>][can_handin]" type="checkbox" value="1" /></td>
 							<td><input id="asgn[<?php echo($pd); ?>][info_changed]" name="asgn[<?php echo($pd); ?>][info_changed]" type="checkbox" value="1" /></td>

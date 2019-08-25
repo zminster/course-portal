@@ -41,7 +41,7 @@ app.set('views', __dirname +'/templates');
 if (!settings.production) app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
-	extended: true
+	extended: false
 }));
 app.use(bodyParser.json());
 app.use(session({
