@@ -115,6 +115,7 @@
 						$rnr = " <span style=\"color:red;\"><b>GRADE FILE ERROR: " . $errstr . "</b> (database unchanged)</span>";
 						$do_not_update = 1; });
 					file_put_contents($rubric_filename, implode("", $rubric)); // write rubric to user's handin dir
+					chmod($rubric_filename, 0660);					// ensure correct perms are set
 					restore_error_handler();
 				} else {
 					$rnr = " (Old rubric not replaced)";

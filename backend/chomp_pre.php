@@ -94,8 +94,9 @@
 				$newfile = implode("<br>", $rubric);
 				set_error_handler(function($errno, $errstr) use (&$rnr) {
 					$rnr = " <span style=\"color:red;\"><b>GRADE FILE ERROR: " . $errstr . "</b> </span>"; });
-				restore_error_handler();
 				file_put_contents($rubric_filename, implode("", $rubric)); // write rubric to user's handin dir
+				chmod($rubric_filename, 0660);					// ensure correct perms are set
+				restore_error_handler();
 			} else {
 				$rnr = " (Old rubric not replaced)";
 			}

@@ -11,4 +11,5 @@ Installation Notes
 * Authbind configuration: add /etc/authbind/byport/443 /etc/authbind/byport/443
 	* Change owner to www-data:instructor on both
 	* Change perms to 544 on both
+* Apache configuration: edit /etc/apache2/envvars and set APACHE_RUN_GROUP=instructor
 
