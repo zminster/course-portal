@@ -1,8 +1,5 @@
 <?php
-	require __DIR__ . '/../vendor/autoload.php';
-	use Symfony\Component\Dotenv\Dotenv;
-	$dotenv = new Dotenv();
-	$dotenv->load(__DIR__.'/../../.env');
+	include 'env.php';
 
 	// Create connection
 	$conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);

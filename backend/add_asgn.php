@@ -64,8 +64,8 @@
 
 		// assignment filesystem changes
 		$old = umask(0);
-		if (!is_dir("/course/csp/handin/" . $asgn_id)) {
-			if (!mkdir("/course/csp/handin/" . $asgn_id, 0770)) {
+		if (!is_dir("/course/".$_ENV['COURSE_CODE']."/handin/" . $asgn_id)) {
+			if (!mkdir("/course/".$_ENV['COURSE_CODE']."/handin/" . $asgn_id, 0770)) {
 				echo("<p>ERROR: Could not create assignment handin directory.</p>");
 			}
 		} else {

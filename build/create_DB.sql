@@ -8,7 +8,7 @@ USE course_portal;
 --  stores master system settings as-needed
 -- 
 --  system(name, value_int, value_str)
-CREATE TABLE course_portal.system_settings (
+CREATE TABLE system_settings (
     `sid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `value_int` INT UNSIGNED,
@@ -25,7 +25,7 @@ INSERT INTO system_settings (name, value_int) VALUES ("current_trimester", 1);
 --  can flexibly add columns later to cover additional perms
 -- 
 --  user_role(rid, name, access_backend, class_membership, reporting_enabled)
-CREATE TABLE course_portal.user_role (
+CREATE TABLE user_role (
     `rid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `access_backend` TINYINT(1),    -- enables/disables admin access
@@ -49,7 +49,7 @@ INSERT INTO user_role (name, access_backend, class_membership, handin_enabled, r
 -- 	stores information necessary to authorize student users
 -- 
 -- 	user(uid, username, password)
-CREATE TABLE course_portal.user (
+CREATE TABLE user (
     `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(20) NOT NULL,
     `password` CHAR(60) NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE course_portal.user (
 -- 	future usage: any extra data about each class
 -- 
 -- 	class(class_pd)
-CREATE TABLE course_portal.class (
+CREATE TABLE class (
     `class_pd` INT UNSIGNED NOT NULL,
     `amnesty` TINYINT(1),
         PRIMARY KEY (`class_pd`)
@@ -76,7 +76,7 @@ CREATE TABLE course_portal.class (
 -- 	stores meta information about each user
 -- 
 -- 	user_meta(uid, first_name, last_name, year, email)
-CREATE TABLE course_portal.user_meta (
+CREATE TABLE user_meta (
     `uid` INT UNSIGNED NOT NULL,
     `first_name` VARCHAR(255) NOT NULL,
     `last_name` VARCHAR(255) NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE course_portal.user_meta (
 -- 	used for figuring out due dates, etc for users
 -- 
 -- 	membership(uid, class_pd)
-CREATE TABLE course_portal.membership (
+CREATE TABLE membership (
     `uid` INT UNSIGNED NOT NULL,
     `class_pd` INT UNSIGNED NOT NULL,
         PRIMARY KEY (`uid`),
@@ -107,7 +107,7 @@ CREATE TABLE course_portal.membership (
 --         - validation_help contains HTML if regex fails
 --
 --  assignment(asgn_id, name, type, pt_value, trimester, honors_possible, description, url)
-CREATE TABLE course_portal.assignment_format (
+CREATE TABLE assignment_format (
     `format_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR (255) NOT NULL,
     `description` TEXT,
@@ -123,7 +123,7 @@ CREATE TABLE course_portal.assignment_format (
 --  used to calculate students' overall grades
 -- 
 --  assignment(type_id, name, weight)
-CREATE TABLE course_portal.assignment_type (
+CREATE TABLE assignment_type (
     `type_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `weight` FLOAT,
@@ -135,7 +135,7 @@ CREATE TABLE course_portal.assignment_type (
 -- 	future usage: type corresponds to enum/relation defining asgn types (hw, project, exam, etc)
 -- 
 -- 	assignment(asgn_id, name, type, pt_value, trimester, honors_possible, description, url)
-CREATE TABLE course_portal.assignment (
+CREATE TABLE assignment (
     `asgn_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `type` INT UNSIGNED NOT NULL,
@@ -155,7 +155,7 @@ CREATE TABLE course_portal.assignment (
 -- 	stores per-class meta information about each assignment
 -- 
 -- 	assignment_meta(asgn_id, class_pd, date_out, date_due, displayed, can_handin, info_changed)
-CREATE TABLE course_portal.assignment_meta (
+CREATE TABLE assignment_meta (
     `asgn_id` INT UNSIGNED NOT NULL,
     `class_pd` INT UNSIGNED NOT NULL,
     `date_out` DATETIME,
@@ -172,7 +172,7 @@ CREATE TABLE course_portal.assignment_meta (
 -- 	stores students' grades on each assignment
 -- 
 -- 	grades(uid, asgn_id, handed_in, late, chomped, can_view_feedback, score, honors_earned)
-CREATE TABLE course_portal.grades (
+CREATE TABLE grades (
     `uid` INT UNSIGNED NOT NULL,
     `asgn_id` INT UNSIGNED NOT NULL,
     `nreq` TINYINT(1) NOT NULL,
@@ -193,7 +193,7 @@ CREATE TABLE course_portal.grades (
 --  stores universal information about class lessons
 -- 
 --  lessons(id, topic, slide_url, extra_url)
-CREATE TABLE course_portal.lesson (
+CREATE TABLE lesson (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `trimester` INT UNSIGNED NOT NULL,
     `topic` VARCHAR(255) NOT NULL,
@@ -207,7 +207,7 @@ CREATE TABLE course_portal.lesson (
 --  stores per-class meta information about each lesson in lesson table
 -- 
 -- lesson_meta(id, class_pd, date, visible)
-CREATE TABLE course_portal.lesson_meta (
+CREATE TABLE lesson_meta (
     `id` INT UNSIGNED NOT NULL,
     `class_pd` INT UNSIGNED NOT NULL,
     `release_date` DATE NOT NULL,

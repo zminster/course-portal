@@ -1,5 +1,6 @@
-<?php 	$rubric_dir = "/course/csp/rubric/";
-		$handin_dir = "/course/csp/handin/"; ?>
+<?php 	include 'config/env.php';
+		$rubric_dir = "/course/".$_ENV['COURSE_CODE']."/rubric/";
+		$handin_dir = "/course/".$_ENV['COURSE_CODE']."/handin/"; ?>
 <html>
 <head>
 	<title>Portal Admin :: Force Chomp Assignment</title>
