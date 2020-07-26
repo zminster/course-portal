@@ -1,0 +1,7 @@
+check course-portal
+with pidfile /var/run/course-portal.pid
+start program = "/etc/init.d/course-portal start"
+stop program = "/etc/init.d/course-portal stop"
+restart program = "/etc/init.d/course-portal restart"
+
+if failed host hds.thelounge.sx port 443 protocol HTTPS request / with timeout 10 seconds then restart

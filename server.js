@@ -2,7 +2,7 @@
 // Author: zminster
 
 // reqs
-require('dotenv').config()
+require('dotenv').config({path: __dirname + '/.env'});
 var express 	= require('express');
 var session 	= require('express-session');
 var cookieParser= require('cookie-parser');
