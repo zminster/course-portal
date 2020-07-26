@@ -4,7 +4,7 @@ var upload 		= require('./upload.js');			/* upload handling for handins */
 var middleware	= require('./middleware.js');		/* login & handin verification */
 var moment		= require('moment');				/* timing handins */
 var conn		= require('./database_ops.js').connection;
-var bcrypt 		= require('bcrypt-nodejs');			/* changing passwords */
+var bcrypt 		= require('bcrypt');				/* changing passwords */
 var fs 			= require('fs');					/* read feedback files */
 var proxy 		= require('express-http-proxy');	/* proxy admin through to backend */
 
@@ -71,7 +71,7 @@ module.exports = function(app, passport) {
             		req.flash('resetMessage', 'Incorrect current password.');
             		res.redirect('/password'); return;
             	} else {
-					conn.query("UPDATE user SET password=?, change_flag=0 WHERE uid=?", [bcrypt.hashSync(req.body.new_password), req.user.uid],
+					conn.query("UPDATE user SET password=?, change_flag=0 WHERE uid=?", [bcrypt.hashSync(req.body.new_password, 10), req.user.uid],
 						function(err, e) {
 							req.logout();
 							req.flash('loginMessage', 'Password changed! Log in again with your new password.');

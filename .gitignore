@@ -1,5 +1,5 @@
-# Database configuration stuff (for security)
-config/database.js
+# Environment configuration
+.env
 
 # Consumable stuff
 public/asgn
@@ -39,6 +39,7 @@ build/Release
 # Dependency directories
 node_modules
 jspm_packages
+vendor
 
 # Optional npm cache directory
 .npm

@@ -1,8 +1,12 @@
 var mysql = require("mysql");
-var dbconfig = require('../config/database');
-var connection = mysql.createConnection(dbconfig.connection);
+var connection = mysql.createConnection({
+	host: 		process.env.DB_HOST,
+	user:		process.env.DB_USER,
+	password: 	process.env.DB_PASS,
+	database: 	process.env.DB_NAME,
+});
 
-connection.query('USE ' + dbconfig.database);
+connection.query('USE ' + process.env.DB_NAME);
 
 module.exports = {
 	connection: connection

@@ -1,6 +1,6 @@
 {
   "name": "course-portal",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "description": "Student course portal frontend for STAB US CS program.",
   "main": "server.js",
   "scripts": {
@@ -16,25 +16,22 @@
   "homepage": "https://bitbucket.org/zminster/course-portal#readme",
   "private": true,
   "dependencies": {
-    "async": "^2.6.3",
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "connect-busboy": "0.0.2",
     "connect-flash": "^0.1.1",
     "consolidate": "^0.14.5",
     "cookie-parser": "^1.4.4",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-http-proxy": "^1.5.1",
     "express-session": "^1.16.2",
-    "greenlock-express": "^2.7.15",
     "hogan.js": "^3.0.2",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^0.5.5",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "mysql": "^2.17.1",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
-    "redirect-https": "^1.3.0",
-    "spdy": "^3.4.7"
+    "passport-local": "^1.0.0"
   }
 }

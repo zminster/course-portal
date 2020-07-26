@@ -1,11 +1,11 @@
 <?php
-	$servername = "localhost";
-	$username = "course_portal";
-	$password = "a258Sta4kfMMcPJZ";
-	$dbname = "course_portal";
+	require __DIR__ . '/../vendor/autoload.php';
+	use Symfony\Component\Dotenv\Dotenv;
+	$dotenv = new Dotenv();
+	$dotenv->load(__DIR__.'/../../.env');
 
 	// Create connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
+	$conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
 
 	// Check connection
 	if ($conn->connect_error) {

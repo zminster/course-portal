@@ -4,7 +4,7 @@
 var LocalStrategy   = require('passport-local').Strategy;
 
 // load up the user model
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 var connection = require('../app/database_ops.js').connection;
 // expose this function to our app using module.exports
 module.exports = function(passport) {
