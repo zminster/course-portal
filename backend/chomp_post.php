@@ -1,4 +1,5 @@
-<?php $handin_dir = "/course/csp/handin/"; ?>
+<?php include 'config/env.php';
+	$handin_dir = "/course/".$_ENV['COURSE_CODE']."/handin/"; ?>
 <html>
 <head>
 	<title>Portal Admin :: Chomp Assignment (Post Grades &amp; Comments)</title>

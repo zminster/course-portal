@@ -5,7 +5,7 @@ var limits = {
 	fileSize : 10240000,
 	files : 5
 };
-var handinDir 	= '/course/csp/handin/';			/* handin dirs are created relative to here */
+var handinDir 	= '/course/'+process.env.COURSE_CODE+'/handin/';	/* handin dirs are created relative to here */
 
 /* Handin upload */
 var busboy		= require('connect-busboy');		/* process multipart forms */

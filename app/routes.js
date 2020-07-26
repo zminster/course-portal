@@ -8,7 +8,7 @@ var bcrypt 		= require('bcrypt');				/* changing passwords */
 var fs 			= require('fs');					/* read feedback files */
 var proxy 		= require('express-http-proxy');	/* proxy admin through to backend */
 
-var handinDir 	= '/course/csp/handin/'; 			/* If changing, also change in upload.js */
+var handinDir 	= '/course/'+process.env.COURSE_CODE+'/handin/'; /* If changing, also change in upload.js */
 var maxSize 	= 1000000;							/* per-handin upload limit (bytes) */
 var releaseTime = 465;								/* minutes after midnight to release lessons */
 var sessions	= {};								/* maintains section selection for class_membership disabled roles */
