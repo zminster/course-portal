@@ -39,4 +39,4 @@ app.use(express.static(__dirname + '/public'));
 // routing
 require('./app/routes.js')(app, passport);
 
-app.listen(process.env.PORT, function() { console.log("Course Potal started: ", this.address()); });
+app.listen(process.env.PORT, 'localhost', function() { console.log("Course Potal started: ", this.address()); });

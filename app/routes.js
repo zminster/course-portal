@@ -86,7 +86,7 @@ module.exports = function(app, passport) {
 	  ADMINISTRATIVE BACKEND ACCESS
 	 **************************************/
 	 // expose backend PHP to administrative users on the /backend route
-	app.use('/backend/', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isAdmin, proxy('10.8.0.1:80/'+process.env.COURSE_CODE));
+	app.use('/backend/', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isAdmin, proxy('http://'+process.env.COURSE_CODE));
 
 	 // GET /admin is a shell that loads PHP backend in iframes
 	app.get('/admin', middleware.isLoggedIn, middleware.isPasswordFresh, middleware.isAdmin, function(req, res) {
