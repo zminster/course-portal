@@ -16,12 +16,11 @@ var engines		= require('consolidate');
 var app 		= express();
 
 // configuration
-process.umask(0);
 require('./config/passport')(passport);
 
 app.engine('html', engines.hogan);
 app.set('views', __dirname +'/templates');
-if (!process.env.PRODUCTION) app.use(morgan('dev'));
+if (!process.env.PRODUCTION == 1) app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
 	extended: false

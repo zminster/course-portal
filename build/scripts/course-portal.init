@@ -9,6 +9,7 @@
 # Short-Description: node.js course-portal frontend
 ### END INIT INFO
 
+umask 007
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
 DAEMON_ARGS="/var/www/course-portal/server.js" 
 DESC="CS Course Portal Frontend Server"
@@ -22,7 +23,7 @@ LOGFILE=/var/log/course-portal-node.log
 
 NCMD="exec $DAEMON $DAEMON_ARGS >>$LOGFILE 2>&1"
 
-if [ ! -e "$LOGFILE" ]; then
+if [ ! -e "$LOGFILE" ];f then
         touch "$LOGFILE"
         chown $NODEUSER "$LOGFILE"
 fi
