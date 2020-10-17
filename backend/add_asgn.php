@@ -120,7 +120,7 @@
 						<th>Time Out</th>
 						<th>Date Due</th>
 						<th>Time Due</th>
-						<th>Display on Portal</th>
+						<th>Enabled</th>
 						<th>Can Handin</th>
 						<th>Info Changed?</th>
 					</tr>
