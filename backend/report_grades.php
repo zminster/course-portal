@@ -26,7 +26,7 @@
 				JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id
 				JOIN assignment_type ON assignment.type = assignment_type.type_id
 			WHERE class_pd = ? AND trimester = ? AND displayed = 1
-			ORDER BY date_due, date_out DESC");
+			ORDER BY date_due DESC, date_out ASC");
 
 		// this gives us each student's grade on each assignment
 		// ordered by the last name of the student (so all assignments are grouped by student)
@@ -40,7 +40,7 @@
 				JOIN user ON user_meta.uid = user.uid
 				JOIN user_role ON user.role = user_role.rid
 			WHERE membership.class_pd = ? AND trimester = ? AND reporting_enabled = 1 AND displayed = 1
-			ORDER BY last_name, first_name, date_due, date_out DESC");
+			ORDER BY last_name, first_name, date_due DESC, date_out ASC");
 
 		$asgn_select->bind_param("ii", $class_pd, $trimester);
 		$grade_select->bind_param("ii", $class_pd, $trimester);

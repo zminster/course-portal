@@ -27,7 +27,7 @@
 				JOIN assignment ON grades.asgn_id = assignment.asgn_id 
 				JOIN assignment_type ON type = type_id 
 				JOIN assignment_meta ON assignment_meta.class_pd = membership.class_pd AND grades.asgn_id = assignment_meta.asgn_id
-			WHERE grades.uid = ? AND trimester = ? AND displayed = 1 ORDER BY date_due");
+			WHERE grades.uid = ? AND trimester = ? AND displayed = 1 ORDER BY date_due DESC, date_out ASC");
 
 		$avg_select = $conn->prepare("SELECT assignment_type.name, weight, SUM(score) / SUM(pt_value) as avg FROM assignment JOIN assignment_type ON type = type_id JOIN grades ON assignment.asgn_id = grades.asgn_id WHERE uid = ? AND trimester = ? AND chomped = 1 AND score IS NOT NULL GROUP BY type_id");
 
