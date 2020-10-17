@@ -17,7 +17,7 @@
 		$trimester = $_POST["trimester"];
 		$assignments = get_all_assignments($conn);
 
-		$stat_select = $conn->prepare("SELECT username, grades.asgn_id, membership.class_pd, nreq, late, handed_in, handin_time, chomped, extension, score FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid JOIN assignment ON grades.asgn_id = assignment.asgn_id LEFT JOIN assignment_meta ON membership.class_pd = assignment_meta.class_pd WHERE trimester = ? AND reporting_enabled = 1 AND displayed = 1 ORDER BY membership.class_pd, asgn_id, username");
+		$stat_select = $conn->prepare("SELECT username, grades.asgn_id, membership.class_pd, nreq, late, handed_in, handin_time, chomped, extension, score FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid JOIN assignment ON grades.asgn_id = assignment.asgn_id LEFT JOIN assignment_meta ON membership.class_pd = assignment_meta.class_pd AND grades.asgn_id = assignment_meta.asgn_id WHERE trimester = ? AND reporting_enabled = 1 AND displayed = 1 ORDER BY membership.class_pd, asgn_id, username");
 
 		$stat_select->bind_param("i", $trimester);
 		$stat_select->bind_result($username, $asgn_id, $class_pd, $nreq, $late, $handed_in, $handin_time, $chomped, $extension, $score);
