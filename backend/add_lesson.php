@@ -54,11 +54,10 @@
 
 			<h2>Meta Information:</h2>
 
-				<div><label for="trimester">Trimester:</label>
+				<div><label for="trimester">Term:</label>
 					<select id="trimester" name="trimester">
-						<option value="1">T1</option>
-						<option value="2">T2</option>
-						<option value="3">T3</option>
+						<option value="1">S1</option>
+						<option value="2">S2</option>
 					</select>
 				</div>
 				<div><label for="topic">Topic:</label><input type="text" id="topic" name="topic" placeholder="(e.g. Graph Algorithms)" /></div>

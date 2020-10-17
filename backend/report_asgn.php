@@ -66,7 +66,7 @@
 		$a_extension 	= [];
 
 		while($stat_select->fetch()) {
-			if(!$reporting_enabled)
+			if(!$reporting_enabled || !$meta[$class_pd]['displayed'])
 				continue;
 			if ($nreq)
 				array_push($a_nreq, [$class_pd, $username]);
@@ -194,7 +194,7 @@
 		}
 
 		while($stat_select->fetch()) {
-			if (!$reporting_enabled)
+			if (!$reporting_enabled || !$meta[$class_pd]['displayed'])
 				continue;
 			array_push($a_score[$class_pd], $score);
 

@@ -1,4 +1,4 @@
-<?php 	include 'config/env.php'
+<?php 	include 'config/env.php';
 		$handin_dir = "/course/".$_ENV['COURSE_CODE']."/handin/"; ?>
 <html>
 <head>

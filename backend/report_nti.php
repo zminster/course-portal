@@ -17,7 +17,7 @@
 		$trimester = $_POST["trimester"];
 		$assignments = get_all_assignments($conn);
 
-		$stat_select = $conn->prepare("SELECT username, grades.asgn_id, class_pd, nreq, late, handed_in, handin_time, chomped, extension, score FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid JOIN assignment ON grades.asgn_id = assignment.asgn_id WHERE trimester = ? AND reporting_enabled = 1 ORDER BY class_pd, asgn_id, username");
+		$stat_select = $conn->prepare("SELECT username, grades.asgn_id, membership.class_pd, nreq, late, handed_in, handin_time, chomped, extension, score FROM grades JOIN membership ON grades.uid = membership.uid JOIN user ON grades.uid = user.uid JOIN user_role ON user.role = user_role.rid JOIN assignment ON grades.asgn_id = assignment.asgn_id  JOIN assignment_meta ON membership.class_pd = assignment_meta.class_pd WHERE trimester = ? AND reporting_enabled = 1 AND displayed = 1 ORDER BY membership.class_pd, asgn_id, username");
 
 		$stat_select->bind_param("i", $trimester);
 		$stat_select->bind_result($username, $asgn_id, $class_pd, $nreq, $late, $handed_in, $handin_time, $chomped, $extension, $score);
@@ -113,13 +113,12 @@
 		?>
 		<h1>Global Assignment Issues</h1>
 		<form action="report_nti.php" method="POST">
-			<p>Select trimester for which to generate report.</p>
+			<p>Select term for which to generate report.</p>
 
-			<div><label for="trimester">Trimester:</label>
+			<div><label for="trimester">Term:</label>
 				<select id="trimester" name="trimester">
-					<option value="1">T1</option>
-					<option value="2">T2</option>
-					<option value="3">T3</option>
+					<option value="1">S1</option>
+					<option value="2">S2</option>
 				</select>
 			</div>
 

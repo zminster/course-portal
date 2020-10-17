@@ -4,7 +4,7 @@
 	<link rel="stylesheet" href="static/style.css" type="text/css" />
 </head>
 <body>
-	<h1>Toggle Amnesty Period</h1>
+	<h1>Toggle Current Term</h1>
 	<?php
 	include 'config/database.php';
 	$method = $_SERVER['REQUEST_METHOD'];
@@ -27,7 +27,7 @@
 		$trimesters = $conn->query("SELECT trimester FROM assignment GROUP BY trimester"); ?>
 
 		<form action="edit_settings.php" method="post">
-			<div><label for="current_trimester">Current Trimester:</label>
+			<div><label for="current_trimester">Current Term:</label>
 				<select id="current_trimester" name="current_trimester"><?php
 					if ($trimesters->num_rows > 0) {
 						while($trimester = $trimesters->fetch_assoc()) {

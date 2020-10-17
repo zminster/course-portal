@@ -15,7 +15,7 @@
 		<li><a href="edit_asgn_type.php">Edit/Delete Assignment Category</a></li>
 		<li><a href="add_asgn_format.php">Add Assignment Format</a></li>
 		<li><a href="edit_asgn_format.php">Edit/Delete Assignment Format</a></li>
-		<li><a href="edit_settings.php">Edit System Settings</a></li>
+		<li><a href="edit_settings.php">Toggle Current Term</a></li>
 	</ul>
 
 	<h2>User Management</h2>
@@ -37,7 +37,7 @@
 		<li><a href="chomp_force.php">Force-Chomp Assignment (Copy blank rubrics for NTI assignments, optionally shutdown handins)</a></li>
 		<li><a href="edit_toggle.php">Toggle Assignment LATE/NREQ/CAN_VIEW_FEEDBACK (Per-Student)</a></li>
 		<li><a href="edit_nullify.php">Nullify Assignment (Mark Zero) (Per-Student)</a></li>
-		<li><a href="edit_amnesty.php">Toggle Amnesty Period</a></li>
+		<!--<li><a href="edit_amnesty.php">Toggle Amnesty Period</a></li>-->
 	</ul>
 
 	<h2>Lesson Management</h2>

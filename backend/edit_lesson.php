@@ -69,11 +69,10 @@
 
 					<div><label for="delete">Delete?</label><input type="checkbox" id="delete" name="delete" /></div>
 
-					<div><label for="trimester">Trimester:</label>
+					<div><label for="trimester">Term:</label>
 						<select id="trimester" name="trimester">
-							<option value="1" <?php echo($trimester == 1 ? "selected" : ""); ?>>T1</option>
-							<option value="2" <?php echo($trimester == 2 ? "selected" : ""); ?>>T2</option>
-							<option value="3" <?php echo($trimester == 3 ? "selected" : ""); ?>>T3</option>
+							<option value="1" <?php echo($trimester == 1 ? "selected" : ""); ?>>S1</option>
+							<option value="2" <?php echo($trimester == 2 ? "selected" : ""); ?>>S2</option>
 						</select>
 					</div>
 					<div><label for="topic">Topic:</label><input type="text" id="topic" name="topic" placeholder="(e.g. Graph Algorithms)" value="<?php echo($topic); ?>" /></div>

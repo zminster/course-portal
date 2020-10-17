@@ -25,8 +25,8 @@
 			FROM assignment
 				JOIN assignment_meta ON assignment.asgn_id = assignment_meta.asgn_id
 				JOIN assignment_type ON assignment.type = assignment_type.type_id
-			WHERE class_pd = ? AND trimester = ?
-			ORDER BY date_due DESC");
+			WHERE class_pd = ? AND trimester = ? AND displayed = 1
+			ORDER BY date_due, date_out DESC");
 
 		// this gives us each student's grade on each assignment
 		// ordered by the last name of the student (so all assignments are grouped by student)
@@ -39,7 +39,8 @@
 				JOIN user_meta ON grades.uid = user_meta.uid
 				JOIN user ON user_meta.uid = user.uid
 				JOIN user_role ON user.role = user_role.rid
-			WHERE membership.class_pd = ? AND trimester = ? AND reporting_enabled = 1 ORDER BY last_name, first_name, date_due DESC");
+			WHERE membership.class_pd = ? AND trimester = ? AND reporting_enabled = 1 AND displayed = 1
+			ORDER BY last_name, first_name, date_due, date_out DESC");
 
 		$asgn_select->bind_param("ii", $class_pd, $trimester);
 		$grade_select->bind_param("ii", $class_pd, $trimester);
@@ -47,7 +48,7 @@
 		$asgn_select->bind_result($asgn_id, $name, $date_due, $type, $honors_possible, $pt_value);
 		$grade_select->bind_result($uid, $last_name, $first_name, $nreq, $handed_in, $extension, $late, $chomped, $score, $honors_possible, $honors_earned, $asgn_id);
 
-		?><h1>Class Grade Report &raquo; Period <?php echo($class_pd); ?> &raquo; Trimester <?php echo($trimester);?></h1>
+		?><h1>Class Grade Report &raquo; Period <?php echo($class_pd); ?> &raquo; Term <?php echo($trimester);?></h1>
 
 		<ul>
 			<li>Headings highlighted in <span style="background-color:#D5E3F1; font-weight:bold;">BLUE</span> indicate that AP credit could be earned on the assignment. Scores bounded in <span style="background-color:#D5E3F1; font-weight:bold;">BLUE</span> indicate credit was earned.</li>
@@ -139,13 +140,12 @@
 		?>
 		<h1>Class Period Grade Report</h1>
 		<form action="report_grades.php" method="POST">
-			<p>Select trimester and class period in which to generate a grade report.</p>
+			<p>Select term and class period for which to generate a grade report.</p>
 
-			<div><label for="trimester">Trimester:</label>
+			<div><label for="trimester">Term:</label>
 				<select id="trimester" name="trimester">
-					<option value="1">T1</option>
-					<option value="2">T2</option>
-					<option value="3">T3</option>
+					<option value="1">S1</option>
+					<option value="2">S2</option>
 				</select>
 			</div>
 
