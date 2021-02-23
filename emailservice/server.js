@@ -1,9 +1,5 @@
-require('dotenv').config({path: __dirname + '/.env'});
+require('dotenv').config({path: __dirname + '../.env'});
 const mysql = require('mysql2');
-const express = require('express');
-const app = express();
-const session = require('express-session');
-const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 const nodemail = require('nodemailer');
@@ -27,9 +23,6 @@ connection.connect((err) => {
 	if (err) console.log(err);
 });
 
-app.use(morgan('dev'));
-
-app.get("/sendMail", async (req, res) => {
 	let randString = uniqueNamesGenerator({
 		dictionaries: [adjectives, animals, names],
 		style: 'lowerCase'
@@ -96,8 +89,3 @@ app.get("/sendMail", async (req, res) => {
 				});
 			}
 		});
-});
-
-app.listen(6968, () => {
-	console.log("server go vroom");
-});
