@@ -10,6 +10,7 @@ const {
 	names
 } = require('unique-names-generator');
 
+
 //connect to db
 const connection = mysql.createConnection({
 	host: process.env.DB_HOST,
