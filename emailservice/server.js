@@ -37,7 +37,7 @@ connection.connect((err) => {
 	});
 	let date = new Date().getTime();
 	connection.query("SELECT grades.uid, grades.asgn_id, grades.extension, membership.class_pd, assignment_meta.date_due FROM grades INNER JOIN membership ON grades.uid = membership.uid " +
-		"INNER JOIN assignment_meta ON grades.asgn_id = assignment_meta.asgn_id AND membership.class_pd = assignment_meta.class_pd WHERE handed_in=0 AND chomped=0", async (err, gradeRows) => {
+		"INNER JOIN assignment_meta ON grades.asgn_id = assignment_meta.asgn_id AND membership.class_pd = assignment_meta.class_pd WHERE handed_in=0 AND chomped=0 AND displayed=1", async (err, gradeRows) => {
 			if (err) console.log("GRADE SELECTION error on uid, asgn_id, and extension", err);
 			if (gradeRows) {
 				//start looking at each student at a time
@@ -51,14 +51,15 @@ connection.connect((err) => {
 					//run through a multitude a comparators of each portion of data in date_due
 					if (date - udate > 0) {
 						//send a message after finding which assignment it is
-						connection.query("SELECT assignment.name, assignment.url, user_meta.first_name, user_meta.last_name, user_meta.email FROM assignment, user_meta WHERE assignment.asgn_id=? AND user_meta.uid=?", [item.asgn_id, item.uid], (err, assignmentRow) => {
+						connection.query("SELECT assignment.name, assignment.url, assignment.asgn_id, user_meta.first_name, user_meta.last_name, user_meta.email FROM assignment CROSS JOIN user_meta LEFT JOIN user ON user.uid = user_meta.uid LEFT JOIN user_role ON user.role = user_role.rid WHERE assignment.asgn_id=? AND user_meta.uid=? AND user_role.reporting_enabled=1 AND user_role.handin_enabled=1;", [item.asgn_id, item.uid], (err, assignmentRow) => {
 							if (err) console.log("selection from assignment for name and url", err);
+							console.log(assignmentRow);
 							//fill out the text file <--must be named late.txt
-							if (index < 20) {
+							//if (index < 20) {
 								console.log("send email");
 								fs.readFile(path.join(__dirname, "assignmentFiles", "late1.txt"), function(err, template) {
 									if (err) console.log(err);
-									if (assignmentRow[0].first_name == "Sophia" && assignmentRow[0].last_name == "Manavalan") {
+									//if (assignmentRow[0].first_name == "Sophia" && assignmentRow[0].last_name == "Manavalan") {
 										console.log(assignmentRow);
 									let dateTime = new Date(udate).toString().substring(0, 15);
 									let returnEmail = template.toString();
@@ -68,7 +69,7 @@ connection.connect((err) => {
 									returnEmail = returnEmail.replace("{{DUE_DATE}}", dateTime ? dateTime : "");
 									returnEmail = returnEmail.replace("{{URL}}", assignmentRow[0].url ? assignmentRow[0].url : "");
 									console.log("EMAIL SEND TO:", assignmentRow[0].email);
-									transporter.sendMail({
+									/*transporter.sendMail({
 										from: 'CSP' + randString + '@cs.stab.org',
 										to: "smorris21@students.stab.org",
 										subject: 'Missing Assignment: ' + assignmentRow[0].name,
@@ -76,9 +77,9 @@ connection.connect((err) => {
 									}, (err, info) => {
 										console.error(err);
 									});
-									}
+									}*/
 								});
-							}
+							//}
 						});
 					} else {
 						connection.query("SELECT assignment.name, assignment.url, assignment_type.weight, user_meta.first_name," +
@@ -92,3 +93,4 @@ connection.connect((err) => {
 				});
 			}
 		});
+
