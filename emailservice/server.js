@@ -86,7 +86,7 @@ connection.connect((err) => {
 						connection.query("SELECT assignment.name, assignment.url, assignment_type.weight, user_meta.first_name," +
 							" user_meta.last_name, user_meta.email" +
 							" FROM assignment, user_meta INNER JOIN " +
-							"assignment_type ON assignment.type = assignment_type.type", (err, assignmentRow) => {
+							"assignment_type ON assignment.type = assignment_type.type_id", (err, assignmentRow) => {
 								if (err) console.log("selection from assignment for name and url", err);
 								console.log(assignmentRow);
 							});
