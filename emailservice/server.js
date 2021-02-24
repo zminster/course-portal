@@ -37,7 +37,7 @@ connection.connect((err) => {
 	});
 	let date = new Date().getTime();
 	connection.query("SELECT grades.uid, grades.asgn_id, grades.extension, membership.class_pd, assignment_meta.date_due FROM grades INNER JOIN membership ON grades.uid = membership.uid " +
-		"INNER JOIN assignment_meta ON grades.asgn_id = assignment_meta.asgn_id AND membership.class_pd = assignment_meta.class_pd WHERE handed_in=0 AND chomped=0 AND displayed=1", async (err, gradeRows) => {
+		"INNER JOIN assignment_meta ON grades.asgn_id = assignment_meta.asgn_id AND membership.class_pd = assignment_meta.class_pd LEFT JOIN user ON grades.uid = user.uid LEFT JOIN user_role ON user.role = user_role.rid  WHERE handed_in=0 AND chomped=0 AND displayed=1 AND user_role.handin_enabled = 1 AND user_role.reporting_enabled = 1 AND grades.nreq = 0;", async (err, gradeRows) => {
 			if (err) console.log("GRADE SELECTION error on uid, asgn_id, and extension", err);
 			if (gradeRows) {
 				//start looking at each student at a time
@@ -47,11 +47,12 @@ connection.connect((err) => {
 					//now that you know class period you can check against the specific assignments
 					//first check the due date of the specific project
 					let udate = new Date(item.date_due).getTime();
+					console.log("ITEM UNDER SCRUTINY: " + JSON.stringify(item));
 					//take due date and compare it to current time
 					//run through a multitude a comparators of each portion of data in date_due
 					if (date - udate > 0) {
 						//send a message after finding which assignment it is
-						connection.query("SELECT assignment.name, assignment.url, assignment.asgn_id, user_meta.first_name, user_meta.last_name, user_meta.email FROM assignment CROSS JOIN user_meta LEFT JOIN user ON user.uid = user_meta.uid LEFT JOIN user_role ON user.role = user_role.rid WHERE assignment.asgn_id=? AND user_meta.uid=? AND user_role.reporting_enabled=1 AND user_role.handin_enabled=1;", [item.asgn_id, item.uid], (err, assignmentRow) => {
+						connection.query("SELECT assignment.name, assignment.url, assignment.asgn_id, user_meta.first_name, user_meta.last_name, user_meta.email FROM assignment CROSS JOIN user_meta WHERE assignment.asgn_id=? AND user_meta.uid=?;", [item.asgn_id, item.uid], (err, assignmentRow) => {
 							if (err) console.log("selection from assignment for name and url", err);
 							console.log(assignmentRow);
 							//fill out the text file <--must be named late.txt
