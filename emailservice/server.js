@@ -63,7 +63,7 @@ connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.n
             console.log("EMAIL SEND TO:", assignment.email);
             transporter.sendMail({
                 from: '"CS Mailboy+"<CSP_' + randString + '@cs.stab.org>',
-                to: "zminster@stab.org", // assignment.email,
+                to: assignment.email,
                 subject: 'Missing Assignment: ' + assignment.name,
                 html: "<pre>" + returnEmail + "</pre>"
             }, (err, info) => {
