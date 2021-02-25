@@ -4,7 +4,7 @@
 | |_| | | | | | |_| | | | | |_|
  \___/|_| |_|  \___/|_| |_| (_)
 
-Late Assignment
+Missing Assignment
 
 -------------------------------------------------------------------------------------
 
@@ -12,8 +12,8 @@ Hello {{SPECIMEN_NAMEF}} {{SPECIMEN_NAMEL}}!
 
 -------------------------------------------------------------------------------------
 
-{{ASSIGNMENT_NAME}} seems to be missing,
-this assignment was due {{DUE_DATE}}
+{{ASSIGNMENT_NAME}} seems to be missing;
+this assignment was due {{DUE_DATE}}.
 
 ------------------------------------
 
@@ -22,4 +22,4 @@ Find a better description at {{URL}}
 ------------------------------------
 
 We love and appreciate you,
-the CSP Boys
+The CSP Team

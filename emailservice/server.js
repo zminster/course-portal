@@ -32,7 +32,7 @@ let randString = uniqueNamesGenerator({
     dictionaries: [adjectives, animals, names],
     style: 'lowerCase'
 });
-console.log("running query", process.env.DB_HOST, process.env.DB_USER);
+
 //grab information, and send all the people who are missing assignments
 let transporter = nodemail.createTransport({
     sendmail: true,
@@ -59,15 +59,15 @@ connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.n
             returnEmail = returnEmail.replace("{{SPECIMEN_NAMEL}}", assignment.last_name);
             returnEmail = returnEmail.replace("{{ASSIGNMENT_NAME}}", assignment.name);
             returnEmail = returnEmail.replace("{{DUE_DATE}}", dateTime ? dateTime : "");
-            returnEmail = returnEmail.replace("{{URL}}", assignment ? assignment : "");
+            returnEmail = returnEmail.replace("{{URL}}", assignment.url ? assignment.url : "");
             console.log("EMAIL SEND TO:", assignment.email);
             transporter.sendMail({
-                from: '"CS Mailboy+"<CSP' + randString + '@cs.stab.org>',
-                to: "chall22@students.stab.org", // assignment.email,
+                from: '"CS Mailboy+"<CSP_' + randString + '@cs.stab.org>',
+                to: "zminster@stab.org", // assignment.email,
                 subject: 'Missing Assignment: ' + assignment.name,
                 html: "<pre>" + returnEmail + "</pre>"
             }, (err, info) => {
-                if (err) console.log(err);
+                if (err) console.error(err);
                 console.log(info);
             });
         });
@@ -79,4 +79,5 @@ connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.n
     		if (err) console.log("selection from assignment for name and url", err);
     		console.log(assignmentRow);
     	});*/
+    connection.close();
 });
