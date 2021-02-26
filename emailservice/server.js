@@ -55,11 +55,11 @@ connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.n
             if (err) reject(err);
             let dateTime = new Date(assignment.date_due).toString().substring(0, 15);
             let returnEmail = template.toString();
-            returnEmail = returnEmail.replace("{{SPECIMEN_NAMEF}}", assignment.first_name);
-            returnEmail = returnEmail.replace("{{SPECIMEN_NAMEL}}", assignment.last_name);
-            returnEmail = returnEmail.replace("{{ASSIGNMENT_NAME}}", assignment.name);
-            returnEmail = returnEmail.replace("{{DUE_DATE}}", dateTime ? dateTime : "");
-            returnEmail = returnEmail.replace("{{URL}}", assignment.url ? assignment.url : "");
+            returnEmail = returnEmail.replaceAll("{{SPECIMEN_NAMEF}}", assignment.first_name);
+            returnEmail = returnEmail.replaceAll("{{SPECIMEN_NAMEL}}", assignment.last_name);
+            returnEmail = returnEmail.replaceAll("{{ASSIGNMENT_NAME}}", assignment.name);
+            returnEmail = returnEmail.replaceAll("{{DUE_DATE}}", dateTime ? dateTime : "");
+            returnEmail = returnEmail.replaceAll("{{URL}}", assignment.url ? assignment.url : "");
             console.log("EMAIL SEND TO:", assignment.email);
             transporter.sendMail({
                 from: '"CS Mailboy+"<CSP_' + randString + '@cs.stab.org>',
