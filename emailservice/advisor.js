@@ -76,7 +76,7 @@ connection.query("SELECT user_meta.advisor_email, CONCAT(user_meta.first_name, '
             returnEmail = returnEmail.replace(/{{COURSE_CODE}}/g, process.env.COURSE_CODE.toUpperCase());
             returnEmail = returnEmail.replace(/{{DELUGE}}/g, assignmentDeluge);
             transporter.sendMail({
-                from: '"CS Mailboy+"<CSP_' + randString + '@cs.stab.org>',
+                from: '"CS Department"<' + process.env.COURSE_CODE.toUpperCase() + '_' + randString + '@cs.stab.org>',
                 to: email,
                 replyTo: 'zminster@stab.org',
                 subject: 'Advisees Missing Assignments In ' + process.env.COURSE_CODE.toUpperCase(),
@@ -87,6 +87,6 @@ connection.query("SELECT user_meta.advisor_email, CONCAT(user_meta.first_name, '
             });
         });
     });
-    
+
     connection.close();
 });
