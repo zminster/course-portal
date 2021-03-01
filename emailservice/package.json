@@ -1,20 +1,15 @@
 {
-  "name": "package",
+  "name": "course-portal-email",
   "version": "1.0.0",
-  "description": "",
+  "description": "sends automated missing assignment emails from Course Portal",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "author": "",
+  "author": "charlie-map & zminster",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
-    "fs": "0.0.1-security",
-    "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.17",
     "path": "^0.12.7",

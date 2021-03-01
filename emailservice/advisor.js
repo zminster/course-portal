@@ -1,6 +1,5 @@
 const mysql = require('mysql2');
 const fs = require('fs');
-const util = require('util');
 const path = require('path');
 require('dotenv').config({
     path: path.resolve(__dirname, '../.env')
@@ -25,8 +24,6 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) console.log(err);
 });
-
-const db = util.promisify(connection.query).bind(connection);
 
 let randString = uniqueNamesGenerator({
     dictionaries: [adjectives, animals, names],
