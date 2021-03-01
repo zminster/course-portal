@@ -19,7 +19,9 @@ this assignment was due {{DUE_DATE}}.
 
 Find a better description at {{URL}}
 
+Turn in on Course Portal at {{CP_URL}}
+
 ------------------------------------
 
 We love and appreciate you,
-The CSP Team
+Your {{COURSE_CODE}} Friends
