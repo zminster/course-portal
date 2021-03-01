@@ -64,7 +64,7 @@ connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.n
             returnEmail = returnEmail.replace(/{{COURSE_CODE}}/g, process.env.COURSE_CODE.toUpperCase());
             console.log("EMAIL SEND TO:", assignment.email);
             transporter.sendMail({
-                from: '"CS Mailboy+"' + process.env.COURSE_CODE.toUpperCase() +  '_' + randString + '@cs.stab.org>',
+                from: '"CS Mailboy+"<' + process.env.COURSE_CODE.toUpperCase() +  '_' + randString + '@cs.stab.org>',
                 to: assignment.email,
                 replyTo: 'zminster@stab.org',
                 subject: 'Missing Assignment: ' + assignment.name,
