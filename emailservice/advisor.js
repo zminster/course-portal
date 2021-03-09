@@ -44,6 +44,7 @@ connection.query("SELECT user_meta.advisor_email, CONCAT(user_meta.first_name, '
     // group missing assignments by advisor in giant object
     let advisors = {};
     gradeRows.forEach((assignment) => {
+        if (!assignment || !assignment.advisor_email) return;
         if (advisors[assignment.advisor_email])
             if (advisors[assignment.advisor_email][assignment.student_name])
                 advisors[assignment.advisor_email][assignment.student_name].push(assignment)

@@ -46,7 +46,7 @@
 			$username_update	= $conn->prepare("UPDATE user SET username=? WHERE uid=?");
 			$password_change	= $conn->prepare("UPDATE user SET password=?, change_flag=1 WHERE uid=?");
 			$role_change		= $conn->prepare("UPDATE user SET role=? WHERE uid=?");
-			$meta_update		= $conn->prepare("UPDATE user_meta SET first_name=?, last_name=?, year=?, email=? WHERE uid=?");
+			$meta_update		= $conn->prepare("UPDATE user_meta SET first_name=?, last_name=?, year=?, email=?, advisor_email=? WHERE uid=?");
 			$period_update		= $conn->prepare("UPDATE membership SET class_pd=? WHERE uid = ?");
 			$membership_removal = $conn->prepare("DELETE FROM membership WHERE uid = ?");
 			$membership_add		= $conn->prepare("INSERT INTO membership (uid, class_pd) VALUES (?, ?)");
@@ -55,7 +55,7 @@
 			$username_update->bind_param("si", $_POST["username"], $uid);
 			$password_change->bind_param("si", $password, $uid);
 			$role_change->bind_param("ii", $_POST["role"], $uid);
-			$meta_update->bind_param("ssssi", $_POST["first_name"], $_POST["last_name"], $_POST["year"], $_POST["email"], $uid);
+			$meta_update->bind_param("sssssi", $_POST["first_name"], $_POST["last_name"], $_POST["year"], $_POST["email"], $_POST["advisor_email"], $uid);
 			$period_update->bind_param("ii", $_POST["class_pd"], $uid);
 			$membership_removal->bind_param("i", $uid);
 			$membership_add->bind_param("ii", $uid, $_POST["class_pd"]);
@@ -148,6 +148,7 @@
 				<div><label for="last_name">Last Name:</label><input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo($user["last_name"]); ?>" /></div>
 				<div><label for="year">Year:</label><input type="text" id="year" name="year" placeholder="e.g. 12" value="<?php echo($user["year"]); ?>" /></div>
 				<div><label for="email">Email:</label><input type="text" id="email" name="email" placeholder="Email" value="<?php echo($user["email"]); ?>" /></div>
+				<div><label for="advisor_email">Advisor Email:</label><input type="text" ie="advisor_email" name="advisor_email" placeholder="jcarberr@brown.edu" value="<?php echo($user["advisor_email"]); ?>" /></div>
 				
 				<input type="submit" />
 			</form>

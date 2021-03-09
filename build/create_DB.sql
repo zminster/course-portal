@@ -82,6 +82,7 @@ CREATE TABLE user_meta (
     `last_name` VARCHAR(255) NOT NULL,
     `year` INT UNSIGNED NOT NULL,
     `email` VARCHAR(255) NOT NULL,
+    `advisor_email` VARCHAR(255) NOT NULL,
         PRIMARY KEY (`uid`),
     FOREIGN KEY (`uid`) REFERENCES user(`uid`)
 );

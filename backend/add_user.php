@@ -21,7 +21,7 @@
 
 		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag, role) VALUES (?, ?, 1, ?)");
 		$uid_lookup  = $conn->prepare("SELECT uid FROM user WHERE username = ?");
-		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, first_name, last_name, year, email) VALUES (?, ?, ?, ?, ?)");
+		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, first_name, last_name, year, email, advisor_email) VALUES (?, ?, ?, ?, ?, ?)");
 		$membership  = $conn->prepare("INSERT INTO membership (uid, class_pd) VALUES (?, ?)");
 		$asgn_select = $conn->prepare("SELECT asgn_id FROM assignment");
 		$grades		 = $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
@@ -39,7 +39,7 @@
 		$user_insert->bind_param("ssi", $username, $password, $role);
 		$uid_lookup->bind_param("s", $username);
 		$uid_lookup->bind_result($uid);
-		$meta_insert->bind_param("issis", $uid, $first_name, $last_name, $year, $email);
+		$meta_insert->bind_param("ississ", $uid, $first_name, $last_name, $year, $email, $advisor_email);
 		$membership->bind_param("ii", $uid, $period);
 		$grades->bind_param("ii", $uid, $asgn_id);
 		?><h2><?php echo($roles[$role]['name']); ?> Users Added<?php echo($roles[$role]['class_membership'] ? " :: Period " . $period : ""); ?></h2><ul><?php
@@ -49,7 +49,7 @@
 			$ct++;
 			$data = explode(",", $student);
 
-			if (count($data) != 5)
+			if (count($data) != 6)
 				die("MALFORMED STUDENT LINE " + $ct + ": " + $student);
 
 			// extract vars
@@ -58,6 +58,7 @@
 			$first_name = trim($data[2]);
 			$year = trim($data[3]);
 			$email = trim($data[4]);
+			$advisor_email = trim($data[5]);
 
 			// generate password
 			$gen_pass = generate_easy_password();
@@ -124,7 +125,7 @@
 		</div>
 
 		<div>Add users on newlines in the following comma-separated
-		format: [username],[last name],[first name],[year],[email]</div>
+		format: [username],[last name],[first name],[year],[email],[advisor_email]</div>
 
 		<textarea id="students" name="students"></textarea>
 		<input type="submit">

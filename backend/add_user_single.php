@@ -22,6 +22,7 @@
 		$last_name = $_POST['last_name'];
 		$year = $_POST['year'];
 		$email = $_POST['email'];
+		$advisor_email = $_POST['advisor_email'];
 
 		// get existing assignments first
 		$asgn_select = $conn->prepare("SELECT asgn_id FROM assignment");
@@ -37,14 +38,14 @@
 		// initialize & bind queries
 		$user_insert = $conn->prepare("INSERT INTO user (username, password, change_flag, role) VALUES (?, ?, 1, ?)");
 		$uid_lookup  = $conn->prepare("SELECT uid FROM user WHERE username = ?");
-		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, first_name, last_name, year, email) VALUES (?, ?, ?, ?, ?)");
+		$meta_insert = $conn->prepare("INSERT INTO user_meta (uid, first_name, last_name, year, email, advisor_email) VALUES (?, ?, ?, ?, ?, ?)");
 		$membership  = $conn->prepare("INSERT INTO membership (uid, class_pd) VALUES (?, ?)");
 		$grades		 = $conn->prepare("INSERT INTO grades (uid, asgn_id, nreq, handed_in, late, chomped, can_view_feedback) VALUES (?, ?, 0, 0, 0, 0, 0)");
 
 		$user_insert->bind_param("ssi", $username, $password, $role);
 		$uid_lookup->bind_param("s", $username);
 		$uid_lookup->bind_result($uid);
-		$meta_insert->bind_param("issis", $uid, $first_name, $last_name, $year, $email);
+		$meta_insert->bind_param("ississ", $uid, $first_name, $last_name, $year, $email, $advisor_email);
 		$membership->bind_param("ii", $uid, $period);
 		$grades->bind_param("ii", $uid, $asgn_id);
 
@@ -114,10 +115,11 @@
 			</div>
 
 			<div><label for="username">Username:</label><input type="text" id="username" name="username" placeholder="jcarberr" /></div>
-			<div><label for="username">First Name:</label><input type="text" id="first_name" name="first_name" placeholder="Josiah" /></div>
-			<div><label for="username">Last Name:</label><input type="text" id="last_name" name="last_name" placeholder="Carberry" /></div>
-			<div><label for="username">Grade:</label><input type="text" id="year" name="year" placeholder="10" /></div>
-			<div><label for="username">Email:</label><input type="text" ie="email" name="email" placeholder="jcarberr@brown.edu" /></div>
+			<div><label for="first_name">First Name:</label><input type="text" id="first_name" name="first_name" placeholder="Josiah" /></div>
+			<div><label for="last_name">Last Name:</label><input type="text" id="last_name" name="last_name" placeholder="Carberry" /></div>
+			<div><label for="year">Grade:</label><input type="text" id="year" name="year" placeholder="10" /></div>
+			<div><label for="email">Email:</label><input type="text" ie="email" name="email" placeholder="jcarberr@brown.edu" /></div>
+			<div><label for="advisor_email">Advisor Email:</label><input type="text" ie="advisor_email" name="advisor_email" placeholder="jcarberr@brown.edu" /></div>
 
 		<input type="submit">
 		</form>
