@@ -20,7 +20,7 @@ module.exports = function (req, res, next) {
 	req.handin_path = handinDir + req.params.asgn_id + '/' + req.user.class_pd + '/' + req.user.username;
 	req.handin_path = req.handin_path.replace(/\s+/g, '');						// remove any spaces from path prior to execution
 	exec('rm -rf ' + req.handin_path + '/*', function (err, stdout, stderr) { 	// remove old handin dir (ignore EEXIST)
-		mkdirp(req.handin_path, {mode: 0770}, function(err, made) {				// create new handin dir
+		mkdirp(req.handin_path, {mode: 0770}).then(made => {					// create new handin dir
 			var bb = busboy({limits: limits});					// read & begin processing handin form
 			bb(req, res, function() {
 				if (!req.busboy) {
