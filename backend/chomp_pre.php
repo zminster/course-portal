@@ -78,7 +78,7 @@
 					if (strpos($rubric[$i], "CSP_HEAD") !== FALSE) {
 						$insert = ["Student: " . $first_name . " " . $last_name . " (" . $username . ")" . PHP_EOL,
 							"Period: " . $class_pd . PHP_EOL,
-							"Turned In: " . date("D, M d, Y g:i A", $handin_t) . 
+							"Turned In: " . $handin_time ? date("D, M d, Y g:i A", $handin_t) : "N/A" . 
 							"\t(Due: " . $d_dt->format("D, M d, Y g:i A") . ($extension ? " - extended" : "") . ")"  . PHP_EOL
 						];
 						array_splice($rubric, $i, 1, $insert);
