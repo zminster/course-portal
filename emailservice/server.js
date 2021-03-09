@@ -37,7 +37,7 @@ let transporter = nodemail.createTransport({
     path: '/usr/sbin/sendmail'
 });
 let date = new Date().getTime();
-connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.name, grades.asgn_id, assignment_meta.date_due, assignment.url, user_meta.email FROM grades INNER JOIN membership ON grades.uid = membership.uid LEFT JOIN assignment ON grades.asgn_id = assignment.asgn_id INNER JOIN assignment_meta ON grades.asgn_id = assignment_meta.asgn_id AND membership.class_pd = assignment_meta.class_pd LEFT JOIN user ON grades.uid = user.uid LEFT JOIN user_role ON user.role = user_role.rid LEFT JOIN user_meta ON user.uid = user_meta.uid WHERE handed_in=0 AND chomped=0 AND displayed=1 AND user_role.handin_enabled = 1 AND user_role.reporting_enabled = 1 AND grades.nreq = 0 AND date_due < NOW();", async(err, gradeRows) => {
+connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.name, grades.asgn_id, assignment_meta.date_due, assignment.url, user_meta.email FROM grades INNER JOIN membership ON grades.uid = membership.uid LEFT JOIN assignment ON grades.asgn_id = assignment.asgn_id INNER JOIN assignment_meta ON grades.asgn_id = assignment_meta.asgn_id AND membership.class_pd = assignment_meta.class_pd LEFT JOIN user ON grades.uid = user.uid LEFT JOIN user_role ON user.role = user_role.rid LEFT JOIN user_meta ON user.uid = user_meta.uid WHERE handed_in=0 AND chomped=0 AND displayed=1 AND user_role.handin_enabled = 1 AND user_role.reporting_enabled = 1 AND grades.nreq = 0 AND date_due < NOW() AND trimester = (SELECT value_int FROM system_settings WHERE name = 'current_trimester');", async(err, gradeRows) => {
     if (err) { console.error("GRADE SELECTION error on uid, asgn_id, and extension", err); return; }
     if (!gradeRows.length) return;
     //start looking at each student at a time
@@ -59,7 +59,7 @@ connection.query("SELECT user_meta.first_name, user_meta.last_name, assignment.n
             returnEmail = returnEmail.replace(/{{URL}}/g, assignment.url ? assignment.url : "");
             returnEmail = returnEmail.replace(/{{CP_URL}}/g, 'https://' + process.env.COURSE_CODE + '.cs.stab.org/handin/' + assignment.asgn_id);
             returnEmail = returnEmail.replace(/{{COURSE_CODE}}/g, process.env.COURSE_CODE.toUpperCase());
-            console.log("EMAIL SEND TO:", assignment.email);
+
             transporter.sendMail({
                 from: '"CS Mailboy+"<' + process.env.COURSE_CODE.toUpperCase() +  '_' + randString + '@cs.stab.org>',
                 to: assignment.email,
