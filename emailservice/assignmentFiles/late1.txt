@@ -1,0 +1,27 @@
+ _   _ _        ___  _       _
+| | | | |__    / _ \| |__   | |
+| | | | '_ \  | | | | '_ \  | |
+| |_| | | | | | |_| | | | | |_|
+ \___/|_| |_|  \___/|_| |_| (_)
+
+Missing Assignment
+
+-------------------------------------------------------------------------------------
+
+Hello {{SPECIMEN_NAMEF}} {{SPECIMEN_NAMEL}}!
+
+-------------------------------------------------------------------------------------
+
+{{ASSIGNMENT_NAME}} seems to be missing;
+this assignment was due {{DUE_DATE}}.
+
+------------------------------------
+
+Find a better description at {{URL}}
+
+Turn in on Course Portal at {{CP_URL}}
+
+------------------------------------
+
+We love and appreciate you,
+Your {{COURSE_CODE}} Friends

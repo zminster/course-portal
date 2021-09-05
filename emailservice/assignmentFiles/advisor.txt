@@ -1,0 +1,26 @@
+ ____                       _   
+|  _ \ ___ _ __   ___  _ __| |_ 
+| |_) / _ \ '_ \ / _ \| '__| __|
+|  _ <  __/ |_) | (_) | |  | |_ 
+|_| \_\___| .__/ \___/|_|   \__|
+          |_|                   
+
+Missing Assignment Report
+-------------------------------------------------------------------------------------
+
+Hi there! This is an automated message from the Computer Science Department.
+
+Some of your advisees in {{COURSE_CODE}} are missing assignments, as detailed below:
+
+------------------------------------
+
+{{DELUGE}}
+------------------------------------
+
+Your advisees are receiving automated emails to this effect each morning at 8:55am.
+
+In these emails, they can find submission instructions and help resources.
+
+Students can submit assignments up to the end-of-quarter deadline (March 5, 2021) without penalty.
+
+Have a great day!

@@ -1,0 +1,18 @@
+{
+  "name": "course-portal-email",
+  "version": "1.0.0",
+  "description": "sends automated missing assignment emails from Course Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "charlie-map & zminster",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mysql2": "^2.2.5",
+    "nodemailer": "^6.4.17",
+    "path": "^0.12.7",
+    "unique-names-generator": "^4.3.1"
+  }
+}
