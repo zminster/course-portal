@@ -4,11 +4,10 @@
 // reqs
 require('dotenv').config({path: __dirname + '/.env'});
 var express 	= require('express');
-var session 	= require('express-session');
-var cookieParser= require('cookie-parser');
+var db 			= require("./app/database_ops.js");
 var bodyParser 	= require('body-parser');
-var morgan		= require('morgan');
 var passport	= require('passport');
+var morgan		= require('morgan');
 var flash		= require('connect-flash');
 var engines		= require('consolidate');
 
@@ -21,15 +20,22 @@ require('./config/passport')(passport);
 app.engine('html', engines.hogan);
 app.set('views', __dirname +'/templates');
 if (!process.env.PRODUCTION == 1) app.use(morgan('dev'));
-app.use(cookieParser());
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(bodyParser.json());
-app.use(session({
+app.use(db.session({
+	key: process.env.COURSE_CODE,
 	secret: process.env.SESSION_SECRET,
-	resave: true,
-	saveUninitialized: true
+	store: db.sessionStore,
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		maxAge: 604800000,
+		secure: process.env.PRODUCTION != 0,
+		domain: process.env.DOMAIN,
+		sameSite: 'lax'
+	}
 }));
 app.use(passport.initialize());
 app.use(passport.session());
