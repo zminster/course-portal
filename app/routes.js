@@ -412,6 +412,8 @@ module.exports = function(app, passport) {
 	 **************************************/
 	app.get('/logout', function(req, res) {
 		req.logout();
+		req.session.destroy();
+		res.clearCookie(process.env.COURSE_CODE);
 		res.redirect('/');
 	});
 
