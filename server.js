@@ -18,6 +18,7 @@ var app 		= express();
 require('./config/passport')(passport);
 
 app.engine('html', engines.hogan);
+app.set('trust proxy', 'loopback');
 app.set('views', __dirname +'/templates');
 if (!process.env.PRODUCTION == 1) app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({
@@ -32,7 +33,7 @@ app.use(db.session({
 	saveUninitialized: false,
 	cookie: {
 		maxAge: 604800000,
-		secure: process.env.PRODUCTION != 0,
+		secure: process.env.PRODUCTION == 1,
 		domain: process.env.DOMAIN,
 		sameSite: 'lax'
 	}
